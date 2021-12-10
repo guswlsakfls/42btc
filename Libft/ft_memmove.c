@@ -1,27 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/19 10:50:46 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/27 18:51:11 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/19 16:43:49 by hyujo             #+#    #+#             */
+/*   Updated: 2021/11/29 11:02:11 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_bzero(void *s, size_t n)
+void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	size_t			i;
-	unsigned char	*str;
+	const unsigned char	*mem_src;
+	unsigned char		*mem_dst;
+	size_t				i;
 
-	str = (unsigned char *)s;
+	mem_src = (const unsigned char *)src;
+	mem_dst = (unsigned char *)dst;
 	i = 0;
-	while (i < n)
+	if (len == 0 || mem_dst == mem_src)
+		return (dst);
+	if (mem_dst > mem_src)
 	{
-		str[i] = 0;
-		i++;
+		while (i < len)
+		{
+			mem_dst[len - i - 1] = mem_src[len - i - 1];
+			i++;
+		}
 	}
+	else
+		ft_memcpy(mem_dst, mem_src, len);
+	return (dst);
 }
