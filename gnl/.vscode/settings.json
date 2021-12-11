@@ -1,0 +1,10 @@
+{
+	"makefile.extensionOutputFolder": "./.vscode",
+	"makefile.launchConfigurations": [
+		{
+			"cwd": "/Users/hyujo/Desktop/42btc/gnl",
+			"binaryPath": "/Users/hyujo/Desktop/42btc/gnl/a.out",
+			"binaryArgs": []
+		}
+	]
+}
