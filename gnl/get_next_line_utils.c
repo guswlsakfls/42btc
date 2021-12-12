@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 10:24:00 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/11 19:38:52 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/12 19:27:42 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ char	*ft_strchr(const char *s, int c)
 	size_t				len;
 	const unsigned char	*str;
 
+	if (!s)
+		return (0);
 	i = 0;
 	len = ft_strlen(s);
 	str = (const unsigned char *)s;
@@ -104,6 +106,5 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (0);
 	ft_strlcpy(str, s1, s1_len + 1);
 	ft_strlcpy(str + s1_len, s2, s2_len + 1);
-	printf("1\n%c\n%zu", str[10000000], ft_strlen(str));
 	return (str);
 }

@@ -6,11 +6,31 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 16:16:16 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/11 19:30:24 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/12 19:20:32 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+t_list	*ft_listnew(t_list **head, int fd)
+{
+	t_list	*list;
+
+	list = malloc(sizeof(t_list));
+	if (list == NULL)
+		return (NULL);
+	list->fd = fd;
+	list->backup = NULL;
+	list->data = malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (list->data == NULL)
+		return (NULL);
+	list->line = NULL;
+	list->len = 0;
+	list->offset = 1;
+	list->next = NULL;
+	*head = list;
+	return (*head);
+}
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
@@ -31,37 +51,36 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 char	*get_next_line(int fd)
 {
-	char 			*data;
 	static t_list	*head;
-	int				offset;
-	int				len;
-	char			*line;
+	t_list			*list;
 
-	if (head == NULL)
-		head = malloc(sizeof(t_list));
-	if (head->backup == NULL)
-		head->backup = ft_strdup("");
-	data = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (data == NULL)
-		return (NULL);
-	offset = 1;
-	while (offset != 0 && !ft_strchr(head->backup, '\n'))
+	while (head)
 	{
-		offset = read(fd, data, BUFFER_SIZE);
-		if (offset == -1)
+		if (head->fd == fd)
+			break ;
+		head = head->next;
+	}
+	list = ft_listnew(&head, fd);
+	while (list->offset != 0 && !ft_strchr(list->backup, '\n'))
+	{
+		list->offset = read(list->fd, list->data, BUFFER_SIZE);
+		if (list->offset == -1)
 		{
-			free(data);
+			free(list->data);
 			return (NULL);
 		}
-		data[offset] = '\0';
-		head->backup = ft_strjoin(head->backup, data);
-		printf("%c", head->backup[10000000]);
+		list->data[list->offset] = '\0';
+		list->backup = ft_strjoin(list->backup, list->data);
 	}
-	len = ft_strchr(head->backup, '\n') - head->backup;
-	line = ft_substr(head->backup, 0, len + 1);
-	head->backup = ft_strchr(head->backup, '\n') + 1;
-	free(data);
-	return (line);
+	printf("exbackup : %p\n%p\n", list->backup, ft_strchr(list->backup, '\n'));
+	list->len = ft_strchr(list->backup, '\n') - list->backup;
+	printf("len : %d\n", list->len);
+	list->line = ft_substr(list->backup, 0, list->len + 1);
+	printf("line : %s\n", list->line);
+	list->backup = ft_strchr(list->backup, '\n') + 1;
+	printf("afbackup : %s\n", list->backup);
+	free(list->data);
+	return (list->line);
 }
 
 int main()
@@ -69,15 +88,14 @@ int main()
 	int fd;
 	char *str;
 
-	fd = open("ttt.txt", O_RDONLY);
+	fd = open("text.txt", O_RDONLY);
 	while (1)
 	{
 		str = get_next_line(fd);
 		if (str[0] == '\0')
 			break ;
-		//printf("%d", str[0]);
+		printf("str : %s\n", str);
 	}
-	//printf("%d", str[10]);
 	close(fd);
 	return (0);
 }
