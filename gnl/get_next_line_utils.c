@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 10:24:00 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/12 19:27:42 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 20:42:58 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	cnt;
 
+	if (!s)
+		return (0);
 	cnt = 0;
 	while (*s != '\0')
 	{
@@ -87,7 +89,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	s1_len;
 	size_t	s2_len;

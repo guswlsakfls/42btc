@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/12 16:55:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 20:38:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,11 @@
 # include <fcntl.h>
 # include <stdio.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 2
-# endif
-
 typedef struct s_list
 {
 	int				fd;
 	char			*backup;
-	char			*data;
+	char			data[BUFFER_SIZE];
 	char			*line;
 	int				len;
 	int				offset;
@@ -34,7 +30,7 @@ typedef struct s_list
 }	t_list;
 
 char	*get_next_line(int fd);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *s);
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);

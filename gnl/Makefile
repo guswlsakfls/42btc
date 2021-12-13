@@ -6,14 +6,14 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 11:39:10 by hyujo             #+#    #+#              #
-#    Updated: 2021/12/12 09:00:31 by hyujo            ###   ########.fr        #
+#    Updated: 2021/12/13 14:51:41 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = a.out
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=2
 AR = ar -rcs
 RM = rm -f
 

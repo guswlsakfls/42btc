@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 11:57:54 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/10 12:36:13 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 16:25:22 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	while (back > front && ft_strchr(set, s1[back]))
 		back--;
 	if (back == front)
-		return(ft_strdup("");
+		return (ft_strdup(""));
 	str_trim = malloc(sizeof(char) * back - front + 2);
 	if (!str_trim)
 		return (0);

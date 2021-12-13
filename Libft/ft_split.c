@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 12:50:22 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/09 20:42:25 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 17:24:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	**ft_malloc_error(char **str)
 		free(str[i++]);
 	}
 	free(str);
-	str == NULL;
+	str = NULL;
 	return (NULL);
 }
 
