@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/13 20:38:40 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/14 14:07:32 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ typedef struct s_list
 {
 	int				fd;
 	char			*backup;
+	char			*tmp_str;
+	char			tmp_chr;
+	char			*nl_position;
 	char			data[BUFFER_SIZE];
-	char			*line;
-	int				len;
 	int				offset;
 	struct s_list	*next;
 }	t_list;
