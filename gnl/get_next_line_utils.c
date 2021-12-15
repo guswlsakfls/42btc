@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 10:24:00 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/13 20:42:58 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/15 21:01:08 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ size_t	ft_strlen(const char *s)
 	return (cnt);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	size_t			i;
 	size_t			len;

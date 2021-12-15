@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/14 14:07:32 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/15 18:04:33 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,12 @@ typedef struct s_list
 {
 	int				fd;
 	char			*backup;
-	char			*tmp_str;
-	char			tmp_chr;
-	char			*nl_position;
-	char			data[BUFFER_SIZE];
-	int				offset;
 	struct s_list	*next;
 }	t_list;
 
 char	*get_next_line(int fd);
 char	*ft_strjoin(char *s1, char *s2);
-char	*ft_strdup(const char *s);
+char	*ft_strdup(char *s);
 size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strchr(const char *s, int c);
