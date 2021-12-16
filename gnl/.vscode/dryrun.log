@@ -1,7 +1,0 @@
-make all --dry-run --always-make --keep-going --print-directory
-make: Entering directory `/Users/hyujo/Desktop/42btc/gnl'
-gcc -Wall -Wextra -Werror -g   -c -o main.o main.c
-gcc -Wall -Wextra -Werror -g   -c -o get_next_line_utils.o get_next_line_utils.c
-gcc -Wall -Wextra -Werror -g -o a.out main.o get_next_line_utils.o
-make: Leaving directory `/Users/hyujo/Desktop/42btc/gnl'
- 

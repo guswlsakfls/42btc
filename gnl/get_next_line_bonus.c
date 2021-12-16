@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 16:16:16 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/16 15:21:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/16 19:36:50 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+#include <stdio.h>
 
 void	ft_get_backup(t_list *list)
 {
@@ -89,6 +91,27 @@ void	ft_left_backup(t_list *list)
 	list->backup = tmp;
 }
 
+t_list	*ft_find_next(t_list *head, t_list *list)
+{
+	t_list	*tmp;
+
+	tmp = head;
+	if (head == list)
+	{
+		head = head->next;
+		free(list);
+	}
+	else
+	{
+		while (tmp->next != list)
+			tmp = tmp->next;
+		tmp->next = list->next;
+		free(list);
+		list = NULL;
+	}
+	return (head);
+}
+
 char	*get_next_line(int fd)
 {
 	static t_list	*head;
@@ -100,14 +123,13 @@ char	*get_next_line(int fd)
 	list = ft_lstfd(&head, fd);
 	ft_get_backup(list);
 	if (!list->backup)
+	{
+		list = NULL;
 		return (NULL);
+	}
 	line = ft_get_line(list);
 	ft_left_backup(list);
-	if (!line)
-	{
-		free(list);
-		list = NULL;
-		head = NULL;
-	}
+	if (!(list->backup))
+		head = ft_find_next(head, list);
 	return (line);
 }
