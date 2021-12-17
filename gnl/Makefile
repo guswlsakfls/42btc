@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 11:39:10 by hyujo             #+#    #+#              #
-#    Updated: 2021/12/16 13:13:27 by hyujo            ###   ########.fr        #
+#    Updated: 2021/12/16 19:57:45 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ CFLAGS = -Wall -Wextra -Werror -D BUFFER_SIZE=1
 AR = ar -rcs
 RM = rm -f
 
-SRCS = get_next_line.c get_next_line_utils.c
+SRCS = get_next_line_bonus.c get_next_line_utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
 

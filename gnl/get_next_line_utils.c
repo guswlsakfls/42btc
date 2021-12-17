@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/11 10:24:00 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/16 12:16:38 by hyujo            ###   ########.fr       */
+/*   Created: 2021/12/16 14:36:00 by hyujo             #+#    #+#             */
+/*   Updated: 2021/12/17 12:54:30 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,38 +78,29 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-t_list	*ft_lstnew(int fd)
-{
-	t_list	*list;
-
-	list = malloc(sizeof(t_list));
-	if (list == NULL)
-		return (NULL);
-	list->fd = fd;
-	list->backup = NULL;
-	list->next = NULL;
-	return (list);
-}
-
 t_list	*ft_lstfd(t_list **head, int fd)
 {
-	t_list	*prev_lst;
-	t_list	*cur_lst;
+	t_list	*pre;
+	t_list	*cur;
 
-	cur_lst = *head;
+	cur = *head;
+	pre = NULL;
+	while (cur)
+	{
+		pre = cur;
+		if (cur->fd == fd)
+			return (cur);
+		cur = cur->next;
+	}
+	cur = malloc(sizeof(t_list));
+	if (cur == NULL)
+		return (NULL);
+	cur->fd = fd;
+	cur->backup = NULL;
+	cur->next = NULL;
 	if (!*head)
-	{
-		*head = ft_lstnew(fd);
-		return (*head);
-	}
-	while (cur_lst)
-	{
-		prev_lst = cur_lst;
-		if ((cur_lst)->fd == fd)
-			return (cur_lst);
-		cur_lst = cur_lst->next;
-	}
-	cur_lst = ft_lstnew(fd);
-	prev_lst->next = cur_lst;
-	return (cur_lst);
+		*head = cur;
+	if (pre)
+		pre->next = cur;
+	return (cur);
 }
