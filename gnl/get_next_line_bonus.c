@@ -6,13 +6,11 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 16:16:16 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/17 12:52:55 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/19 09:18:05 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-#include <stdio.h>
 
 t_list	*ft_find_next(t_list **head, t_list **list)
 {
@@ -45,7 +43,12 @@ t_list	*ft_get_backup(t_list **list, t_list **head)
 	while (!ft_strchr((*list)->backup, '\n') && read_size != 0)
 	{
 		read_size = read((*list)->fd, buf, BUFFER_SIZE);
-		if (read_size < 0 || (read_size == 0 && (*list)->backup && !((*list)->backup[0])))
+		if (read_size < 0)
+		{
+			*head = ft_find_next(head, list);
+			return (NULL);
+		}
+		else if (read_size == 0 && (*list)->backup && !((*list)->backup[0]))
 		{
 			*head = ft_find_next(head, list);
 			return (NULL);
