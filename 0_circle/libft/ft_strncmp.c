@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 15:42:26 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/02 14:22:46 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/04 15:04:45 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,3 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 	}
 	return (cmp_s1[i] - cmp_s2[i]);
 }
-
-// #include <stdio.h>
-// #include <string.h>
-// int main()
-// {
-// 	printf("%d\n", ft_strncmp("test\200", "test\0", 6));
-// 	printf("%d\n", strncmp("test\200", "test\0", 6));
-// }

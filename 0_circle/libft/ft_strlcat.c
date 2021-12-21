@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/19 18:13:05 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 17:43:54 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/04 15:30:58 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,6 @@ size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 	if (dst_l >= dstsize)
 		return (src_l + dstsize);
 	i = 0;
-	while (src[i] && (i + 1) < dstsize - dst_l)
-	{
-		dst[dst_l + i] = src[i];
-		i++;
-	}
-	dst[dst_l + i] = '\0';
+	ft_strlcpy(dst + dst_l, src, dstsize - dst_l);
 	return (dst_l + src_l);
 }

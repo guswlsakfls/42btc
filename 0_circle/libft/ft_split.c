@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 12:50:22 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/30 16:44:46 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 17:24:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@ static char	**ft_malloc_error(char **str)
 	size_t	i;
 
 	i = 0;
-	while (!str[i])
+	while (str[i])
 	{
 		free(str[i++]);
 	}
 	free(str);
+	str = NULL;
 	return (NULL);
 }
 
@@ -53,11 +54,11 @@ static size_t	ft_word_count(char const *str, char chr)
 	return (cnt);
 }
 
-void	ft_work_split(char **res, char const *str, char chr, int s_cnt)
+void	ft_work_split(char **res, char const *str, char chr, size_t s_cnt)
 {
-	int	res_i;
-	int	str_i;
-	int	word_len;
+	size_t	res_i;
+	size_t	str_i;
+	size_t	word_len;
 
 	res_i = 0;
 	str_i = 0;
@@ -71,9 +72,9 @@ void	ft_work_split(char **res, char const *str, char chr, int s_cnt)
 			str_i++;
 			word_len++;
 		}
-		res[res_i] = ft_calloc(word_len + 1, sizeof(char));
+		res[res_i] = malloc(sizeof(char) * (word_len + 1));
 		if (res == NULL)
-			ft_malloc_error(res);
+			return (ft_malloc_error(res));
 		ft_strlcpy(res[res_i], str + str_i - word_len, word_len + 1);
 		res_i++;
 	}
@@ -82,13 +83,13 @@ void	ft_work_split(char **res, char const *str, char chr, int s_cnt)
 
 char	**ft_split(char const *s, char c)
 {
-	int		w_cnt;
+	size_t	w_cnt;
 	char	**res;
 
 	if (s == 0)
 		return (NULL);
 	w_cnt = ft_word_count(s, c);
-	res = ft_calloc(w_cnt + 1, sizeof(char *));
+	res = malloc(sizeof(char *) * (w_cnt + 1));
 	if (res == 0)
 		return (NULL);
 	ft_work_split(res, s, c, w_cnt);

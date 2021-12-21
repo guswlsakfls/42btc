@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 19:01:11 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 12:42:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/04 14:59:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 	if (!s || !f)
 		return (0);
 	len = ft_strlen(s);
-	str = ft_calloc(len + 1, sizeof(char));
+	str = malloc(sizeof(char) * (len + 1));
 	if (!str)
 		return (0);
 	i = 0;

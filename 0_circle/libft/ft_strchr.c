@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 14:41:26 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/30 11:10:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/12 17:25:38 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,16 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	int	i;
-	int	len;
+	size_t				i;
+	size_t				len;
+	const unsigned char	*str;
 
 	i = 0;
 	len = ft_strlen(s);
+	str = (const unsigned char *)s;
 	while (i < len)
 	{
-		if (s[i] == c)
+		if (s[i] == (unsigned char)c)
 			return ((char *)s + i);
 		i++;
 	}

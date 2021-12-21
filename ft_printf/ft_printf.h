@@ -1,38 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   test.c                                             :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/17 15:33:56 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/19 10:53:45 by hyujo            ###   ########.fr       */
+/*   Created: 2021/12/21 17:55:40 by hyujo             #+#    #+#             */
+/*   Updated: 2021/12/21 18:34:59 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdarg.h>
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-void printf_digit(int args)
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include "./libft/libft.h"
+
+typedef struct s_flags
 {
-	va_list ap;
+	int		minus;
+	int		zero;
+	int		width;
+	int		precision;
+	char	type;
+}	t_flags;
 
-	va_start(ap, args);
-
-	for (int i = 0; i < args; i++)
-	{
-		int num = va_args(ap, int);
-		
-		printf("%d\n", num);
-	}
-	va_end(ap);
-}
-
-int main()
-{
-	printf_digit(1, 10);
-	printf_digit(2, 10, 20);
-	printf_digit(3, 10, 20, 30);
-
-	return (0);
-}
+#endif

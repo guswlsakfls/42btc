@@ -6,13 +6,13 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 12:50:22 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/13 17:24:40 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/21 15:35:33 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static char	**ft_malloc_error(char **str)
+char	**ft_malloc_error(char **str)
 {
 	size_t	i;
 
@@ -54,7 +54,7 @@ static size_t	ft_word_count(char const *str, char chr)
 	return (cnt);
 }
 
-void	ft_work_split(char **res, char const *str, char chr, size_t s_cnt)
+char	**ft_work_split(char **res, char const *str, char chr, size_t s_cnt)
 {
 	size_t	res_i;
 	size_t	str_i;
@@ -79,6 +79,7 @@ void	ft_work_split(char **res, char const *str, char chr, size_t s_cnt)
 		res_i++;
 	}
 	res[s_cnt] = NULL;
+	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)

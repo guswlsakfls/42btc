@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 15:01:18 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/30 19:06:24 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/04 15:45:26 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strdup(const char *s)
 {
-	size_t	i;
-	size_t	len;
-	char	*ptr;
+	size_t			i;
+	size_t			len;
+	unsigned char	*ptr;
 
 	len = ft_strlen(s);
 	ptr = malloc(sizeof(char) * len + 1);
@@ -25,9 +25,9 @@ char	*ft_strdup(const char *s)
 	i = 0;
 	while (i < len)
 	{
-		ptr[i] = s[i];
+		ptr[i] = (unsigned char)s[i];
 		i++;
 	}
 	ptr[i] = '\0';
-	return (ptr);
+	return ((char *)ptr);
 }

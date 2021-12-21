@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/26 16:48:20 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/28 17:51:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/03 15:26:34 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 {
 	t_list	*lst_last;
 
-	if (!lst || !new)
+	if (!new || !lst)
 		return ;
 	if (!*lst)
 	{
@@ -24,6 +24,5 @@ void	ft_lstadd_back(t_list **lst, t_list *new)
 		return ;
 	}
 	lst_last = ft_lstlast(*lst);
-	new->next = lst_last->next;
 	lst_last->next = new;
 }

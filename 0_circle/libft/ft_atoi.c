@@ -6,32 +6,29 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 20:55:34 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 16:19:37 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/03 18:33:51 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <limits.h>
 
-int	check_over_range(unsigned long long sum, int sign)
+static int	ft_check_over(unsigned long long sum, int sign)
 {
-	if (sum > LLONG_MAX - 1 && sign == -1)
+	if (sum > 9223372036854775807 - 1 && sign == -1)
 		return (0);
-	if (sum > LLONG_MAX && sign == 1)
+	if (sum > 9223372036854775807 && sign == 1)
 		return (-1);
 	return (sum * sign);
 }
 
 static int	ft_issapce(char c)
 {
-	if ((9 <= c && c <= 13) || c == ' ')
-		return (1);
-	return (0);
+	return ((9 <= c && c <= 13) || c == ' ');
 }
 
 int	ft_atoi(const char *str)
 {
-	int			i;
+	size_t		i;
 	int			sign;
 	long long	res;
 
@@ -51,6 +48,6 @@ int	ft_atoi(const char *str)
 		res = res * 10 + str[i] - '0';
 		i++;
 	}
-	res = check_over_range(res, sign);
+	res = ft_check_over(res, sign);
 	return ((int)res);
 }

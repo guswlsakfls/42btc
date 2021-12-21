@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 11:57:54 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 20:45:16 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/13 16:25:22 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*str;
-	size_t	front;
-	size_t	back;
+	char				*str_trim;
+	size_t				front;
+	size_t				back;
 
 	if (!s1 || !set)
 		return (ft_strdup(""));
@@ -26,9 +26,11 @@ char	*ft_strtrim(char const *s1, char const *set)
 		front++;
 	while (back > front && ft_strchr(set, s1[back]))
 		back--;
-	str = ft_calloc(back - front + 2, sizeof(char));
-	if (!str)
+	if (back == front)
+		return (ft_strdup(""));
+	str_trim = malloc(sizeof(char) * back - front + 2);
+	if (!str_trim)
 		return (0);
-	ft_strlcpy(str, s1 + front, back - front + 2);
-	return (str);
+	ft_strlcpy(str_trim, s1 + front, back - front + 2);
+	return (str_trim);
 }

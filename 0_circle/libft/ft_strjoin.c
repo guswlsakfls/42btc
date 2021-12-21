@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/23 11:40:33 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 18:26:00 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/04 15:51:34 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (ft_strdup(s1));
 	s1_len = ft_strlen(s1);
 	s2_len = ft_strlen(s2);
-	str = ft_calloc(s1_len + s2_len, sizeof(char));
+	str = malloc(sizeof(char) * (s1_len + s2_len + 1));
 	if (!str)
 		return (0);
 	ft_strlcpy(str, s1, s1_len + 1);
