@@ -3,17 +3,17 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
+#    By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 11:39:10 by hyujo             #+#    #+#              #
-#    Updated: 2021/12/21 18:02:35 by hyujo            ###   ########.fr        #
+#    Updated: 2021/12/28 14:18:20 by hyunjinjo        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libftprintf.a
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 AR = ar -rcs
 RM = rm -f
 
@@ -32,11 +32,12 @@ $(NAME): $(OBJS)
 all: $(NAME)
 
 clean:
-	$(MAKE) -C $(LIB_DIR) clean
 	$(RM) $(OBJS)
+	$(MAKE) -C $(LIB_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
+	$(MAKE) -C $(LIB_DIR) fclean
 
 re: fclean all
 

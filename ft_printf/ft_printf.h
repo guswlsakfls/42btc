@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 17:55:40 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/21 18:34:59 by hyujo            ###   ########.fr       */
+/*   Updated: 2021/12/31 20:59:32 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,11 @@
 
 typedef struct s_flags
 {
-	int		minus;
-	int		zero;
-	int		width;
-	int		precision;
-	char	type;
+	int	minus;
+	int	zero;
+	int	width;
+	int	prec;
+	int	base;	
 }	t_flags;
 
 #endif
