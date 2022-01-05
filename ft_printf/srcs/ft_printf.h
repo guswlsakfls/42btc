@@ -1,28 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/19 10:16:55 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/05 13:44:13 by hyujo            ###   ########.fr       */
+/*   Created: 2021/12/21 17:55:40 by hyujo             #+#    #+#             */
+/*   Updated: 2022/01/05 18:38:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-size_t	ft_strlen(const char *s)
+# include <stdarg.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include "./libft/libft.h"
+
+typedef struct s_flags
 {
-	size_t	cnt;
+	int	minus;
+	int	zero;
+	int	width;
+	int	prec;
+	int	base;	
+}	t_flags;
 
-	if (!s)
-		return (0);
-	cnt = 0;
-	while (*s != '\0')
-	{
-		s++;
-		cnt++;
-	}
-	return (cnt);
-}
+int	ft_printf(const char *fmt, ...);
+
+#endif

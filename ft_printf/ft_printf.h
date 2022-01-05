@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/21 17:55:40 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/31 20:59:32 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/01/05 19:45:15 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,7 @@ typedef struct s_flags
 	int	prec;
 	int	base;	
 }	t_flags;
+
+int	ft_printf(const char *fmt, ...);
 
 #endif

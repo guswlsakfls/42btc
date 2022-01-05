@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
+/*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/19 10:16:55 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/05 13:44:13 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/23 21:19:48 by hyujo             #+#    #+#             */
+/*   Updated: 2021/12/04 14:44:18 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlen(const char *s)
+void	ft_putnbr_fd(int n, int fd)
 {
-	size_t	cnt;
+	long long	nb;
 
-	if (!s)
-		return (0);
-	cnt = 0;
-	while (*s != '\0')
+	nb = n;
+	if (nb < 0)
 	{
-		s++;
-		cnt++;
+		ft_putchar_fd('-', fd);
+		nb *= -1;
 	}
-	return (cnt);
+	if (nb >= 10)
+		ft_putnbr_fd(nb / 10, fd);
+	ft_putchar_fd("0123456789"[nb % 10], fd);
 }
