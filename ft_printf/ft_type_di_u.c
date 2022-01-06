@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/06 11:51:43 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/06 17:38:28 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/01/06 19:11:30 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ int	ft_type_di(long nb, t_flags *flags)
 	if (len < flags->width)
 		flags->width = flags->width - len + 1;
 	if (flags->plus == 1)
-		write(1, "+", 1);
+		cnt += write(1, "+", 1);
 	if (flags->space == 1)
-		write(1, " ", 1);
+		cnt += write(1, " ", 1);
 	if (flags->minus == 0)
 		cnt += ft_print_space_or_zero(flags);
 	while (--(flags->prec) > 0)
@@ -97,7 +97,7 @@ unsigned int	ft_type_u(unsigned int nb, t_flags *flags)
 		cnt += ft_print_space_or_zero(flags);
 	while (--(flags->prec) > 0)
 		cnt += write(1, "0", 1);
-	cnt = ft_print_u(nb);
+	cnt += ft_print_u(nb);
 	cnt += ft_print_space_or_zero(flags);
 	return (cnt);
 }

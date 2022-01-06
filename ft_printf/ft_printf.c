@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/17 15:33:56 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/06 17:38:53 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/01/06 19:15:27 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,18 +100,17 @@ int	ft_printf(const char *fmt, ...)
 	return (cnt);
 }
 
-// #include <stdio.h>
-// int	main(void)
-// {
-// 	int	cnt;
+#include <stdio.h>
+int	main(void)
+{
+	int	cnt;
 
-// 	cnt = 0;
-// 	cnt = printf("%010.2u\n", 12345);
-// 	cnt = printf("%10.3s\n", "12345");
-// 	printf("cnt : %d\n", cnt);
-// 	printf("---------------------------------------\n");
-// 	cnt = ft_printf("%010.2u\n", 12345);
-// 	cnt = ft_printf("%10.3s\n", "12345");
-// 	printf("cnt : %d\n", cnt);
-// 	return (0);
-// }
+	cnt = 0;
+	cnt = printf("%-10.4ud\n", 123);
+	// cnt = printf("%10.3s\n", "12345");
+	printf("cnt : %d\n", cnt);
+	printf("---------------------------------------\n");
+	cnt = ft_printf("%-10.4ud\n", 123);
+	printf("cnt : %d\n", cnt);
+	return (0);
+}
