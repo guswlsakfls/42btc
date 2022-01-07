@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/24 11:39:10 by hyujo             #+#    #+#              #
-#    Updated: 2022/01/06 18:54:10 by hyujo            ###   ########.fr        #
+#    Updated: 2022/01/07 10:46:48 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,11 +27,14 @@ SRCS = ft_printf.c \
 
 OBJS = $(SRCS:.c=.o)
 
+%o: %c
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+
 $(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
-	$(CC) $@
+	# $(CC) $@
 
 all: $(NAME)
 
