@@ -18,7 +18,7 @@ $(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
-	$(CC) $@
+	$(CC) $@ -o push_swap
 
 all: $(NAME)
 

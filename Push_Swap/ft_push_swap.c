@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/27 19:24:39 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/01/27 21:41:50 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,41 +326,41 @@ void	ft_sort_a_under_three(t_deq *deq, int size)
 	}
 }
 
+void	ft_sort_b_under_two(t_deq *a, t_deq *b)
+{
+	if (b->top->data < b->top->next->data)
+		ft_sb(b);
+	ft_pa(a, b);
+	ft_pa(a, b);
+}
+
 void	ft_sort_b_under_three(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
+	{
 		ft_pa(a, b);
+		return ;
+	}
 	if (size == 2)
 	{
-		if (b->top->data > b->top->next->data)
-			ft_sb(b);
-		ft_pa(a, b);
-		ft_pa(a, b);
+		ft_sort_b_under_two(a, b);
+		return ;
 	}
-	if (size == 3)
+	if (b->top->next->data > b->top->data && b->top->next->data > b->top->next->next->data)
+		ft_sb(b);
+	if (b->top->data > b->top->next->data && b->top->data > b->top->next->next->data)
 	{
-		if (b->top->data > b->top->next->data && b->top->data > b->top->next->next->data)
-		{
-			ft_rb(b);
-			if (b->top->data > b->top->next->data)
-				ft_sb(b);
-		}
-		else if (b->top->next->data > b->top->data && b->top->next->data > b->top->next->next->data)
-		{
-			ft_rrb(b);
-			if (b->top->data > b->top->next->data)
-				ft_sb(b);
-		}
-		else if (b->top->next->next->data > b->top->data && b->top->next->next->data > b->top->next->data)
-		{
-			if (b->top->data > b->top->next->data)
-				ft_sb(b);
-		}
 		ft_pa(a, b);
-		ft_pa(a, b);
-		ft_pa(a, b);
+		ft_sort_b_under_two(a, b);
 	}
-	return ;
+	else
+	{
+		ft_rb(b);
+		ft_sb(b);
+		ft_pa(a, b);
+		ft_rrb(b);
+		ft_sort_b_under_two(a, b);
+	}
 }
 
 void	ft_a_to_b(t_deq *a, t_deq *b, int size)
@@ -382,7 +382,7 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 	i = -1;
 	while (++i < size)
 	{
-		if (a->top->data >= pivot)
+		if (a->top->data > pivot)
 		{
 			ft_ra(a);
 			a_size++;
@@ -419,7 +419,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	i = -1;
 	while (++i < size)
 	{
-		if (b->top->data < pivot)
+		if (b->top->data <= pivot)
 		{
 			ft_rb(b);
 			b_size++;
