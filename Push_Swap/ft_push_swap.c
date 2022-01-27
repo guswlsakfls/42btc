@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/27 21:41:50 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/01/27 23:38:09 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_deq
 {
 	t_node	*top;
 	t_node	*bottom;
+	char 	*arr;
 	int		size;
 }	t_deq;
 
@@ -41,6 +42,7 @@ t_deq	*ft_init_deq(void)
 	deq->top = NULL;
 	deq->bottom = NULL;
 	deq->size = 0;
+	deq->arr = NULL;
 	return (deq);
 }
 
@@ -283,7 +285,7 @@ int	ft_find_pivot(t_deq *a, int size)
 
 	tmp = a->top;
 	i = 1;
-	while (i < size)
+	while (i < size / 2)
 	{
 		tmp = tmp->next;
 		i++;
@@ -437,14 +439,49 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	ft_b_to_a(a, b, b_size);
 }
 
+void	ft_get_arr(int ac, char **av, t_deq *a, t_deq *b)
+{
+	int		i;
+	int		j;
+	int		k;
+	char	*v;
+	char	**arr;
+
+	a = b;
+	i = 0;
+	k = 0;
+	v = " ";
+	while (++i < ac)
+	{
+		j = 0;
+		while (av[i][j])
+		{
+			if (!ft_isdigit(av[i][j]) && av[i][j] != ' ')
+				exit(1);
+			j++;
+		}
+		arr = ft_split(av[i], ' ');
+		j = 0;
+		while (arr[j])
+		{
+			printf("arr : %s\n", arr[j]);
+			a->arr = ft_strjoin(a->arr, v);
+			a->arr[k] = ft_atoi(arr[j]);
+			printf("a->arr : %s\n", a->arr);
+			j++;
+			k++;
+		}
+	}
+}
+
 int	main(int argc, char **argv)
 {
-	t_node	*node;
+	// t_node	*node;
 	t_deq	*a;
 	t_deq	*b;
-	int		data;
-	int		i;
-	int		size;
+	// int		data;
+	// int		i;
+	// int		size;
 
 	if (argc <= 2) // 인자가 아무것도 안들어오고, 하나만 들어 왔을 때 예외처리
 		return (0);
@@ -452,42 +489,43 @@ int	main(int argc, char **argv)
 	// ft_ceate_deq(a, b)
 	a = ft_init_deq();
 	b = ft_init_deq();
-	i = 1;
-	data = 0;
-	while (i < argc)
-	{
-		data = ft_atoi(argv[i]);
-		node = ft_init_node(data);
-		ft_push_back(a, node);
-		i++;
-	}
+	ft_get_arr(argc, argv, a, b);
+	// i = 1;
+	// data = 0;
+	// while (i < argc)
+	// {
+	// 	data = ft_atoi(argv[i]);
+	// 	node = ft_init_node(data);
+	// 	ft_push_back(a, node);
+	// 	i++;
+	// }
 
+	// // while (a->top)
+	// // {
+	// // 	printf("%d\n", a->top->data);
+	// // 	a->top = a->top->next;
+	// // }
+
+	// // 연습___________________________
+	// size = ft_size_deq(a);
+	// ft_a_to_b(a, b, size);
+
+
+	// // test__________________________
+	
+	// // ft_push_swap 부분
 	// while (a->top)
 	// {
 	// 	printf("%d\n", a->top->data);
 	// 	a->top = a->top->next;
 	// }
 
-	// 연습___________________________
-	size = ft_size_deq(a);
-	ft_a_to_b(a, b, size);
-
-
-	// test__________________________
-	
-	// ft_push_swap 부분
-	while (a->top)
-	{
-		printf("%d\n", a->top->data);
-		a->top = a->top->next;
-	}
-
-	printf("-\na\n\n");
-	while (b->top)
-	{
-		printf("%d\n", b->top->data);
-		b->top = b->top->next;
-	}
-	printf("-\nb\n\n\n");
+	// printf("-\na\n\n");
+	// while (b->top)
+	// {
+	// 	printf("%d\n", b->top->data);
+	// 	b->top = b->top->next;
+	// }
+	// printf("-\nb\n\n\n");
 	return (0);
 }
