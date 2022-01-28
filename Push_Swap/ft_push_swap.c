@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/28 12:54:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/01/28 21:43:33 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_deq
 {
 	t_node	*top;
 	t_node	*bottom;
-	int		*arr;
+	int		arr[1000];
 	int		size;
 }	t_deq;
 
@@ -35,6 +35,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size);
 t_deq	*ft_init_deq(void)
 {
 	t_deq	*deq;
+	int		i;
 
 	deq = malloc(sizeof(t_deq));
 	if (!deq)
@@ -42,7 +43,12 @@ t_deq	*ft_init_deq(void)
 	deq->top = NULL;
 	deq->bottom = NULL;
 	deq->size = 0;
-	deq->arr = NULL;
+	i = 0;
+	while (i <= 1000)
+	{
+		deq->arr[i] = 0;
+		i++;
+	}
 	return (deq);
 }
 
@@ -245,21 +251,6 @@ void	ft_rrr(t_deq *a, t_deq *b)
 	ft_putstr_fd("rrr\n", 1);
 }
 
-int	ft_size_deq(t_deq *deq)
-{
-	t_node	*tmp;
-	int		i;
-
-	i = 0;
-	tmp = deq->top;
-	while (tmp)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	return (i);
-}
-
 int	ft_get_pivot(t_deq *a, int size)
 {
 	t_node	*tmp;
@@ -421,7 +412,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	i = -1;
 	while (++i < size)
 	{
-		if (b->top->data <= pivot)
+		if (b->top->data < pivot)
 		{
 			ft_rb(b);
 			b_size++;
@@ -439,46 +430,59 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	ft_b_to_a(a, b, b_size);
 }
 
-int	ft_strl(int *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-int	*ft_sjoin(int *s1)
+void	ft_sort_arr(t_deq *a, t_deq *b)
 {
 	int	i;
 	int	j;
-	int	*str;
+	int	tmp;
+	int	flag;
 
-	if (!s1)
-	{
-		s1 = malloc(1 * sizeof(int));
-		if (!s1)
-			return (NULL);
-		s1[0] = 1;
-	}
-	str = malloc(sizeof(int) * (ft_strl(s1) + 1));
-	if (str == NULL)
-		return (NULL);
+	flag = 0;
 	i = -1;
-	j = 0;
-	printf("__\n");
-	if (s1)
-		while (s1[++i] != '\0')
-			str[i] = s1[i];
-	str[i] = 1;
-	str[++i] = '\0';
-	free(s1);
-	s1 = NULL;
-	return (str);
+	tmp = 0;
+	while (++i < a->size)
+	{
+		j = 0;
+		while (j < a->size - i)
+		{
+			if (a->arr[j] > a->arr[j + 1])
+			{
+				flag = 1;
+				tmp = a->arr[j];
+				a->arr[j] = a->arr[j + 1];
+				a->arr[j + 1] = tmp;
+			}
+			j++;
+		}
+	}
+	if (flag == 0)
+		exit(0);
+	i = -1;
+	while (a->arr[++i])
+		b->arr[i] = a->arr[i];
+	b->arr[i] = '\0';
 }
 
-void	ft_get_arr(int ac, char **av, t_deq *a)
+void	ft_check_dup(t_deq *a)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < a->size)
+	{
+		j = i + 1;
+		while (j < a->size + 1)
+		{
+			if (a->arr[i] == a->arr[j])
+				exit(0);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	ft_get_arr(int ac, char **av, t_deq *a, t_deq *b)
 {
 	int			i;
 	int			j;
@@ -494,67 +498,77 @@ void	ft_get_arr(int ac, char **av, t_deq *a)
 		while (av[i][++j])
 		{
 			if (!ft_isdigit(av[i][j]) && av[i][j] != ' ' && av[i][j] != '-')
+			{
+				ft_putstr_fd("Error", 1);
 				exit(0);
+			}
 		}
 		arr = ft_split(av[i], ' ');
 		j = -1;
 		while (arr[++j])
 		{
-			a->arr = ft_sjoin(a->arr);
 			num = ft_atoi(arr[j]);
 			if (-2147483648 > num || num > 2147483647)
 				exit(0);
 			a->arr[k++] = num;
+			if (k == 1001)
+				exit(0);
 		}
+		j = -1;
+		while (arr[++j])
+			free(arr[j]);
+		free(arr);
 	}
+	a->size = k - 1; // 인덱스 0부터니까 하나 뺌
+	b->size = k - 1;
 	a->arr[k] = '\0';
 }
 
 int	main(int argc, char **argv)
 {
 	t_node	*node;
+	t_node	*tmp;
 	t_deq	*a;
 	t_deq	*b;
 	int		i;
-	// int		size;
 
 	if (argc <= 2) // 인자가 아무것도 안들어오고, 하나만 들어 왔을 때 예외처리
 		return (0);
 	a = ft_init_deq();
 	b = ft_init_deq();
-	ft_get_arr(argc, argv, a);
+	ft_get_arr(argc, argv, a, b);
 	i = -1;
-	while (a->arr[++i])
+	while (++i < a->size + 1) // data 값이 0 이면 탈출해 버리는 거 같다. a->arr[++i] 이거 교체.
 	{
 		node = ft_init_node(a->arr[i]);
 		ft_push_back(a, node);
 	}
+	ft_sort_arr(a, b);
+	ft_check_dup(a);
+	// 연습___________________________
+	ft_a_to_b(a, b, a->size + 1);
+	// test__________________________
+	
+	// ft_push_swap 부분
 	while (a->top)
 	{
 		printf("%d\n", a->top->data);
 		a->top = a->top->next;
 	}
 
-	// // 연습___________________________
-	// size = ft_size_deq(a);
-	// ft_a_to_b(a, b, size);
-
-
-	// // test__________________________
-	
-	// // ft_push_swap 부분
-	// while (a->top)
-	// {
-	// 	printf("%d\n", a->top->data);
-	// 	a->top = a->top->next;
-	// }
-
-	// printf("-\na\n\n");
-	// while (b->top)
-	// {
-	// 	printf("%d\n", b->top->data);
-	// 	b->top = b->top->next;
-	// }
-	// printf("-\nb\n\n\n");
+	printf("-\na\n\n");
+	while (b->top)
+	{
+		printf("%d\n", b->top->data);
+		b->top = b->top->next;
+	}
+	printf("-\nb\n\n\n");
+	while (a->top)
+	{
+		tmp = ft_pop_front(a);
+		free(tmp);
+	}
+	free(a);
+	free(b);
 	return (0);
 }

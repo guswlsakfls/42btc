@@ -5,7 +5,7 @@ ARG=""
 
 while [ $i -gt 0 ]
 do
-        random_num="$(($RANDOM% 100))"
+        random_num="$(($RANDOM% 20))"
         ARG="${ARG}$random_num "
         i=$(($i-1))
 done
