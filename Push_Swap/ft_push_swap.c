@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_push_swap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/27 23:38:09 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/01/28 12:54:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ typedef struct s_deq
 {
 	t_node	*top;
 	t_node	*bottom;
-	char 	*arr;
+	int		*arr;
 	int		size;
 }	t_deq;
 
@@ -439,72 +439,101 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	ft_b_to_a(a, b, b_size);
 }
 
-void	ft_get_arr(int ac, char **av, t_deq *a, t_deq *b)
+int	ft_strl(int *s)
 {
-	int		i;
-	int		j;
-	int		k;
-	char	*v;
-	char	**arr;
+	int	i;
 
-	a = b;
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+int	*ft_sjoin(int *s1)
+{
+	int	i;
+	int	j;
+	int	*str;
+
+	if (!s1)
+	{
+		s1 = malloc(1 * sizeof(int));
+		if (!s1)
+			return (NULL);
+		s1[0] = 1;
+	}
+	str = malloc(sizeof(int) * (ft_strl(s1) + 1));
+	if (str == NULL)
+		return (NULL);
+	i = -1;
+	j = 0;
+	printf("__\n");
+	if (s1)
+		while (s1[++i] != '\0')
+			str[i] = s1[i];
+	str[i] = 1;
+	str[++i] = '\0';
+	free(s1);
+	s1 = NULL;
+	return (str);
+}
+
+void	ft_get_arr(int ac, char **av, t_deq *a)
+{
+	int			i;
+	int			j;
+	int			k;
+	char		**arr;
+	long long	num;
+
 	i = 0;
 	k = 0;
-	v = " ";
 	while (++i < ac)
 	{
-		j = 0;
-		while (av[i][j])
+		j = -1;
+		while (av[i][++j])
 		{
-			if (!ft_isdigit(av[i][j]) && av[i][j] != ' ')
-				exit(1);
-			j++;
+			if (!ft_isdigit(av[i][j]) && av[i][j] != ' ' && av[i][j] != '-')
+				exit(0);
 		}
 		arr = ft_split(av[i], ' ');
-		j = 0;
-		while (arr[j])
+		j = -1;
+		while (arr[++j])
 		{
-			printf("arr : %s\n", arr[j]);
-			a->arr = ft_strjoin(a->arr, v);
-			a->arr[k] = ft_atoi(arr[j]);
-			printf("a->arr : %s\n", a->arr);
-			j++;
-			k++;
+			a->arr = ft_sjoin(a->arr);
+			num = ft_atoi(arr[j]);
+			if (-2147483648 > num || num > 2147483647)
+				exit(0);
+			a->arr[k++] = num;
 		}
 	}
+	a->arr[k] = '\0';
 }
 
 int	main(int argc, char **argv)
 {
-	// t_node	*node;
+	t_node	*node;
 	t_deq	*a;
 	t_deq	*b;
-	// int		data;
-	// int		i;
+	int		i;
 	// int		size;
 
 	if (argc <= 2) // 인자가 아무것도 안들어오고, 하나만 들어 왔을 때 예외처리
 		return (0);
-
-	// ft_ceate_deq(a, b)
 	a = ft_init_deq();
 	b = ft_init_deq();
-	ft_get_arr(argc, argv, a, b);
-	// i = 1;
-	// data = 0;
-	// while (i < argc)
-	// {
-	// 	data = ft_atoi(argv[i]);
-	// 	node = ft_init_node(data);
-	// 	ft_push_back(a, node);
-	// 	i++;
-	// }
-
-	// // while (a->top)
-	// // {
-	// // 	printf("%d\n", a->top->data);
-	// // 	a->top = a->top->next;
-	// // }
+	ft_get_arr(argc, argv, a);
+	i = -1;
+	while (a->arr[++i])
+	{
+		node = ft_init_node(a->arr[i]);
+		ft_push_back(a, node);
+	}
+	while (a->top)
+	{
+		printf("%d\n", a->top->data);
+		a->top = a->top->next;
+	}
 
 	// // 연습___________________________
 	// size = ft_size_deq(a);

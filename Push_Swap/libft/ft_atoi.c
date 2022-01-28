@@ -6,13 +6,13 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/22 20:55:34 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/03 18:33:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/01/28 11:42:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int	ft_check_over(unsigned long long sum, int sign)
+static long long	ft_check_over(unsigned long long sum, int sign)
 {
 	if (sum > 9223372036854775807 - 1 && sign == -1)
 		return (0);
@@ -26,7 +26,7 @@ static int	ft_issapce(char c)
 	return ((9 <= c && c <= 13) || c == ' ');
 }
 
-int	ft_atoi(const char *str)
+long long	ft_atoi(const char *str)
 {
 	size_t		i;
 	int			sign;
@@ -49,5 +49,5 @@ int	ft_atoi(const char *str)
 		i++;
 	}
 	res = ft_check_over(res, sign);
-	return ((int)res);
+	return (res);
 }
