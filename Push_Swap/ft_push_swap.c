@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_push_swap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/28 21:43:33 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/01/30 18:04:46 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,39 +251,6 @@ void	ft_rrr(t_deq *a, t_deq *b)
 	ft_putstr_fd("rrr\n", 1);
 }
 
-int	ft_get_pivot(t_deq *a, int size)
-{
-	t_node	*tmp;
-	int		pivot;
-	int		i;
-
-	tmp = a->top;
-	i = 1;
-	pivot = 0;
-	while (i < size / 2)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	pivot = tmp->data;
-	return (pivot);
-}
-
-int	ft_find_pivot(t_deq *a, int size)
-{
-	int		i;
-	t_node	*tmp;
-
-	tmp = a->top;
-	i = 1;
-	while (i < size / 2)
-	{
-		tmp = tmp->next;
-		i++;
-	}
-	return (tmp->data);
-}
-
 void	ft_sort_a_under_three(t_deq *deq, int size)
 {
 	if (size <= 1)
@@ -298,13 +265,18 @@ void	ft_sort_a_under_three(t_deq *deq, int size)
 	{
 		if (deq->top->data > deq->top->next->data && deq->top->data > deq->top->next->next->data)
 		{
+			ft_sa(deq);
 			ft_ra(deq);
+			ft_sa(deq);
+			ft_rra(deq);
 			if (deq->top->data > deq->top->next->data)
 				ft_sa(deq);
 			return ;
 		}
 		if (deq->top->next->data > deq->top->data && deq->top->next->data > deq->top->next->next->data)
 		{
+			ft_ra(deq);
+			ft_sa(deq);
 			ft_rra(deq);
 			if (deq->top->data > deq->top->next->data)
 				ft_sa(deq);
@@ -356,6 +328,8 @@ void	ft_sort_b_under_three(t_deq *a, t_deq *b, int size)
 	}
 }
 
+// int	ft_get_pivot(t_deq *a, int size)
+
 void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 {
 	int	pivot;
@@ -369,7 +343,7 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 		ft_sort_a_under_three(a, size);
 		return ;
 	}
-	pivot = ft_find_pivot(a, size);
+	pivot = a->arr[a->size - (size / 2)];
 	a_size = 0;
 	b_size = 0;
 	i = -1;
@@ -406,7 +380,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 		ft_sort_b_under_three(a, b, size);
 		return ;
 	}
-	pivot = ft_find_pivot(b, size);
+	pivot = b->arr[size / 2];
 	a_size = 0;
 	b_size = 0;
 	i = -1;
