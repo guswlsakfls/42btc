@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/30 18:04:46 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/02/04 22:35:49 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,6 +287,13 @@ void	ft_sort_a_under_three(t_deq *deq, int size)
 			if (deq->top->data > deq->top->next->data)
 				ft_sa(deq);
 			return ;
+		}
+	}
+	if (size == 5)
+	{
+		if (a->top->data > a->top->next->data && a->top->data > a->top->next->next->data && a->top->data > a->top->next->next->next->data)
+		{
+
 		}
 	}
 }
