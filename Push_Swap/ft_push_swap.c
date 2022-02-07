@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/04 22:35:49 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/02/07 18:46:58 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -251,51 +251,119 @@ void	ft_rrr(t_deq *a, t_deq *b)
 	ft_putstr_fd("rrr\n", 1);
 }
 
-void	ft_sort_a_under_three(t_deq *deq, int size)
+void	ft_sort_b_two(t_deq *a, t_deq *b)
+{
+	if (b->top->data < b->top->next->data)
+		ft_sb(b);
+	ft_pa(a, b);
+	ft_pa(a, b);
+}
+
+void ft_sort_a_three(t_deq *a)
+{
+	if (a->top->data > a->top->next->data && a->top->data > a->top->next->next->data)
+	{
+		ft_sa(a);
+		ft_ra(a);
+		ft_sa(a);
+		ft_rra(a);
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+	if (a->top->next->data > a->top->data && a->top->next->data > a->top->next->next->data)
+	{
+		ft_ra(a);
+		ft_sa(a);
+		ft_rra(a);
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+	if (a->top->next->next->data > a->top->data && a->top->next->next->data > a->top->next->data)
+	{
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+}
+
+int	*ft_bubble_sort(int *arr, int size)
+{
+	int	i;
+	int	j;
+	int	tmp;
+	int	flag;
+	
+	flag = 0;
+	i = 0;
+	tmp = 0;
+	while (++i < size)
+	{
+		j = -1;
+		while (++j < size - i)
+		{
+			if (arr[j] > arr[j + 1])
+			{
+				flag = 1;
+				tmp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = tmp;
+			}
+		}
+	}
+	if (flag == 0)
+		exit(0);
+	return (arr);
+}
+
+void ft_sort_five(t_deq *a, t_deq *b)
+{
+	t_node	*node;
+	int		*arr;
+	int		i;
+
+	arr = malloc(sizeof(int) * 5);
+	if (!arr)
+		return ;
+	node = a->top;
+	i = -1;
+	while (++i < 5)
+	{
+		arr[i] = node->data;
+		node = node->next;
+	}
+	arr = ft_bubble_sort(arr, 5);
+	i = -1;
+	while (++i < 5)
+	{
+		if (arr[2] > a->top->data)
+			ft_pb(a, b);
+		else
+			ft_ra(a);
+	}
+	free(arr);
+	ft_rra(a);
+	ft_rra(a);
+	ft_rra(a);
+	ft_sort_a_three(a);
+	ft_sort_b_two(a, b);
+}
+
+void	ft_sort_a_under_six(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
 		return ;
 	if (size == 2)
 	{
-		if (deq->top->data > deq->top->next->data)
-			ft_sa(deq);
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
 		return ;
 	}
 	if (size == 3)
-	{
-		if (deq->top->data > deq->top->next->data && deq->top->data > deq->top->next->next->data)
-		{
-			ft_sa(deq);
-			ft_ra(deq);
-			ft_sa(deq);
-			ft_rra(deq);
-			if (deq->top->data > deq->top->next->data)
-				ft_sa(deq);
-			return ;
-		}
-		if (deq->top->next->data > deq->top->data && deq->top->next->data > deq->top->next->next->data)
-		{
-			ft_ra(deq);
-			ft_sa(deq);
-			ft_rra(deq);
-			if (deq->top->data > deq->top->next->data)
-				ft_sa(deq);
-			return ;
-		}
-		if (deq->top->next->next->data > deq->top->data && deq->top->next->next->data > deq->top->next->data)
-		{
-			if (deq->top->data > deq->top->next->data)
-				ft_sa(deq);
-			return ;
-		}
-	}
+		ft_sort_a_three(a);
 	if (size == 5)
-	{
-		if (a->top->data > a->top->next->data && a->top->data > a->top->next->next->data && a->top->data > a->top->next->next->next->data)
-		{
-
-		}
-	}
+		ft_sort_five(a, b);
 }
 
 void	ft_sort_b_under_two(t_deq *a, t_deq *b)
@@ -306,7 +374,7 @@ void	ft_sort_b_under_two(t_deq *a, t_deq *b)
 	ft_pa(a, b);
 }
 
-void	ft_sort_b_under_three(t_deq *a, t_deq *b, int size)
+void	ft_sort_b_under_four(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
 	{
@@ -335,8 +403,6 @@ void	ft_sort_b_under_three(t_deq *a, t_deq *b, int size)
 	}
 }
 
-// int	ft_get_pivot(t_deq *a, int size)
-
 void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 {
 	int	pivot;
@@ -345,9 +411,9 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 	int	a_size;   // 구조체로 데리고 다니면 전역변수가 되서 스택을 이용할때 값이 꼬인다.
 	int	b_size;
 
-	if (size <= 3)
+	if (size <= 5 && size != 4)
 	{
-		ft_sort_a_under_three(a, size);
+		ft_sort_a_under_six(a, b, size);
 		return ;
 	}
 	pivot = a->arr[a->size - (size / 2)];
@@ -384,7 +450,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 
 	if (size <= 3)
 	{
-		ft_sort_b_under_three(a, b, size);
+		ft_sort_b_under_four(a, b, size);
 		return ;
 	}
 	pivot = b->arr[size / 2];
