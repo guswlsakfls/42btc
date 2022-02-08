@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_push_swap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/08 21:51:56 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/09 01:12:44 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -348,39 +348,6 @@ int	ft_sort_arr(int *arr, int size)
 	return (1);
 }
 
-void ft_sort_a_five(t_deq *a, t_deq *b)
-{
-	t_node	*node;
-	int		*arr;
-	int		i;
-
-	arr = malloc(sizeof(int) * 5);
-	if (!arr)
-		return ;
-	node = a->top;
-	i = -1;
-	while (++i < 5)
-	{
-		arr[i] = node->data;
-		node = node->next;
-	}
-	ft_sort_arr(arr, 5);
-	i = -1;
-	while (++i < 5)
-	{
-		if (arr[2] > a->top->data)
-			ft_pb(a, b);
-		else
-			ft_ra(a);
-	}
-	free(arr);
-	ft_rra(a);
-	ft_rra(a);
-	ft_rra(a);
-	ft_sort_a_three(a);
-	ft_sort_b_two(a, b);
-}
-
 void ft_ex_sort_a_five(t_deq *a, t_deq *b)
 {
 	t_node	*node;
@@ -411,7 +378,7 @@ void ft_ex_sort_a_five(t_deq *a, t_deq *b)
 	ft_sort_b_two(a, b);
 }
 
-void	ft_sort_a_under_six(t_deq *a, t_deq *b, int size)
+void	ft_sort_a_under_four(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
 		return ;
@@ -423,40 +390,6 @@ void	ft_sort_a_under_six(t_deq *a, t_deq *b, int size)
 	}
 	if (size == 3)
 		ft_sort_a_three(a);
-	if (size == 5)
-		ft_sort_a_five(a, b);
-}
-
-void	ft_sort_b_five(t_deq *a, t_deq *b)
-{
-	t_node	*node;
-	int		*arr;
-	int		i;
-
-	arr = malloc(sizeof(int) * 5);
-	if (!arr)
-		return ;
-	node = b->top;
-	i = -1;
-	while (++i < 5)
-	{
-		arr[i] = node->data;
-		node = node->next;
-	}
-	ft_sort_arr(arr, 5);
-	i = -1;
-	while (++i < 5)
-	{
-		if (arr[2] > a->top->data)
-			ft_rb(b);
-		else
-			ft_pa(a, b);
-	}
-	free(arr);
-	ft_sort_a_three(a);
-	ft_rra(b);
-	ft_rra(b);
-	ft_sort_b_two(a, b);
 }
 
 void	ft_sort_b_under_six(t_deq *a, t_deq *b, int size)
@@ -513,9 +446,9 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 	int	a_size;   // 구조체로 데리고 다니면 전역변수가 되서 스택을 이용할때 값이 꼬인다.
 	int	b_size;
 
-	if (size <= 5 && size != 4)
+	if (size < 4)
 	{
-		ft_sort_a_under_six(a, b, size);
+		ft_sort_a_under_four(a, b, size);
 		return ;
 	}
 	pivot = ft_get_pivot(a, size);
@@ -553,11 +486,6 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	if (size <= 3)
 	{
 		ft_sort_b_under_six(a, b, size);
-		return ;
-	}
-	if (size == 5)
-	{
-		ft_sort_b_five(a, b);
 		return ;
 	}
 	pivot = ft_get_pivot(b, size);
@@ -709,7 +637,7 @@ int	main(int argc, char **argv)
 	ft_a_to_b(a, b, a->size);
 	// test__________________________
 	
-	// // ft_push_swap 부분
+	// ft_push_swap 부분
 	// while (a->top)
 	// {
 	// 	printf("%d\n", a->top->data);
