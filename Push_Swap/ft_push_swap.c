@@ -3,16 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   ft_push_swap.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/07 18:46:58 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/02/08 21:51:56 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "libft/libft.h"
+
+void	ft_print_Error(void)
+{
+	write(1, "Error\n", 6);
+}
 
 typedef struct s_node
 {
@@ -31,6 +36,7 @@ typedef struct s_deq
 
 void	ft_a_to_b(t_deq *a, t_deq *b, int size);
 void	ft_b_to_a(t_deq *a, t_deq *b, int size);
+int	*ft_stack_to_arr(t_deq *deq, int size);
 
 t_deq	*ft_init_deq(void)
 {
@@ -288,13 +294,38 @@ void ft_sort_a_three(t_deq *a)
 	}
 }
 
-int	*ft_bubble_sort(int *arr, int size)
+void ft_ex_sort_a_three(t_deq *a)
+{
+	if (a->top->data > a->top->next->data && a->top->data > a->top->next->next->data)
+	{
+		ft_ra(a);
+		ft_sa(a);
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+	if (a->top->next->data > a->top->data && a->top->next->data > a->top->next->next->data)
+	{
+		ft_rra(a);
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+	if (a->top->next->next->data > a->top->data && a->top->next->next->data > a->top->next->data)
+	{
+		if (a->top->data > a->top->next->data)
+			ft_sa(a);
+		return ;
+	}
+}
+
+int	ft_sort_arr(int *arr, int size)
 {
 	int	i;
 	int	j;
 	int	tmp;
 	int	flag;
-	
+
 	flag = 0;
 	i = 0;
 	tmp = 0;
@@ -313,11 +344,11 @@ int	*ft_bubble_sort(int *arr, int size)
 		}
 	}
 	if (flag == 0)
-		exit(0);
-	return (arr);
+		return (0);
+	return (1);
 }
 
-void ft_sort_five(t_deq *a, t_deq *b)
+void ft_sort_a_five(t_deq *a, t_deq *b)
 {
 	t_node	*node;
 	int		*arr;
@@ -333,7 +364,7 @@ void ft_sort_five(t_deq *a, t_deq *b)
 		arr[i] = node->data;
 		node = node->next;
 	}
-	arr = ft_bubble_sort(arr, 5);
+	ft_sort_arr(arr, 5);
 	i = -1;
 	while (++i < 5)
 	{
@@ -350,6 +381,36 @@ void ft_sort_five(t_deq *a, t_deq *b)
 	ft_sort_b_two(a, b);
 }
 
+void ft_ex_sort_a_five(t_deq *a, t_deq *b)
+{
+	t_node	*node;
+	int		*arr;
+	int		i;
+
+	arr = malloc(sizeof(int) * 5);
+	if (!arr)
+		return ;
+	node = a->top;
+	i = -1;
+	while (++i < 5)
+	{
+		arr[i] = node->data;
+		node = node->next;
+	}
+	ft_sort_arr(arr, 5);
+	i = -1;
+	while (++i < 5)
+	{
+		if (arr[2] > a->top->data)
+			ft_pb(a, b);
+		else
+			ft_ra(a);
+	}
+	free(arr);
+	ft_ex_sort_a_three(a);
+	ft_sort_b_two(a, b);
+}
+
 void	ft_sort_a_under_six(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
@@ -363,18 +424,42 @@ void	ft_sort_a_under_six(t_deq *a, t_deq *b, int size)
 	if (size == 3)
 		ft_sort_a_three(a);
 	if (size == 5)
-		ft_sort_five(a, b);
+		ft_sort_a_five(a, b);
 }
 
-void	ft_sort_b_under_two(t_deq *a, t_deq *b)
+void	ft_sort_b_five(t_deq *a, t_deq *b)
 {
-	if (b->top->data < b->top->next->data)
-		ft_sb(b);
-	ft_pa(a, b);
-	ft_pa(a, b);
+	t_node	*node;
+	int		*arr;
+	int		i;
+
+	arr = malloc(sizeof(int) * 5);
+	if (!arr)
+		return ;
+	node = b->top;
+	i = -1;
+	while (++i < 5)
+	{
+		arr[i] = node->data;
+		node = node->next;
+	}
+	ft_sort_arr(arr, 5);
+	i = -1;
+	while (++i < 5)
+	{
+		if (arr[2] > a->top->data)
+			ft_rb(b);
+		else
+			ft_pa(a, b);
+	}
+	free(arr);
+	ft_sort_a_three(a);
+	ft_rra(b);
+	ft_rra(b);
+	ft_sort_b_two(a, b);
 }
 
-void	ft_sort_b_under_four(t_deq *a, t_deq *b, int size)
+void	ft_sort_b_under_six(t_deq *a, t_deq *b, int size)
 {
 	if (size <= 1)
 	{
@@ -383,24 +468,41 @@ void	ft_sort_b_under_four(t_deq *a, t_deq *b, int size)
 	}
 	if (size == 2)
 	{
-		ft_sort_b_under_two(a, b);
+		ft_sort_b_two(a, b);
 		return ;
 	}
-	if (b->top->next->data > b->top->data && b->top->next->data > b->top->next->next->data)
-		ft_sb(b);
-	if (b->top->data > b->top->next->data && b->top->data > b->top->next->next->data)
+	if (size == 3)
 	{
-		ft_pa(a, b);
-		ft_sort_b_under_two(a, b);
+		if (b->top->next->data > b->top->data && b->top->next->data > b->top->next->next->data)
+			ft_sb(b);
+		if (b->top->data > b->top->next->data && b->top->data > b->top->next->next->data)
+		{
+			ft_pa(a, b);
+			ft_sort_b_two(a, b);
+		}
+		else
+		{
+			ft_rb(b);
+			ft_sb(b);
+			ft_pa(a, b);
+			ft_rrb(b);
+			ft_sort_b_two(a, b);
+		}
 	}
-	else
-	{
-		ft_rb(b);
-		ft_sb(b);
-		ft_pa(a, b);
-		ft_rrb(b);
-		ft_sort_b_under_two(a, b);
-	}
+	// if (size == 5)
+	// 	ft_sort_b_five(a, b);
+}
+
+int	ft_get_pivot(t_deq *deq, int size)
+{
+	int	*arr;
+	int	pivot;
+
+	arr = ft_stack_to_arr(deq, size);
+	ft_sort_arr(arr, size);
+	pivot = arr[size / 2];
+	free(arr);
+	return (pivot);
 }
 
 void	ft_a_to_b(t_deq *a, t_deq *b, int size)
@@ -416,7 +518,7 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 		ft_sort_a_under_six(a, b, size);
 		return ;
 	}
-	pivot = a->arr[a->size - (size / 2)];
+	pivot = ft_get_pivot(a, size);
 	a_size = 0;
 	b_size = 0;
 	i = -1;
@@ -450,10 +552,15 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 
 	if (size <= 3)
 	{
-		ft_sort_b_under_four(a, b, size);
+		ft_sort_b_under_six(a, b, size);
 		return ;
 	}
-	pivot = b->arr[size / 2];
+	if (size == 5)
+	{
+		ft_sort_b_five(a, b);
+		return ;
+	}
+	pivot = ft_get_pivot(b, size);
 	a_size = 0;
 	b_size = 0;
 	i = -1;
@@ -477,51 +584,18 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	ft_b_to_a(a, b, b_size);
 }
 
-void	ft_sort_arr(t_deq *a, t_deq *b)
-{
-	int	i;
-	int	j;
-	int	tmp;
-	int	flag;
-
-	flag = 0;
-	i = -1;
-	tmp = 0;
-	while (++i < a->size)
-	{
-		j = 0;
-		while (j < a->size - i)
-		{
-			if (a->arr[j] > a->arr[j + 1])
-			{
-				flag = 1;
-				tmp = a->arr[j];
-				a->arr[j] = a->arr[j + 1];
-				a->arr[j + 1] = tmp;
-			}
-			j++;
-		}
-	}
-	if (flag == 0)
-		exit(0);
-	i = -1;
-	while (a->arr[++i])
-		b->arr[i] = a->arr[i];
-	b->arr[i] = '\0';
-}
-
-void	ft_check_dup(t_deq *a)
+void	ft_check_dup(int *arr, int size)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < a->size)
+	while (i < size - 1)
 	{
 		j = i + 1;
-		while (j < a->size + 1)
+		while (j < size)
 		{
-			if (a->arr[i] == a->arr[j])
+			if (arr[i] == arr[j])
 				exit(0);
 			j++;
 		}
@@ -529,24 +603,34 @@ void	ft_check_dup(t_deq *a)
 	}
 }
 
-void	ft_get_arr(int ac, char **av, t_deq *a, t_deq *b)
+int	ft_check_not_digit(char **arr, int i, int j)
+{
+	if (arr[i][j] != ' ' && arr[i][j] != '+' && arr[i][j] != '-')
+		return (1);
+	if (arr[i][j] == '-' && !ft_isdigit(arr[i][j + 1]))
+		return (1);
+	if (arr[i][j] == '+' && !ft_isdigit(arr[i][j + 1]))
+		return (1);
+	return (0);
+}
+
+void	ft_get_stack_a(int ac, char **av, t_deq *a)
 {
 	int			i;
 	int			j;
-	int			k;
 	char		**arr;
 	long long	num;
+	t_node		*node;
 
 	i = 0;
-	k = 0;
 	while (++i < ac)
 	{
 		j = -1;
 		while (av[i][++j])
 		{
-			if (!ft_isdigit(av[i][j]) && av[i][j] != ' ' && av[i][j] != '-')
+			if (!ft_isdigit(av[i][j]) && ft_check_not_digit(av, i, j))
 			{
-				ft_putstr_fd("Error", 1);
+				ft_print_Error();
 				exit(0);
 			}
 		}
@@ -556,64 +640,95 @@ void	ft_get_arr(int ac, char **av, t_deq *a, t_deq *b)
 		{
 			num = ft_atoi(arr[j]);
 			if (-2147483648 > num || num > 2147483647)
+			{
+				ft_print_Error();
 				exit(0);
-			a->arr[k++] = num;
-			if (k == 1001)
-				exit(0);
+			}
+			node = ft_init_node(num);
+			a->size++;
+			ft_push_back(a, node);
 		}
 		j = -1;
 		while (arr[++j])
 			free(arr[j]);
 		free(arr);
 	}
-	a->size = k - 1; // 인덱스 0부터니까 하나 뺌
-	b->size = k - 1;
-	a->arr[k] = '\0';
+}
+
+int	*ft_stack_to_arr(t_deq *deq, int size)
+{
+	int		*arr;
+	t_node	*node;
+	int		i;
+
+	arr = malloc(sizeof(int) * size);
+	if (!arr)
+		return (NULL);
+	i = 0;
+	node = deq->top;
+	while (i < size)
+	{
+		arr[i] = node->data;
+		node = node->next;
+		i++;
+	}
+	return (arr);
 }
 
 int	main(int argc, char **argv)
 {
 	t_node	*node;
-	t_node	*tmp;
 	t_deq	*a;
 	t_deq	*b;
-	int		i;
+	int		*arr;
 
 	if (argc <= 2) // 인자가 아무것도 안들어오고, 하나만 들어 왔을 때 예외처리
+	{
+		ft_print_Error();
 		return (0);
+	}
 	a = ft_init_deq();
 	b = ft_init_deq();
-	ft_get_arr(argc, argv, a, b);
-	i = -1;
-	while (++i < a->size + 1) // data 값이 0 이면 탈출해 버리는 거 같다. a->arr[++i] 이거 교체.
+	ft_get_stack_a(argc, argv, a);
+	arr = ft_stack_to_arr(a, a->size);
+	if (!ft_sort_arr(arr, a->size))
+		exit(0);
+	ft_check_dup(arr, a->size);
+	free(arr);
+	if (a->size == 3)
 	{
-		node = ft_init_node(a->arr[i]);
-		ft_push_back(a, node);
+		ft_ex_sort_a_three(a);
+		return (0);
 	}
-	ft_sort_arr(a, b);
-	ft_check_dup(a);
+	if (a->size == 5)
+	{
+		ft_ex_sort_a_five(a, b);
+		return (0);
+	}
 	// 연습___________________________
-	ft_a_to_b(a, b, a->size + 1);
+	ft_a_to_b(a, b, a->size);
 	// test__________________________
 	
-	// ft_push_swap 부분
-	while (a->top)
-	{
-		printf("%d\n", a->top->data);
-		a->top = a->top->next;
-	}
+	// // ft_push_swap 부분
+	// while (a->top)
+	// {
+	// 	printf("%d\n", a->top->data);
+	// 	a->top = a->top->next;
+	// }
 
-	printf("-\na\n\n");
-	while (b->top)
-	{
-		printf("%d\n", b->top->data);
-		b->top = b->top->next;
-	}
-	printf("-\nb\n\n\n");
+	// printf("-\na\n\n");
+	// while (b->top)
+	// {
+	// 	printf("%d\n", b->top->data);
+	// 	b->top = b->top->next;
+	// }
+	// printf("-\nb\n\n\n");
+
+
 	while (a->top)
 	{
-		tmp = ft_pop_front(a);
-		free(tmp);
+		node = ft_pop_front(a);
+		free(node);
 	}
 	free(a);
 	free(b);

@@ -5,7 +5,7 @@ ARG=""
 
 while [ $i -gt 0 ]
 do
-        random_num="$(($RANDOM% 20))"
+        random_num="$(($RANDOM% 2147483647))"
         ARG="${ARG}$random_num "
         i=$(($i-1))
 done
@@ -17,4 +17,4 @@ echo "Arguments : $ARG"
 echo "========================"
 ./push_swap $ARG
 
-# ./push_swap $ARG
+./push_swap $ARG | ./checker_Mac $ARG
