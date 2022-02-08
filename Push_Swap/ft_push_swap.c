@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/18 17:57:05 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/09 01:12:44 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/02/09 01:19:03 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_deq
 	t_node	*bottom;
 	int		arr[1000];
 	int		size;
+	int		flag;
 }	t_deq;
 
 void	ft_a_to_b(t_deq *a, t_deq *b, int size);
@@ -49,6 +50,7 @@ t_deq	*ft_init_deq(void)
 	deq->top = NULL;
 	deq->bottom = NULL;
 	deq->size = 0;
+	deq->flag = 0;
 	i = 0;
 	while (i <= 1000)
 	{
@@ -378,7 +380,7 @@ void ft_ex_sort_a_five(t_deq *a, t_deq *b)
 	ft_sort_b_two(a, b);
 }
 
-void	ft_sort_a_under_four(t_deq *a, t_deq *b, int size)
+void	ft_sort_a_under_four(t_deq *a, int size)
 {
 	if (size <= 1)
 		return ;
@@ -448,7 +450,7 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 
 	if (size < 4)
 	{
-		ft_sort_a_under_four(a, b, size);
+		ft_sort_a_under_four(a, size);
 		return ;
 	}
 	pivot = ft_get_pivot(a, size);
@@ -469,7 +471,7 @@ void	ft_a_to_b(t_deq *a, t_deq *b, int size)
 		}
 	}
 	rra = a_size;
-	while (--rra >= 0 && a->top->next) // 노드가 2개 이상일때만 이거는 나중에 초기 예외처리에서 제외될듯
+	while (--rra >= 0 && a->top->next && a->flag == 1) // 노드가 2개 이상일때만 이거는 나중에 초기 예외처리에서 제외될듯
 		ft_rra(a);
 	ft_a_to_b(a, b, a_size);
 	ft_b_to_a(a, b, b_size);
@@ -483,6 +485,7 @@ void	ft_b_to_a(t_deq *a, t_deq *b, int size)
 	int	a_size;   // 구조체로 데리고 다니면 전역변수가 되서 스택을 이용할때 값이 꼬인다.
 	int	b_size;
 
+	a->flag = 1;
 	if (size <= 3)
 	{
 		ft_sort_b_under_six(a, b, size);
