@@ -1,0 +1,530 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+# GNU Make 3.81
+# Copyright (C) 2006  Free Software Foundation, Inc.
+# This is free software; see the source for copying conditions.
+# There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# This program built for i386-apple-darwin11.3.0
+ 
+
+# Make data base, printed on Wed Feb  9 19:35:20 2022
+
+# Variables
+
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# automatic
+?F = $(notdir $?)
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# automatic
+@F = $(notdir $@)
+# makefile
+CURDIR := /Users/hyujo/Desktop/42btc/push_swap
+# makefile
+SHELL = /bin/sh
+# makefile (from `Makefile', line 17)
+RM = rm -f
+ 
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# environment
+_ = /usr/bin/make
+# makefile (from `Makefile', line 15)
+CFLAGS = -Wall -Wextra -Werror
+# makefile (from `Makefile', line 1)
+MAKEFILE_LIST :=  Makefile
+# makefile (from `Makefile', line 19)
+LIB_DIR = ./libft
+# environment
+VSCODE_NODE_CACHED_DATA_DIR = /Users/hyujo/Library/Application Support/Code/CachedData/6ab598523be7a800d7f3eb4d92d7ab9a66069390
+# environment
+VERBOSE_LOGGING = true
+# environment
+VSCODE_LOGS = /Users/hyujo/Library/Application Support/Code/logs/20220209T161805
+# makefile (from `Makefile', line 34)
+OBJS = $(SRCS:.c=.o)
+# environment
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/zz/zyxvpxvq6csfxvn_n000cmy400357j/T/vscode-ipc-70b03baa-d1e7-4bef-a521-7105866e3df4.sock
+# environment
+PATH = /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki
+# environment
+LaunchInstanceID = 575AAFF6-497D-4F36-8CA8-42E0C3D1D267
+# makefile (from `Makefile', line 16)
+AR = ar -rcs
+# environment
+VSCODE_LOG_STACK = false
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# default
+.FEATURES := target-specific order-only second-expansion else-if archives jobserver check-symlink
+# environment
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.dy3IP0d2UG/Listeners
+# automatic
+%F = $(notdir $%)
+# environment
+PWD = /Users/hyujo/Desktop/42btc/push_swap
+# environment
+HOME = /Users/hyujo
+# default
+MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
+# environment
+LOGNAME = hyujo
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# environment
+XPC_FLAGS = 0x0
+# default
+MAKE = $(MAKE_COMMAND)
+# default
+MAKECMDGOALS := all
+# makefile (from `Makefile', line 21)
+SRCS = push_swap.c ft_a_opt.c ft_b_opt.c ft_arr.c ft_ab_to.c ft_commands_1.c ft_commands_2.c ft_commands_3.c ft_deq.c ft_init.c ft_utils.c ft_get_stack_a.c
+# environment
+SHLVL = 1
+# makefile (from `Makefile', line 14)
+CC = gcc
+# default
+MAKE_VERSION := 3.81
+# environment
+AMD_ENTRYPOINT = vs/workbench/services/extensions/node/extensionHostProcess
+# environment
+USER = hyujo
+# makefile
+.DEFAULT_GOAL := push_swap.a
+# makefile (from `Makefile', line 13)
+NAME = push_swap.a
+# environment
+PIPE_LOGGING = true
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# default
+MAKE_COMMAND := /Applications/Xcode.app/Contents/Developer/usr/bin/make
+# default
+.VARIABLES := 
+# environment
+TMPDIR = /var/folders/zz/zyxvpxvq6csfxvn_n000cmy400357j/T/
+# automatic
+*F = $(notdir $*)
+# environment
+VSCODE_IPC_HOOK = /Users/hyujo/Library/Application Support/Code/1.39.2-main.sock
+# makefile
+MAKEFLAGS = Rrqp
+# environment
+MFLAGS = -Rrqp
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+MAIL = hyujo@student.42seoul.kr
+# environment
+XPC_SERVICE_NAME = com.apple.xpc.launchd.oneshot.0x1000000a.Electron
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# automatic
++F = $(notdir $+)
+# environment
+__CF_USER_TEXT_ENCODING = 0x194F1:0x0:0x0
+# environment
+COMMAND_MODE = unix2003
+# default
+MAKEFILES := 
+# automatic
+<F = $(notdir $<)
+# environment
+LC_ALL = C
+# environment
+SECURITYSESSIONID = 186d7
+# automatic
+^F = $(notdir $^)
+# default
+SUFFIXES := 
+# default
+.INCLUDE_DIRS = /usr/local/include
+# environment
+MAKELEVEL := 0
+# environment
+LANG = C
+# environment
+VSCODE_PID = 16455
+# variable set hash-table stats:
+# Load=70/1024=7%, Rehash=0, Collisions=4/98=4%
+
+ 
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 16777225, inode 3171393): 36 files, no impossibilities.
+
+# 36 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+%o: %c
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# 1 implicit rules, 0 (0.0%) terminal.
+
+# Files
+
+# Not a target:
+ft_arr.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 15:17:33
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+push_swap.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 18:06:35
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+ft_get_stack_a.o: ft_get_stack_a.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_get_stack_a.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# Not a target:
+ft_a_opt.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 18:34:00
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+ft_ab_to.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 17:31:27
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+all: push_swap.a
+#  Phony target (prerequisite of .PHONY).
+#  Command-line target.
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+.PHONY: all clean fclean re
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ft_init.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 15:57:41
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+ft_commands_3.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 14:33:33
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+.SUFFIXES:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+ft_b_opt.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 18:29:20
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 19:35:14
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+ft_commands_1.o: ft_commands_1.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_commands_1.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# Not a target:
+ft_get_stack_a.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 16:00:46
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+bonus: all
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+fclean: clean
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 54):
+	$(RM) $(NAME)
+	$(MAKE) -C $(LIB_DIR) fclean
+	
+
+ft_deq.o: ft_deq.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_deq.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+ft_commands_2.o: ft_commands_2.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_commands_2.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+re: fclean all
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+
+clean:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 50):
+	$(RM) $(OBJS)
+	$(MAKE) -C $(LIB_DIR) clean
+	
+
+# Not a target:
+ft_commands_1.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 14:32:13
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+ft_arr.o: ft_arr.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_arr.'
+#  Last modified 2022-02-09 18:34:03
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+push_swap.o: push_swap.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `push_swap.'
+#  Last modified 2022-02-09 18:34:03
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+ft_a_opt.o: ft_a_opt.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_a_opt.'
+#  Last modified 2022-02-09 18:34:03
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+ft_ab_to.o: ft_ab_to.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_ab_to.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+push_swap.a: push_swap.o ft_a_opt.o ft_b_opt.o ft_arr.o ft_ab_to.o ft_commands_1.o ft_commands_2.o ft_commands_3.o ft_deq.o ft_init.o ft_utils.o ft_get_stack_a.o
+#  Implicit rule search has not been done.
+#  Last modified 2022-02-09 18:34:05
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 40):
+	$(MAKE) all -C $(LIB_DIR)
+	cp $(LIB_DIR)/libft.a $@
+	$(AR) $@ $^
+	$(CC) $@ -o push_swap
+	
+
+ft_init.o: ft_init.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_init.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# Not a target:
+ft_deq.c:
+ 
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 14:52:06
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+# Not a target:
+ft_commands_2.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 14:33:19
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+ft_commands_3.o: ft_commands_3.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_commands_3.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+ft_b_opt.o: ft_b_opt.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_b_opt.'
+#  Last modified 2022-02-09 18:34:03
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# Not a target:
+ft_utils.c:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-09 15:19:10
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+
+ft_utils.o: ft_utils.c
+#  Implicit rule search has been done.
+#  Implicit/static pattern stem: `ft_utils.'
+#  Last modified 2022-02-09 18:34:04
+#  File has been updated.
+#  Successfully updated.
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+#  commands to execute (from `Makefile', line 37):
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	
+
+# files hash-table stats:
+# Load=34/1024=3%, Rehash=0, Collisions=5/104=5%
+# VPATH Search Paths
+
+# No `vpath' search paths.
+
+# No general (`VPATH' variable) search path.
+
+# # of strings in strcache: 1
+# # of strcache buffers: 1
+# strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
+# strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
+
+# Finished Make data base on Wed Feb  9 19:35:20 2022
+
+ 

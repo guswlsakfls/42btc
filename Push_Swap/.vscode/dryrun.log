@@ -1,0 +1,5 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory `/Users/hyujo/Desktop/42btc/push_swap'
+make: `push_swap.a' is up to date.
+make: Leaving directory `/Users/hyujo/Desktop/42btc/push_swap'
+ 
