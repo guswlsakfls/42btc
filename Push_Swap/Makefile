@@ -7,7 +7,18 @@ RM = rm -f
 
 LIB_DIR = ./libft
 
-SRCS = ft_push_swap.c
+SRCS = push_swap.c \
+		ft_a_opt.c \
+		ft_b_opt.c \
+		ft_arr.c \
+		ft_ab_to.c \
+		ft_commands_1.c \
+		ft_commands_2.c \
+		ft_commands_3.c \
+		ft_deq.c \
+		ft_init.c \
+		ft_utils.c \
+		ft_get_stack_a.c
 
 OBJS = $(SRCS:.c=.o)
 
