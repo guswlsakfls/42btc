@@ -1,0 +1,8 @@
+first file...
+total 128
+drwxr-xr-x   6 hyujo  2021_seoul    204 Feb 11 16:42 .
+drwxr-xr-x  10 hyujo  2021_seoul    340 Feb 10 18:43 ..
+-rwxr-xr-x   1 hyujo  2021_seoul  49424 Feb 10 19:04 a.out
+-rw-r--r--   1 hyujo  2021_seoul     14 Feb 11 17:50 file1
+-rw-r--r--   1 hyujo  2021_seoul      9 Feb 11 16:42 file2
+-rw-r--r--   1 hyujo  2021_seoul    136 Feb 10 19:04 pipex.c
