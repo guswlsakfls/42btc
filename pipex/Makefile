@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/02/11 18:03:28 by hyujo            ###   ########.fr        #
+#    Updated: 2022/02/12 11:47:58 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,7 +29,7 @@ $(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
-	$(CC) $@
+	$(CC) $@ -o pipex
 
 all: $(NAME)
 
