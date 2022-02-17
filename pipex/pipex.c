@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 18:00:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/16 18:17:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/17 11:46:03 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ int	main(int ac, char **av, char **envp)
 	char	*path;
 
 	i = 0;
-	if (ac < 5)
+	if (ac != 5)
 		ft_print_error(7);
 	if (pipe(pipe_fd) < 0)
 		ft_print_error(0);

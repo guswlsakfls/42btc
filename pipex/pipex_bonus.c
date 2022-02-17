@@ -6,12 +6,37 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/16 19:00:53 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/16 19:00:54 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/17 19:34:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_pipex.h"
+#include "ft_pipex_bonus.h"
 #include <stdio.h>
+
+int	ft_get_next_line(char **line)
+{
+	char	save[999999];
+	char	buff[1];
+	int		i;
+
+	i = -1;
+	save[i] = '\0';
+	while (read(0, buff, 1) == 1)
+	{
+		save[++i] = buff[0];
+		save[i + 1] = '\0';
+		if (save[i] == '\n')
+			break ;
+	}
+	if (save[0] == '\0')
+		return (0);
+	(*line) = malloc(i + 1);
+	i = -1;
+	while (save[++i])
+		(*line)[i] = save[i];
+	(*line)[i] = '\0';
+	return (1);
+}
 
 void	ft_print_error(int num)
 {
@@ -90,64 +115,99 @@ char	*ft_get_path(char *cmd, char **envp)
 	return (0);
 }
 
+void	ft_execute(char *av, char **envp)
+{
+	char	**cmds;
+	char	*path;
+	int		i;
+
+	i = 0;
+	cmds = ft_split(av, ' ');
+	path = ft_get_path(cmds[0], envp);
+	if (!path)
+	{
+		ft_free(cmds);
+		ft_print_error(3);
+	}
+	if (execve(path, cmds, envp) < 0)
+		ft_print_error(4);
+}
+
+void	ft_child_process(char	*av, char **envp)
+{
+	pid_t	pid;
+	int		pipe_fd[2];
+
+	if (pipe(pipe_fd) < 0)
+		ft_print_error(0);
+	pid = fork();
+	if (pid < 0)
+		ft_print_error(1);
+	if (pid > 0)
+	{
+		dup2(pipe_fd[0], STDIN_FILENO);
+		close(pipe_fd[1]);
+		waitpid(pid, NULL, 0);
+	}
+	else
+	{
+		dup2(pipe_fd[1], STDOUT_FILENO);
+		close(pipe_fd[0]);
+		ft_execute(av, envp);
+	}
+}
+
 int	main(int ac, char **av, char **envp)
 {
 	int		i;
 	int		pipe_fd[2];
 	int		file_fd[2];
-	char	**cmds;
 	pid_t	pid1;
-	char	*path;
+	char	*line;
+	char	buf[10000];
 
 	i = 0;
 	if (ac < 5)
 		ft_print_error(7);
-	if (pipe(pipe_fd) < 0)
-		ft_print_error(0);
-	pid1 = fork();
-	if (pid1 < 0)
-		ft_print_error(1);
-	if (pid1 > 0)
+	if (ft_strncmp(av[1], "here_doc", 8) == 0)
 	{
-		if (waitpid(pid1, NULL, WNOHANG) < 0)
-			ft_print_error(5);
-		file_fd[1] = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-		if (file_fd[1] < 0)
-			ft_print_error(6);
-		dup2(file_fd[1], STDOUT_FILENO);
-		dup2(pipe_fd[WRITE], STDIN_FILENO);
-		close(pipe_fd[READ]);
-		cmds = ft_split(av[3], ' ');
-		path = ft_get_path(cmds[0], envp);
-		if (ft_check_slash(cmds[0]) == 0 && path == 0)
-			ft_print_error(3);
-		else if (path == 0)
+		if (ac != 6)
+			ft_print_error(7);
+		i = 3;
+		file_fd[1] = open(av[5], O_WRONLY | O_CREAT | O_APPEND, 0777);
+		if (pipe(pipe_fd) < 0)
+			ft_print_error(0);
+		pid1 = fork();
+		if (pid1 < 0)
+			ft_print_error(1);
+		if (pid1 > 0)
 		{
-			free(path);
-			path = cmds[0];
+			dup2(pipe_fd[0], STDIN_FILENO);
+			close(pipe_fd[1]);
+			waitpid(pid1, NULL, 0);
 		}
-		if (execve(path, cmds, envp) < 0)
-			ft_print_error(4);
+		else
+		{
+			close(pipe_fd[0]);
+			while (ft_get_next_line(&line))
+			{
+				if (ft_strncmp(line, av[2], ft_strlen(av[2])) == 0)
+					exit(0);
+				write(pipe_fd[1], line, ft_strlen(line));
+				read(pipe_fd[1], buf, 1024);
+				fprintf(stderr, "pipe_fd[1] : %s\n", buf);
+			}
+		}
 	}
-	else if (pid1 == 0)
+	else
 	{
-		file_fd[0] = open(av[1], O_RDONLY);
-		if (file_fd[0] < 0)
-			ft_print_error(2);
+		i = 2;
+		file_fd[1] = open(av[ac - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		file_fd[0] = open(av[1], O_RDONLY, 0777);
 		dup2(file_fd[0], STDIN_FILENO);
-		dup2(pipe_fd[READ], STDOUT_FILENO);
-		close(pipe_fd[WRITE]);
-		cmds = ft_split(av[2], ' ');
-		path = ft_get_path(cmds[0], envp);
-		if (ft_check_slash(cmds[0]) == 0 && path == 0)
-			ft_print_error(3);
-		else if (path == 0)
-		{
-			free(path);
-			path = cmds[0];
-		}
-		if (execve(path, cmds, envp) < 0)
-			ft_print_error(4);
 	}
-	return (0);
+	while (i < ac - 2)
+		ft_child_process(av[++i], envp);
+	dup2(file_fd[1], STDOUT_FILENO);
+	ft_execute(av[ac - 2], envp);
 }
