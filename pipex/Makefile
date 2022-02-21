@@ -6,21 +6,21 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/02/17 13:33:51 by hyujo            ###   ########.fr        #
+#    Updated: 2022/02/21 15:18:36 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 AR = ar -rcs
 RM = rm -f
 
 LIB_DIR = ./libft
 
-SRCS = pipex.c
+SRCS = pipex.c ft_pipex_utils.c
 
-BONUS = pipex_bonus.c
+BONUS = pipex_bonus.c ft_pipex_utils_bonus.c
 
 OBJS = $(SRCS:.c=.o)
 OBJS_BONUS = $(BONUS:.c=.o)
