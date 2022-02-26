@@ -6,40 +6,39 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/02/22 18:05:48 by hyujo            ###   ########.fr        #
+#    Updated: 2022/02/26 17:54:40 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = so_long.a
+NAME = so_long
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-AR = ar -rcs
+CLIB = -Lmlx -lmlx -framework OpenGL -framework Appkit -Imlx -g
+# AR = ar -rcs
 RM = rm -f
 
-LIB_DIR = ./libft
-
-SRCS = so_long.c
+SRCS = so_long.c \
+		get_next_line.c \
+		get_next_line_utils.c \
+		ft_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
 %o: %c
-	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o)
 
-$(NAME): $(OBJ_FILES)
-	$(MAKE) all -C $(LIB_DIR)
-	cp $(LIB_DIR)/libft.a $@
-	$(AR) $@ $^
-	$(CC) $@ -o so_long
+$(NAME): $(OBJS)
+	# $(AR) $@ $^
+	$(CC) $(CLIB) $(CLIB) $(SRCS) -o $@
 
 all: $(NAME)
 
 clean:
-	$(RM) $(OBJS) $(OBJS_BONUS)
-	$(MAKE) -C $(LIB_DIR) clean
+	$(RM) $(OBJS)
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIB_DIR) fclean
+	$(RM) so_long.a
 
 re: fclean all
 
