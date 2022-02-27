@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/26 17:33:04 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/27 15:53:18 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,20 @@
 # include <stdio.h>
 
 # define BUFFER_SIZE 1
-# define GROUND "./textures/wall_s.xpm"
+# define WALL "./textures/wall_s.xpm"
+# define COLLECT "./textures/Coin.xpm"
+# define EXIT "./textures/wall_e.xpm"
+# define PLAYER "./textures/PacMan.xpm"
+# define GROUND "./textures/wall_n.xpm"
+
+# define KEY_ESC 53
+
+# define KEY_W 13
+# define KEY_A 0
+# define KEY_S 1
+# define KEY_D 2
+
+# define END 1
 
 typedef struct s_list
 {
@@ -56,11 +69,10 @@ typedef struct s_vars {
 typedef struct s_sprites
 {
 	void	*wall;
-	void	*ground;
 	void	*collect;
 	void	*exit;
-	void	**enemies;
-	void	**player;
+	void	*player;
+	void	*ground;
 	int		img_width;
 	int		img_height;
 }			t_sprites;
@@ -68,15 +80,15 @@ typedef struct s_sprites
 typedef struct s_coin
 {
 	int		amount;
-	int		amount_get;
 }			t_coin;
 
 typedef struct s_player
 {
-	int		player_left;
-	int		player_right;
-	int		player_up;
-	int		player_down;
+	int	player_left;
+	int	player_right;
+	int	player_up;
+	int	player_down;
+	int	player_move;
 }			t_player;
 
 //이미지의 정보를 나타내는 변수를 저장한 구조체
@@ -87,6 +99,7 @@ typedef struct s_game
 	t_player	*player;
 	t_coin		*coin;
 	t_sprites	*sprite;
+	int			flag;
 }	t_game;
 
 char	*get_next_line(int fd);
