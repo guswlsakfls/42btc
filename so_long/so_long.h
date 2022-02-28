@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/27 15:53:18 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/28 14:52:13 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,12 @@
 # define WALL "./textures/wall_s.xpm"
 # define COLLECT "./textures/Coin.xpm"
 # define EXIT "./textures/wall_e.xpm"
-# define PLAYER "./textures/PacMan.xpm"
 # define GROUND "./textures/wall_n.xpm"
+
+# define PLAYERRIGHT "./textures/PacManRight.xpm"
+# define PLAYERLEFT "./textures/PacManLeft.xpm"
+# define PLAYERUP "./textures/PacManUp.xpm"
+# define PLAYERDOWN "./textures/PacManDown.xpm"
 
 # define KEY_ESC 53
 

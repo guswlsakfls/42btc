@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/27 15:56:12 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/02/28 18:55:59 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,7 @@ void	ft_put_img(t_game *game, void *sprite)
 
 void	ft_select_sprite(char sp_num, t_game *game)
 {
-	if (sp_num == '1')
-		ft_put_img(game, game->sprite->wall);
-	if (sp_num == '0')
-		ft_put_img(game, game->sprite->ground);
-	else if (sp_num == 'C')
+	if (sp_num == 'C')
 	{
 		game->coin->amount++;
 		ft_put_img(game, game->sprite->collect);
@@ -67,7 +63,7 @@ void	ft_init_sprite(t_vars *vars, t_sprites *sprite)
 	sprite->wall = ft_init_img(WALL, vars->mlx, sprite);
 	sprite->collect = ft_init_img(COLLECT, vars->mlx, sprite);
 	sprite->exit = ft_init_img(EXIT, vars->mlx, sprite);
-	sprite->player = ft_init_img(PLAYER, vars->mlx, sprite);
+	sprite->player = ft_init_img(PLAYERRIGHT, vars->mlx, sprite);
 	sprite->ground = ft_init_img(GROUND, vars->mlx, sprite);
 }
 
@@ -80,8 +76,15 @@ int	ft_print_map(t_game *game)
 		game->map->col = 0;
 		while (game->map->col < game->map->width)
 		{
-			ft_select_sprite(game->map->map[game->map->row
-				* game->map->width + game->map->col], game);
+			if (game->map->map[game->map->row
+					* game->map->width + game->map->col] == '1')
+				ft_put_img(game, game->sprite->wall);
+			else
+			{
+				ft_put_img(game, game->sprite->ground);
+				ft_select_sprite(game->map->map[game->map->row
+					* game->map->width + game->map->col], game);
+			}
 			game->map->col++;
 		}
 		game->map->row++;
@@ -165,8 +168,8 @@ void	ft_move_bottom(t_game *game)
 		game->player->player_move += 1;
 		printf("player_move : %d\n", game->player->player_move);
 	}
-	// mlx_destroy_image(game->vars->mlx, game->sprite->player);
-	// game->sprite->player = ft_init_img(PLAYER, game->vars->mlx, game->sprite);
+	mlx_destroy_image(game->vars->mlx, game->sprite->player);
+	game->sprite->player = ft_init_img(PLAYERDOWN, game->vars->mlx, game->sprite);
 }
 
 void	ft_move_up(t_game *game)
@@ -192,8 +195,8 @@ void	ft_move_up(t_game *game)
 		game->player->player_move += 1;
 		printf("player_move : %d\n", game->player->player_move);
 	}
-	// mlx_destroy_image(game->vars->mlx, game->sprite->player);
-	// game->sprite->player = ft_init_img(PLAYER, game->vars->mlx, game->sprite);
+	mlx_destroy_image(game->vars->mlx, game->sprite->player);
+	game->sprite->player = ft_init_img(PLAYERUP, game->vars->mlx, game->sprite);
 }
 
 void	ft_move_right(t_game *game)
@@ -213,8 +216,8 @@ void	ft_move_right(t_game *game)
 		game->player->player_move += 1;
 		printf("player_move : %d\n", game->player->player_move);
 	}
-	// mlx_destroy_image(game->vars->mlx, game->sprite->player);
-	// game->sprite->player = ft_init_img(PLAYER, game->vars->mlx, game->sprite);
+	mlx_destroy_image(game->vars->mlx, game->sprite->player);
+	game->sprite->player = ft_init_img(PLAYERRIGHT, game->vars->mlx, game->sprite);
 }
 
 void	ft_move_left(t_game *game)
@@ -234,15 +237,15 @@ void	ft_move_left(t_game *game)
 		game->player->player_move += 1;
 		printf("player_move : %d\n", game->player->player_move);
 	}
-	// mlx_destroy_image(game->vars->mlx, game->sprite->player);
-	// game->sprite->player = ft_init_img(PLAYER, game->vars->mlx, game->sprite);
+	mlx_destroy_image(game->vars->mlx, game->sprite->player);
+	game->sprite->player = ft_init_img(PLAYERLEFT, game->vars->mlx, game->sprite);
 }
 
-int	ft_main_loop(t_game *game)
-{
-	ft_print_map(game);
-	return (0);
-}
+// int	ft_main_loop(t_game *game)
+// {
+// 	ft_print_map(game);
+// 	return (0);
+// }
 
 int	ft_key_hook(int keycode, t_game *game)
 {
@@ -258,7 +261,19 @@ int	ft_key_hook(int keycode, t_game *game)
 		ft_move_left(game);
 	if (game->flag == END)
 		exit(1);
+	ft_print_map(game);
 	return (0);
+}
+
+int	exit_hook()
+{
+	exit(1);
+}
+
+int	reduce_window(t_game *game)
+{
+	ft_print_map(game);
+	return (1);
 }
 
 int main(int ac, char **av)
@@ -270,8 +285,10 @@ int main(int ac, char **av)
 	ft_parsing_map(game, av[1]);
 	ft_init_game(game);
 	ft_init_sprite(game->vars, game->sprite);
+	ft_print_map(game);
 	mlx_key_hook(game->vars->win, &ft_key_hook, game);
-	mlx_loop_hook(game->vars->mlx, &ft_main_loop, game);
+	mlx_hook(game->vars->win, 17, 0, exit_hook, game);
+	mlx_hook(game->vars->win, 9, 1L << 21, reduce_window, game);
 	mlx_loop(game->vars->mlx);
 	return (0);
 }
