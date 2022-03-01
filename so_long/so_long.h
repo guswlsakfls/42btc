@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/28 14:52:13 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/01 17:11:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,17 @@
 # include <stdio.h>
 
 # define BUFFER_SIZE 1
-# define WALL "./textures/wall_s.xpm"
-# define COLLECT "./textures/Coin.xpm"
-# define EXIT "./textures/wall_e.xpm"
-# define GROUND "./textures/wall_n.xpm"
+# define WALL "./Img/Wall.xpm"
+# define COLLECT "./Img/Coin.xpm"
+# define EXIT "./Img/Exit.xpm"
+# define GROUND "./Img/Ground.xpm"
 
-# define PLAYERRIGHT "./textures/PacManRight.xpm"
-# define PLAYERLEFT "./textures/PacManLeft.xpm"
-# define PLAYERUP "./textures/PacManUp.xpm"
-# define PLAYERDOWN "./textures/PacManDown.xpm"
+# define PLAYERRIGHT "./Img/PacManRight.xpm"
+# define PLAYERLEFT "./Img/PacManLeft.xpm"
+# define PLAYERUP "./Img/PacManUp.xpm"
+# define PLAYERDOWN "./Img/PacManDown.xpm"
+
+# define IMGSIZE 64
 
 # define KEY_ESC 53
 
@@ -39,6 +41,10 @@
 # define KEY_D 2
 
 # define END 1
+
+# define TOP 0
+# define MID 1
+# define BOT 2
 
 typedef struct s_list
 {
@@ -64,7 +70,6 @@ typedef struct s_objs
 	int		e;
 }			t_objs;
 
-// mlx 구조체 mlx 포인터와 생성할 win 포인터를 가지고 있다.
 typedef struct s_vars {
 	void	*mlx;
 	void	*win;
@@ -79,31 +84,18 @@ typedef struct s_sprites
 	void	*ground;
 	int		img_width;
 	int		img_height;
-}			t_sprites;
+}	t_sprites;
 
-typedef struct s_coin
-{
-	int		amount;
-}			t_coin;
-
-typedef struct s_player
-{
-	int	player_left;
-	int	player_right;
-	int	player_up;
-	int	player_down;
-	int	player_move;
-}			t_player;
-
-//이미지의 정보를 나타내는 변수를 저장한 구조체
 typedef struct s_game
 {
 	t_vars		*vars;
 	t_map		*map;
-	t_player	*player;
-	t_coin		*coin;
-	t_sprites	*sprite;
+	t_sprites	*sprites;
+	t_objs		*objs;
+	int			player_move;
+	int			*coin;
 	int			flag;
+	char		*line;
 }	t_game;
 
 char	*get_next_line(int fd);
@@ -114,5 +106,21 @@ t_list	*ft_lstnew(int fd);
 t_list	*ft_lstfd(t_list **head, int fd);
 char	*ft_strnstr(const char *haystack, const char *needle, size_t len);
 int		ft_strncmp(const char *s1, const char *s2, size_t n);
+void	ft_init_game(t_game *game);
+void	*ft_init_img(char *img, void *mlx, t_sprites *sprite);
+void	ft_init_sprite(t_vars *vars, t_sprites *sprite);
+void	ft_print_error(int num);
+void	ft_check_arg(int ac, char *map_file);
+int		ft_key_hook(int keycode, t_game *game);
+int		ft_exit_hook(void);
+void	ft_move_bottom(t_game *game);
+void	ft_move_up(t_game *game);
+void	ft_move_right(t_game *game);
+void	ft_move_left(t_game *game);
+void	ft_put_img(t_game *game, void *sprite);
+int		ft_print_map(t_game *game);
+void	ft_check_map(int row, char *line, t_game *game);
+void	ft_check_ecp(t_game *game);
+void	ft_parsing_map(t_game *game, char *file);
 
 #endif
