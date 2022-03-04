@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/01 17:09:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/01 17:35:57 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	ft_print_error(int num)
 		printf("ERROR\nvalid map\n");
 	else if (num == 10)
 		printf("ERROR\nmlx_init\n");
+	else if (num == 11)
+		printf("ERROR\nmalloc\n");
 	exit(1);
 }
 
@@ -78,7 +80,7 @@ int	main(int ac, char **av)
 	ft_check_arg(ac, av[1]);
 	game = malloc(sizeof(t_game));
 	if (!game)
-		return (0);
+		ft_print_error(11);
 	ft_parsing_map(game, av[1]);
 	ft_init_game(game);
 	ft_init_sprite(game->vars, game->sprites);

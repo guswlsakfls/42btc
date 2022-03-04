@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:23:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/01 17:11:30 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/01 17:28:07 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_init_game(t_game *game)
 	game->vars = malloc(1 * sizeof(t_vars));
 	game->sprites = malloc(1 * sizeof(t_sprites));
 	if (!(game->vars) || !(game->sprites))
-		return ;
+		ft_print_error(11);
 	game->player_move = 0;
 	game->flag = 0;
 	game->vars->mlx = mlx_init();

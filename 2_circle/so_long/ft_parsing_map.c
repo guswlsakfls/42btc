@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:21:15 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/01 15:48:30 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/01 17:28:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_check_ecp(t_game *game)
 
 	game->objs = malloc(1 * sizeof(t_objs));
 	if (!(game->objs))
-		return ;
+		ft_print_error(11);
 	game->objs->e = 0;
 	game->objs->c = 0;
 	game->objs->p = 0;
@@ -70,7 +70,7 @@ void	ft_parsing_map(t_game *game, char *file)
 {
 	game->map = malloc(sizeof(t_map));
 	if (!(game->map))
-		return ;
+		ft_print_error(11);
 	game->map->fd = open(file, O_RDONLY);
 	if (game->map->fd < 0)
 		ft_print_error(2);
