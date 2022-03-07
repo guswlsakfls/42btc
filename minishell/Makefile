@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/06 12:57:01 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/07 18:19:28 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,10 @@ RM = rm -f
 
 LIB_DIR = ./libft
 
-SRCS = minishell.c
+READLINE = -lreadline -I$(shell brew --prefix readline)/lib -I$(shell brew --prefix readline)/include
+
+SRCS = minishell.c \
+		parse_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -29,7 +32,7 @@ $(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
-	$(CC) $@ -o minishell
+	$(CC) $(READLINE) $@ -o minishell
 
 all: $(NAME)
 
