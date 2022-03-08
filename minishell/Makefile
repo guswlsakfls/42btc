@@ -6,13 +6,13 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/07 18:19:28 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/08 18:33:04 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 AR = ar -rcs
 RM = rm -f
 
