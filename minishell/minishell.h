@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/07 18:26:18 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/09 14:56:02 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,13 @@ typedef struct s_minishell
 	char	**envp;
 	char	**path;
 	int		quit;
+	t_list	cmd;
 }	t_minishell;
+
+typedef struct s_argv
+{
+	char	**argv;
+}	t_argv;
 
 char	**cmd_split(char const *s);
 

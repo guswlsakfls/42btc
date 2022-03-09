@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/08 18:48:14 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/09 14:56:05 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,16 @@ void	ft_prompt(t_minishell *minishell, char **envp)
 		exit(0);
 }
 
+void	ft_excute(t_minishell *minishell)
+{
+	pid_t	pid;
+
+	while ()
+	{
+
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_minishell	*minishell;
@@ -174,6 +184,7 @@ int	main(int argc, char **argv, char **envp)
 		minishell->cmds = parse(minishell->input);
 		add_history(minishell->input);
 		// 파싱한 cmds excute 할 것
+		ft_execute(minishell);
 	}
 	return (0);
 }
