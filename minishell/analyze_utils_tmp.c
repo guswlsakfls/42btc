@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*   analyze_utils_tmp.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 20:19:46 by dha               #+#    #+#             */
-/*   Updated: 2022/03/07 18:21:47 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/10 17:56:28 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_word(char const *s, int *unclosed)
 				break ;
 			*unclosed ^= (*s == '\'') << 1;
 			*unclosed ^= (*s == '\"') << 2;
-			*unclosed |= (!(*unclosed) && (*s == '\\' || *s == ';')) << 4;
+			*unclosed |= (!(*unclosed) && (*s == '\\' || *s == ';')) << 3;
 			s++;
 		}
 	}
@@ -34,9 +34,9 @@ char	*get_word(char const *s, int *unclosed)
 		return (NULL);
 	diff = s - start - (2 * (*start == '\'' || *start == '\"'));
 	word = malloc(sizeof(char) * diff + 1);
-	// if (!word)
-	// 	ft_error_exit("Error\n Malloc Failed");
-	ft_strlcpy(word, start + (*start == '\'' || *start == '\"'), diff + 1);
+	if (!word)
+		ft_error_exit("Error\n Malloc Failed");
+	strlcpy(word, start + (*start == '\'' || *start == '\"'), diff + 1);
 	return (word);
 }
 

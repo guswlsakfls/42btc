@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/08 18:33:04 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/10 18:31:25 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,21 +18,25 @@ RM = rm -f
 
 LIB_DIR = ./libft
 
-READLINE = -lreadline -I$(shell brew --prefix readline)/lib -I$(shell brew --prefix readline)/include
+RL_DIR = $(shell brew --prefix readline)
+RL_INC = $(RL_DIR)/include
+RL_LIB = $(RL_DIR)/lib
 
 SRCS = minishell.c \
-		parse_utils.c
+		analyze.c \
+		tokenize.c \
+		tokenize_utils.c
 
 OBJS = $(SRCS:.c=.o)
 
 %o: %c
-	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	$(CC) -c $(CFLAGS) -I $(RL_INC) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
 
 $(NAME): $(OBJS)
-	$(MAKE) all -C $(LIB_DIR)
+	$(MAKE) bonus -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
-	$(CC) $(READLINE) $@ -o minishell
+	$(CC) -L$(RL_LIB) -lreadline -lhistory $@ -o minishell
 
 all: $(NAME)
 
