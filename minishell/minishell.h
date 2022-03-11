@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/10 18:24:46 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/11 18:35:10 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 
 typedef struct s_minishell
 {
+	int		pipe_fd[2];
 	char	**cmds;
 	char	*input;
 	char	*curdir;
@@ -37,10 +38,20 @@ typedef struct s_minishell
 	t_list	cmd;
 }	t_minishell;
 
-typedef struct s_argv
+typedef struct s_cmds
 {
-	char	**argv;
-}	t_argv;
+	char	**cmds;
+	// int		redirect_stream;
+	// t_bool	is_redirect;
+	// t_bool	is_heredoc;
+	// t_bool	is_stream;
+	// t_bool	was_pipe;
+	// t_bool	is_pipe;
+	// t_bool	is_and;
+	// t_bool	is_or;
+	// t_bool	is_wildcard;
+	// t_bool	hav_cmd;
+}	t_cmds;
 
 //dha
 

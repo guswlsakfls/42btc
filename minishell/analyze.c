@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/10 18:11:13 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/11 11:59:19 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 t_list	*analyze(char *cmd)
 {
-	if (!ft_strncmp("exit", cmd, 5))
-	{
-		printf("exit\n");
-		exit(EXIT_SUCCESS);
-	}
-	return (tokenize(cmd));
+	t_list	*lst;
+
+	lst = tokenize(cmd);
+	free(cmd);
+	if (lst == NULL)
+		return (NULL);
+	return (lst);
 }

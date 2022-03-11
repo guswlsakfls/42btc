@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/10 19:03:55 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/11 18:43:09 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,57 +135,61 @@ void	ft_prompt(t_minishell *minishell, char **envp)
 		exit(0);
 }
 
-void	ft_execute(char *av, char **envp)
+void	ft_execute(char *str, char **envp)
 {
 	char	**cmds;
 	char	*path;
-	int		i;
 
-	i = 0;
-	cmds = ft_split(av, ' ');
-	path = ft_get_path(cmds[0], envp);
-	if (!path)
-	{
-		ft_free_two(&cmds);
-		exit(0);
-	}
-	if (execve(path, cmds, envp) < 0)
-		exit(0);
-}
-
-void	ft_execute(t_list token_lst, char *args, char **envp)
-{
-	char	**cmds;
-	char	*path;
-	int		i;
-
-	i = 0;
-	cmds = ft_split(args, ' ');
-	path = (ft_get_path(token_lst->token->str, envp));
+	cmds = ft_split(str, ' ');
+	// ft_built_in(str, envp);
+	path = (ft_get_path(str, envp));
 	if (path)
-		execve(path, token_lst->token->str, envp);
+		execve(path, cmds, envp);
 }
 
-void	ft_nanoshell(t_minishell *minishell, t_list token_lst, char **envp)
+// void	ft_open_pipe(int pipe)
+// {
+// 	if (부모면)
+// 		// close(minishell->pipe_fd[1]);
+// 		// dup2(minishell->pipe_fd[0], STDIN_FILENO);
+// 	else (자식이면)
+// 		// close(minishell->pipe_fd[0]);
+// 		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
+// }
+
+void	ft_child(t_list *token_lst, char **envp, t_minishell *minishell)
 {
 	pid_t	pid;
-	char	*path;
-	int		pipe_fd[2];
 
+	// if (pipe_check == true)
+	if (pipe(minishell->pipe_fd) < 0)
+		exit(0);
 	pid = fork();
 	if (pid < 0)
 		exit(0);
 	if (pid > 0)
 	{
-		close(pipe_fd[1]);
-		dup2(pipe_fd[0], STDIN_FILENO);
+		// close(minishell->pipe_fd[1]);
+		// dup2(minishell->pipe_fd[0], STDIN_FILENO);
 		waitpid(pid, NULL, 0);
 	}
 	else
 	{
-		close(pipe_fd[0]);
-		dup2(pipe_fd[1], STDOUT_FILENO);
-		ft_execute(token_lst, token_lst->content->str, envp);
+		// close(minishell->pipe_fd[0]);
+		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
+		ft_execute(((t_token *) token_lst->content)->str, envp);
+	}
+}
+
+void	ft_nanoshell(t_list *token_lst, char **envp, t_minishell *minishell)
+{
+	t_list	*list;
+
+	list = token_lst;
+	while (list)
+	{
+		ft_child(list, envp, minishell);
+		list = list->next;
 	}
 }
 
@@ -224,7 +228,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_prompt(minishell, envp);
 		token_lst = analyze(minishell->input);
 		// 파싱한 cmds excute 할 것
-		ft_nanoshell(minishell, token_lst, envp);
+		ft_nanoshell(token_lst, envp, minishell);
 		// printf("token : %s\n", token_lst->content->str);
 	}
 	return (0);
