@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/11 18:43:09 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/13 11:24:36 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,3 +233,11 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
+
+
+if is_pipe 파이프 이면
+	ft_pipe 
+if 부모
+	if is_pipe 
+		dup2
+	waitpid
