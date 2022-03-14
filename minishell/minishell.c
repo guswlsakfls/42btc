@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/11 18:43:09 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/14 18:22:56 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ void	ft_execute(char *str, char **envp)
 	char	*path;
 
 	cmds = ft_split(str, ' ');
-	// ft_built_in(str, envp);
 	path = (ft_get_path(str, envp));
 	if (path)
 		execve(path, cmds, envp);
@@ -157,6 +156,24 @@ void	ft_execute(char *str, char **envp)
 // 		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
 // }
 
+// void	ft_built_in(char *cmd)
+// {
+// 	if ((ft_strncmp(cmd, "echo", 5)) == 0)
+// 		ft_echo();
+// 	else if ((ft_strncmp(cmd, "cd", 3)) == 0)
+// 		ft_cd();
+// 	else if ((ft_strncmp(cmd, "pwd", 4)) == 0)
+// 		ft_pwd();
+// 	else if ((ft_strncmp(cmd, "env", 4)) == 0)
+// 		ft_env();
+// 	else if ((ft_strncmp(cmd, "export", 7)) == 0)
+// 		ft_export();
+// 	else if ((ft_strncmp(cmd, "unset", 6)) == 0)
+// 		ft_unset();
+// 	else if ((ft_strncmp(cmd, "exit", 5)) == 0)
+// 		ft_exit();
+// }
+
 void	ft_child(t_list *token_lst, char **envp, t_minishell *minishell)
 {
 	pid_t	pid;
@@ -164,7 +181,10 @@ void	ft_child(t_list *token_lst, char **envp, t_minishell *minishell)
 	// if (pipe_check == true)
 	if (pipe(minishell->pipe_fd) < 0)
 		exit(0);
+	pid = 0;
+	// if (is_pipe || !built_in)
 	pid = fork();
+	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
 	if (pid < 0)
 		exit(0);
 	if (pid > 0)
@@ -177,20 +197,49 @@ void	ft_child(t_list *token_lst, char **envp, t_minishell *minishell)
 	{
 		// close(minishell->pipe_fd[0]);
 		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
+		// ft_built_in(str, envp);
 		ft_execute(((t_token *) token_lst->content)->str, envp);
+	}
+}
+
+void	ft_redir(t_pline pline)
+{
+	t_list	infile;
+	t_list	outfile;
+	int		fd;
+
+	infile = pline->infile;
+	outfile = pline->outfile;
+	while (infile)
+	{
+		fd = open(infile->name, O_RDONLY, 0777);
+		dup2(fd, STDIN_FILENO);
+		close(fd); // file 내용은 STDIN으로 복제 했으니까 닫아도 된다.
+		infile = infile->next;
+	}
+	while (outfile)
+	{
+		fd = open(outfile->name, O_WRONLY, O_CREAT, O_TRUNC, 0777);
+		dup2(fd, STDIN_FILENO);
+		close(fd); // file 내용은 STDIN으로 복제 했으니까 닫아도 된다.
+		outfile = outfile->next;
 	}
 }
 
 void	ft_nanoshell(t_list *token_lst, char **envp, t_minishell *minishell)
 {
-	t_list	*list;
+	t_list	*pline;
 
-	list = token_lst;
-	while (list)
+	pline = token_lst;
+	while (pline)
 	{
-		ft_child(list, envp, minishell);
-		list = list->next;
+		// ft_check_pipe() // 파이프인지 체크, fork를 할지 말지 체크해야함.
+		// ft_open_pipe()
+		// ft_redir() // 리스트를 순회하며 infile 과 outfile 에 STDIN, STDOUT dup2 해줘야 함
+		ft_child(pline, envp, minishell); // if (is_pipe || is_not_built_in)
+		pline = pline->next;
 	}
+	// ft_close_pipe() // 명령이 끝났으므로 열린 fd는 모두 close 해야 무한루프에 빠지지 않는다.
 }
 
 void	ft_sig_handler(int	signum)
