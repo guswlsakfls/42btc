@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/10 18:31:25 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/16 15:30:57 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,12 @@ SRCS = minishell.c \
 		tokenize.c \
 		tokenize_utils.c
 
+SRCS_TEST = ./testFile/redir_right.c \
+			./testFile/test_utils.c \
+			analyze.c \
+			tokenize.c \
+			tokenize_utils.c
+
 OBJS = $(SRCS:.c=.o)
 
 %o: %c
@@ -39,6 +45,10 @@ $(NAME): $(OBJS)
 	$(CC) -L$(RL_LIB) -lreadline -lhistory $@ -o minishell
 
 all: $(NAME)
+
+# 테스트 해보려고 만듬
+test :
+	gcc -I. -lreadline -lhistory -L$(RL_LIB) -I$(RL_INC) $(SRCS_TEST) ./testFile/libft/*.c -g
 
 clean:
 	$(RM) $(OBJS) $(OBJS_BONUS)

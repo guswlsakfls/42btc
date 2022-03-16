@@ -1,37 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenize_utils.c                                   :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/09 20:44:56 by dha               #+#    #+#             */
-/*   Updated: 2022/03/16 13:33:02 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/28 12:36:08 by hyujo             #+#    #+#             */
+/*   Updated: 2021/11/28 12:56:01 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	is_symbol(char *cmd)
+int	ft_isalnum(int c)
 {
-	if (!strncmp("<<", cmd, 2) || !strncmp(">>", cmd, 2))
-		return (2);
-	if (*cmd == '|' || *cmd == '<' || *cmd == '>')
+	if (ft_isalpha(c))
+		return (1);
+	else if (ft_isdigit(c))
 		return (1);
 	return (0);
-}
-
-int	token_type(char *cmd)
-{
-	if (!strncmp("<<", cmd, 2))
-		return (HEREDOC);
-	if (!strncmp(">>", cmd, 2))
-		return (APPEND);
-	if (*cmd == '<')
-		return (IREDIR);
-	if (*cmd == '>')
-		 return (OREDIR);
-	if (*cmd == '|')
-		return (PIPE);
-	return (CMD);
 }

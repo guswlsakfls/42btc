@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/16 15:30:58 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/16 15:19:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,12 @@ typedef struct s_minishell
 	char	**path;
 	int		quit;
 }	t_minishell;
+
+
+void	ft_execute(char *str, char **envp);
+void	ft_free_two(char ***split);
+char	*ft_get_envp(char	**envp, char *var);
+char	*ft_get_path(char *cmd, char **envp);
 
 //dha
 

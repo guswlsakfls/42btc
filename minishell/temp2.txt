@@ -1,0 +1,14 @@
+123123
+123123123
+04h> 
+[?2004le.c
+analyze_utils_tmp.c
+libft
+minishell
+minishell.c
+minishell.h
+pipex
+temp2.txt
+testFile
+tokenize.c
+tokenize_utils.c
