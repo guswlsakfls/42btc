@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/16 18:57:55 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/17 12:33:29 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,133 +178,37 @@ void	ft_child(t_list *token_lst, char **envp, t_minishell *minishell)
 {
 	pid_t	pid;
 
-	// if (pipe_check == true)
+	// if (ft_pipe_check() == true)
 	if (pipe(minishell->pipe_fd) < 0)
 		exit(0);
 	pid = 0;
-	// if (is_pipe || !built_in)
+	// if (ft_pipe_check() == true)
 	pid = fork();
 	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
 	if (pid < 0)
 		exit(0);
 	if (pid > 0)
 	{
-		// close(minishell->pipe_fd[1]);
-		// dup2(minishell->pipe_fd[0], STDIN_FILENO);
 		waitpid(pid, NULL, 0);
+		if (minishell->previous->pipe_fd[0])
+			close(minishell->previous->pipe_fd[0]);
+		close(minishell->pipe_fd[1]);
 	}
-	else
+	else if (pid == 0)
 	{
-		// close(minishell->pipe_fd[0]);
-		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
-		// ft_built_in(str, envp);
-		ft_execute(((t_token *) token_lst->content)->str, envp);
-	}
-}
-
-void	ft_here_doc(t_list infile, int fd)
-{
-	char	*input;
-
-	fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd < 0)
-		exit(1);
-	while (1)
-	{
-		input = readline("> ");
-		if (!input)
-			exit(1);
-		if (ft_strncmp(input, infile->name, ft_strlen(infile->name)) != 0)
+		if (minishell->previous->pipe_fd[0])
+			dup2(minishell->previous->pipe_fd[0], STDIN_FILENO);
+		if (pline->pipe_fd && !(outfile)) // 다음 파이프가 있고, 아웃파일이 없다면. (만약 아웃파일이 있으면 아웃 파일로 STDOUT 해야 하기 때문)
 		{
-			ft_putstr_fd(input, fd); // 계속 데이터가 fd 파일에 쌓인다.
-			ft_putstr_fd("\n", fd);
+			close(minishell->pipe_fd[0]);
+			dup2(minishell->pipe_fd[1], STDOUT_FILENO);
 		}
-		else
+		// if (ft_bulit_in(str, envp) == true)
+		// 	exit(0);
+		if (ft_execute(((t_token *) token_lst->content)->str, envp < 0))
 		{
-			close(fd);
-			free(input);
-			break ;
+			//error 가 났을 때 출력할 메시지 처리
 		}
-		free(input);
-	}
-	close(fd);
-}
-
-void	ft_redir(t_pline pline) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
-{
-	t_list	infile;
-	t_list	heredoc;
-	t_list	outfile;
-	int		fd;
-
-	infile = pline->infile;
-	outfile = pline->outfile;
-	// heredoc 나오면 제일 먼저 임시파일 만들어 준다.
-	heredoc = pline->infile;
-	while (heredoc)
-	{
-		if (heredoc->type == HEREDOC)
-			ft_here_doc(infile, fd);
-		heredoc->next;
-	}
-	while (infile)
-	{
-		// < 일 때
-		if (infile->type == IREDIR)
-		{
-			fd = open(infile->name, O_RDONLY, 0777);
-			if (fd < 0)
-				exit(1);
-		}
-		// << 일 때, here_doc 이다.
-		else
-		{
-			fd = open(".tmp_heredoc", O_RDONLY, 0777);
-			if (fd < 0)
-				exit(1);
-		}
-		if (infile->type == IREDIR)
-		{
-			fd = open(infile->name, O_RDONLY, 0777);
-			if (fd < 0)
-				exit(1);
-		}
-		if (!(infile->next))
-		{
-			// dup2(fd, STDIN_FILENO); // 모든 입력이 fd 이다. // 자식에서 dup2 로 하면 될 듯?
-			// if (dup < 0)
-			// 	exit(1);
-			// close(fd); // file 내용은 STDIN으로 복제 했으니까 닫아도 된다. // 닫으면 fd 파일은 계속 표준입출력에 복제 되나? => 지금까지 이해는 그렇다.
-			// if (inifle->type == HEREDOC)
-			// 	unlink(".tmp_heredoc");
-			break ;
-		}
-		infile = infile->next;
-	}
-	while (outfile)
-	{
-		// > 일 때
-		if (outfile->type == OREDIR)
-		{
-			fd = open(outfile->name, O_WRONLY, O_CREAT, O_TRUNC, 0777);
-			if (fd < 0)
-				exit(1);
-		}
-		else
-		{
-			fd = open(outfile->name, O_WRONLY, O_CREAT, O_APPEND, 0777);
-			if (fd < 0)
-				exit(1);
-		}
-		if (!(outfile->next))
-		{
-			// dup2(fd, STDOUT_FILENO);
-			// if (dup < 0)
-			// 	exit(1);
-			// close(fd); // file 에 stdout cmd 명령에서 넣을껀데 닫아도 상관 없나?
-			break ;
-		}
-		outfile = outfile->next;
 	}
 }
 
@@ -318,7 +222,7 @@ void	ft_nanoshell(t_list *token_lst, char **envp, t_minishell *minishell)
 		// ft_create_cmds() // token 을 excute 하기위해 구조체를 다시 생성한다.
 		// ft_check_pipe() // 파이프인지 체크, fork를 할지 말지 체크해야함.
 		// ft_open_pipe()
-		// ft_redir(plines->pline) // 리스트를 순회하며 infile 과 outfile 에 STDIN, STDOUT dup2 해줘야 함
+		ft_redir(plines->pline) // 리스트를 순회하며 infile 과 outfile 에 STDIN, STDOUT dup2 해줘야 함
 		ft_child(plines, envp, minishell); // if (is_pipe || is_not_built_in)
 		plines = plines->next;
 	}
@@ -365,11 +269,3 @@ int	main(int argc, char **argv, char **envp)
 	}
 	return (0);
 }
-
-
-if is_pipe 파이프 이면
-	ft_pipe 
-if 부모
-	if is_pipe 
-		dup2
-	waitpid

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/16 15:30:58 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/17 12:34:08 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,9 @@ typedef struct s_minishell
 	char	**path;
 	int		quit;
 }	t_minishell;
+
+void	ft_here_doc(t_list infile, int fd);
+void	ft_redir(t_pline pline);
 
 //dha
 
