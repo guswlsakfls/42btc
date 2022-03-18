@@ -6,18 +6,21 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/17 12:33:30 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/18 19:16:09 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_here_doc(t_list infile, int fd)
+void	ft_here_doc(t_pline pline, t_list infile)
 {
 	char	*input;
+	pit_t	pid;
 
-	fd = open(".tmp_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (fd < 0)
+	pid = fork();
+	if (pid < 0)
+		exit(1);
+	if (pipe(pline->pipe_fd) < 0)
 		exit(1);
 	while (1)
 	{
@@ -26,12 +29,12 @@ void	ft_here_doc(t_list infile, int fd)
 			exit(1);
 		if (ft_strncmp(input, infile->name, ft_strlen(infile->name)) != 0)
 		{
-			ft_putstr_fd(input, fd); // 계속 데이터가 fd 파일에 쌓인다.
-			ft_putstr_fd("\n", fd);
+			ft_putstr_fd(input, pline->pipe_fd[1]); // 계속 데이터가 fd 파일에 쌓인다.
+			ft_putstr_fd("\n", pline->pipe_fd[1]);
 		}
 		else
 		{
-			close(fd);
+			close(pipe_fd[1]);
 			free(input);
 			break ;
 		}

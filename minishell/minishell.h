@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/17 12:34:08 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/18 17:44:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+# define ISPIPE 1
 
 typedef struct s_cmds
 {
@@ -50,6 +52,16 @@ typedef struct s_minishell
 void	ft_here_doc(t_list infile, int fd);
 void	ft_redir(t_pline pline);
 
+typedef struct s_pline
+{
+	t_list	*ifile;
+	t_list	*ofile;
+	char	*cmd;
+	int		pipe_fd[2];
+	int		file_fd[2];
+	int		is_pipe
+}	t_pline;
+
 //dha
 
 char	**cmd_split(char *s);
@@ -60,11 +72,6 @@ char	**cmd_split(char *s);
 # define OREDIR 8
 # define APPEND 16
 # define HEREDOC 32
-
-typedef struct s_token {
-	int		type;
-	char	*str;
-}				t_token;
 
 t_list	*analyze(char *cmd);
 t_list	*tokenize(char *cmd);
