@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/21 17:19:22 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/21 23:50:02 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,35 +45,75 @@ void	ft_free_two(char ***split)
 	*split = NULL;
 }
 
-char	*ft_get_envp(char	**envp, char *var)
+char	*ft_get_envp(t_list	*env, char *key)
 {
-	int		i;
-	int		len_var;
+	t_list 	*list;
 
-	i = 0;
-	var = ft_strjoin(var, "=");
-	len_var = ft_strlen(var);
-	while (ft_strnstr(envp[i], var, len_var) == 0) // "=" 도 더함
+	list = env;
+	while (list)
 	{
-		if (envp[i] == NULL)
-		{
-			free(var);
-			return (NULL);
-		}
-		i++;
+		if (ft_strncmp(((t_env *)list->content)->key, key, ft_strlen(key)) == 0)
+			return (((t_env *)list->content)->value);
+		list = list->next;
 	}
-	free(var);
-	return (&(envp[i][len_var]));
+	return (NULL);
 }
 
-char	*ft_get_path(char *cmd, char **envp)
-{
-	int		i;
-	char	**paths;
-	char	*path_list;
-	char	*path;
+// char *ft_get_envp(char **envp, char *var)
+// {
+// 	int i;
+// 	int len_var;
 
-	paths = ft_split(ft_get_envp(envp, "PATH"), ':');
+// 	i = 0;
+// 	var = ft_strjoin(var, "=");
+// 	len_var = ft_strlen(var);
+// 	while (ft_strnstr(envp[i], var, len_var) == 0) // "=" 도 더함
+// 	{
+// 		if (envp[i] == NULL)
+// 		{
+// 			free(var);
+// 			return (NULL);
+// 		}
+// 		i++;
+// 	}
+// 	free(var);
+// 	return (&(envp[i][len_var]));
+// }
+
+// char	*ft_get_path(char *cmd, t_list *env)
+// {
+// 	int		i;
+// 	char	**paths;
+// 	char	*path_list;
+// 	char	*path;
+
+// 	paths = ft_split(ft_get_envp(envp, "PATH"), ':');
+// 	i = -1;
+// 	while (paths[++i])
+// 	{
+// 		path_list = ft_strjoin(paths[i], "/");
+// 		path = ft_strjoin(path_list, cmd);
+// 		if (access(path, F_OK) == 0)
+// 		{
+// 			ft_free_two(&paths);
+// 			free(path_list);
+// 			return (path);
+// 		}
+// 		free(path);
+// 		free(path_list);
+// 	}
+// 	ft_free_two(&paths);
+// 	return (0);
+// }
+
+char *ft_get_path(char *cmd, t_list *env)
+{
+	int 	i;
+	char 	**paths;
+	char 	*path_list;
+	char 	*path;
+
+	paths = ft_split(ft_get_envp(env, "PATH"), ':');
 	i = -1;
 	while (paths[++i])
 	{
@@ -92,11 +132,11 @@ char	*ft_get_path(char *cmd, char **envp)
 	return (0);
 }
 
-void	ft_execute(char **cmds, char **envp)
+void	ft_execute(char **cmds, t_list *env, char **envp)
 {
 	char	*path;
 
-	path = (ft_get_path(cmds[0], envp));
+	path = (ft_get_path(cmds[0], env));
 	if (execve(path, cmds, envp) < 0)
 	{
 		//error 처리 해주기
@@ -139,72 +179,81 @@ void	ft_execute(char **cmds, char **envp)
 // 		exit(0);
 // }
 
-void	ft_fork(t_list *plines, t_pline *pline, int pid, char **envp)
+void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 {
 	t_pline	*prev;
 
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
 	// 포크할 필요가 없으면 pid == 0 으로 들어가 처리 한다.
-	pid = 0;
-	// if (is_pipe == true) || !(is_built_in)) // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
-	pid = fork();
-	if (pid < 0)
+	pline->pid = 0;
+	if (pline->is_pipe == ISPIPE) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
+		pline->pid = fork();
+	if (pline->pid < 0)
 		exit(0);
 	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
-	if (pid > 0)
+	if (pline->pid > 0)
 	{
-		waitpid(pid, NULL, WUNTRACED); // WUNTRACED 
-		if (prev->is_pipe == ISPIPE && prev->pipe_fd[0] != 0)
+		waitpid(pline->pid, NULL, WUNTRACED); // WUNTRACED
+		close(pline->pipe_fd[1]); // 지금 pipe_fd[1] 무조건 닫지
+		if (prev && prev->pipe_fd[0]) // 이전 파이프 남아 있으면 닫자
 			close(prev->pipe_fd[0]);
-		if (pline->pipe_fd[1])
-			close(pline->pipe_fd[1]);
 	}
-	if (pid == 0)
+	// 자식에서 pline->pipe_fd[0] 은 있으면 사용하고 닫음만 잘하자. 인에서 어차피 닫는다.
+	if (pline->pid == 0)
 	{
-		// 이전에 파이프였다면 이전 STDIN 값을 파이프로 가져온다.
-		if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
+		// 현재 인파일이 있으면 사용
+		if (pline->file_fd[0])
 		{
-			dup2(prev->pipe_fd[0], STDIN_FILENO);
-			close(pline->pipe_fd[1]);
-		}
-		else if (pline->file_fd[0])
-		{
-			dup2(prev->file_fd[0], STDIN_FILENO);
-			close(pline->file_fd[0]);
-		}
-		// 다음 파이프가 있고, 아웃파일이 없다면. (만약 아웃파일이 있으면 아웃 파일로 STDOUT 해야 하기 때문)
-		if (pline->is_pipe == ISPIPE && pline->file_fd[1] != ISPIPE)
-		{
-			dup2(pline->pipe_fd[1], STDOUT_FILENO);
+			dup2(pline->file_fd[0], STDIN_FILENO);
+			close(pline->file_fd[0]); // 인파이프 중복
 			close(pline->pipe_fd[0]);
 		}
-		else if (prev && prev->file_fd[1] != 0)
+		// 이전에 파이프이고 아웃파일 없으면 넘어온거 사용
+		else if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
 		{
-			dup2(prev->file_fd[1], STDOUT_FILENO);
-			close(pline->file_fd[0]);
+			dup2(prev->pipe_fd[0], STDIN_FILENO);
+			close(pline->pipe_fd[0]); // 인파이프 중복
+			close(prev->pipe_fd[0]);
 		}
+		else
+			close(pline->pipe_fd[0]); // 인파이프 중복 나중에 최적화 하자! // 그냥 입력 필요 없
+		// 아웃파일 있으면
+		if (pline->file_fd[1])
+		{
+			dup2(pline->file_fd[1], STDOUT_FILENO);
+			close(pline->file_fd[1]);
+			close(pline->pipe_fd[1]); // 필요없은 파이프 꼭 다 닫기
+		}
+		// 아웃파일 없고 파이프면
+		else if (pline->is_pipe == ISPIPE && pline->file_fd[1] == 0)
+		{
+			dup2(pline->pipe_fd[1], STDOUT_FILENO);
+		}
+		// 그냥 입력, 출력이면
+		else
+			close(pline->pipe_fd[1]); // 그냥 출력이면 필요 없
 		// if (ft_bulit_in(str, envp) == true)
 		// 	exit(0);
-		ft_execute(pline->cmds, envp);
+		ft_execute(pline->cmds, env, envp);
 	}
 }
 
-void	ft_nanoshell(t_list *plines, char **envp)
+void	ft_nanoshell(t_list *plines, t_list *env, char **envp)
 {
-	t_list	*head;
+	t_list	*cur_plines;
 	t_pline	*pline;
 
-	head = plines;
-	while (plines)
+	cur_plines = plines;
+	ft_redirection(cur_plines); // 리스트를 순회하며 infile 과 outfile 나온 fd 를 plines 에 file_fd[2] 로 넣어 두고 사용.
+	while (cur_plines)
 	{
-		pline = (t_pline *)plines->content;
-		// ft_redir(plines); // 리스트를 순회하며 infile 과 outfile 나온 fd 를 plines 에 file_fd[2] 로 넣어 두고 사용.
+		pline = (t_pline *)cur_plines->content;
 		// ft_check_pipe() // 파이프인지 체크, fork를 할지 말지 체크해야함. // ft_open_pipe() 는 여기에 들어가면 될 것 같음
-		ft_fork(plines, pline, pline->pid, envp); // if (is_pipe || is_not_built_in)
+		ft_fork(cur_plines, pline, env, envp); // if (is_pipe || is_not_built_in)
 		// ft_close_pipe(); 현재 열린 파이프와 이전에 사용된 파이프를 close 해준다.
 		// 자식 프로세스를 다 돌고 나올때 까지 부모는 기다려 준다.
-		plines = plines->next;
+		cur_plines = cur_plines->next;
 	}
 	// ft_close_pipe() // 명령이 끝났으므로 열린 fd는 모두 close 해야 무한루프에 빠지지 않는다.
 }
@@ -235,7 +284,7 @@ t_list *ft_init_env(char **envp)
 
 int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **envp
 {
-	// t_list 	*plines;
+	t_list 	*plines;
 	t_list	*env;
 
 	if (argc > 2)
@@ -245,21 +294,11 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 	// 처음에 envp 초기화 해서 가지고 다녀야 한다.
 	printf("\n\nNANOSHELL BY HYUJO & DHA\n\n");
 	env = ft_init_env(envp);
-	while (env)
+	ft_signal();	
+	while (1)
 	{
-		printf("key : %s\n", ((t_env *)env->content)->key);
-		printf("value : %s\n", ((t_env *)env->content)->value);
-		env = env->next;
+		plines = analyze(readline("\033[0;91m\033[1mdha's Prompt$ \033[0m"));
+		ft_nanoshell(plines, env, envp);
 	}
-	// ft_signal();	
-	// while (1)
-	// {
-	// 	// 프롬프트 명령 띄울 때 현재 유저랑 디렉토리 나타내기
-	// 	plines = analyze(readline("\033[0;91m\033[1mdha's Prompt$ \033[0m"));
-	// 	// cmd = ft_create_cmds(plines) // 여기서 ft_redirection
-	// 	// 파싱한 cmds excute 할 것
-	// 	ft_nanoshell(plines, envp);
-	// 	// printf("token : %s\n", token_lst->content->str);
-	// }
 	return (0);
 }

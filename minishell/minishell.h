@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/21 16:43:49 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/21 19:08:06 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ typedef struct s_token
 } t_token;
 
 void ft_here_doc(t_list heredoc);
-void ft_redir(t_list plines);
+void ft_redirection(t_list *plines);
 
 //dha
 
