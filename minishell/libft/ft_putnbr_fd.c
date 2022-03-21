@@ -3,26 +3,66 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 21:19:48 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/04 14:44:18 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/24 23:16:56 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:42:44 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+static unsigned char	alen(int n)
+{
+	long long		num;
+	unsigned char	len;
+
+	if (n == 0)
+		return (1);
+	len = 0;
+	num = n;
+	if (num < 0)
+	{
+		num = -num;
+		len++;
+	}
+	while (num > 0)
+	{
+		num /= 10;
+		len++;
+	}
+	return (len);
+}
+
+static unsigned int	pow_ten(unsigned char exp)
+{
+	unsigned int	ret;
+
+	ret = 1;
+	while (exp--)
+		ret *= 10;
+	return (ret);
+}
+
 void	ft_putnbr_fd(int n, int fd)
 {
-	long long	nb;
+	long long		num;
+	unsigned char	len;
+	unsigned char	c;
 
-	nb = n;
-	if (nb < 0)
+	len = alen(n);
+	num = n;
+	if (num < 0)
 	{
-		ft_putchar_fd('-', fd);
-		nb *= -1;
+		num = -num;
+		write(fd, "-", 1);
+		len--;
 	}
-	if (nb >= 10)
-		ft_putnbr_fd(nb / 10, fd);
-	ft_putchar_fd("0123456789"[nb % 10], fd);
+	while (len > 0)
+	{
+		c = (num / pow_ten(len - 1)) + '0';
+		num %= pow_ten(len - 1);
+		write(fd, &c, 1);
+		len--;
+	}
 }

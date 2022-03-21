@@ -3,60 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 15:55:12 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/04 16:00:54 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/18 17:30:14 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:43:07 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	ft_get_len(int n)
+static unsigned char	alen(int n)
 {
-	size_t		len;
-	long long	nb;
+	long long		num;
+	unsigned char	len;
 
-	nb = n;
-	if (nb == 0)
+	if (n == 0)
 		return (1);
 	len = 0;
-	if (nb < 0)
+	num = n;
+	if (num < 0)
 	{
+		num = -num;
 		len++;
-		nb *= -1;
 	}
-	while (nb > 0)
+	while (num > 0)
 	{
-		nb /= 10;
+		num /= 10;
 		len++;
 	}
 	return (len);
 }
 
+static unsigned int	pow_ten(unsigned char exp)
+{
+	unsigned int	ret;
+
+	ret = 1;
+	while (exp--)
+		ret *= 10;
+	return (ret);
+}
+
 char	*ft_itoa(int n)
 {
-	size_t			len;
-	unsigned char	*str;
-	long long		nb;
+	long long		num;
+	char			*ret;
+	unsigned char	len;
+	unsigned char	i;
 
-	if (n == 0)
-		return (ft_strdup("0"));
-	nb = n;
-	len = ft_get_len(n);
-	str = ft_calloc(len + 1, sizeof(unsigned char));
-	if (!str)
+	len = alen(n);
+	ret = (char *) malloc(sizeof(char) * (len + 1));
+	if (ret == 0)
 		return (0);
-	if (nb < 0)
+	i = 0;
+	num = n;
+	if (num < 0)
 	{
-		nb *= -1;
-		str[0] = '-';
+		num = -num;
+		ret[i++] = '-';
+		len--;
 	}
-	while (nb > 0)
+	while (len > 0)
 	{
-		str[--len] = nb % 10 + '0';
-		nb /= 10;
+		ret[i++] = (num / pow_ten(len - 1)) + '0';
+		num %= pow_ten(len - 1);
+		len--;
 	}
-	str[ft_get_len(n)] = '\0';
-	return ((char *)str);
+	ret[i] = '\0';
+	return (ret);
 }

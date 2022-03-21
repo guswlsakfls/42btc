@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strlcat.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/19 18:13:05 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/04 15:30:58 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/10 00:52:29 by dha               #+#    #+#             */
+/*   Updated: 2021/11/29 18:51:26 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,23 @@
 
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
-	size_t	i;
-	size_t	src_l;
-	size_t	dst_l;
+	size_t	dst_len;
+	size_t	src_len;
+	size_t	temp_len;
+	size_t	index;
 
-	src_l = ft_strlen(src);
-	dst_l = ft_strlen(dst);
-	if (dst_l >= dstsize)
-		return (src_l + dstsize);
-	i = 0;
-	ft_strlcpy(dst + dst_l, src, dstsize - dst_l);
-	return (dst_l + src_l);
+	index = 0;
+	dst_len = ft_strlen(dst);
+	src_len = ft_strlen(src);
+	if (dstsize < dst_len || dstsize < 1)
+		return (src_len + dstsize);
+	temp_len = dst_len;
+	while (temp_len < dstsize - 1 && src[index] != '\0')
+	{
+		dst[temp_len] = src[index];
+		temp_len++;
+		index++;
+	}
+	dst[temp_len] = '\0';
+	return (dst_len + src_len);
 }

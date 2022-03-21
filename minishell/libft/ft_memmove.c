@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/19 16:43:49 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/29 11:02:11 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/10 00:49:17 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:42:51 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,28 @@
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {
-	const unsigned char	*mem_src;
-	unsigned char		*mem_dst;
-	size_t				i;
+	unsigned char	*t_dst;
+	unsigned char	*t_src;
 
-	mem_src = (const unsigned char *)src;
-	mem_dst = (unsigned char *)dst;
-	i = 0;
-	if (len == 0 || mem_dst == mem_src)
-		return (dst);
-	if (mem_dst > mem_src)
+	if (dst == 0 && src == 0)
+		return (0);
+	t_src = (unsigned char *) src;
+	t_dst = (unsigned char *) dst;
+	if (t_dst <= t_src)
 	{
-		while (i < len)
+		while (len)
 		{
-			mem_dst[len - i - 1] = mem_src[len - i - 1];
-			i++;
+			*t_dst++ = *t_src++;
+			len--;
 		}
 	}
 	else
-		ft_memcpy(mem_dst, mem_src, len);
+	{
+		while (len)
+		{
+			len--;
+			t_dst[len] = t_src[len];
+		}
+	}
 	return (dst);
 }

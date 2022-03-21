@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/22 15:42:26 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/04 15:04:45 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/10 01:02:48 by dha               #+#    #+#             */
+/*   Updated: 2022/02/19 14:42:09 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,20 @@
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t				i;
-	const unsigned char	*cmp_s1;
-	const unsigned char	*cmp_s2;
+	size_t			i;
+	unsigned char	*tmp_s1;
+	unsigned char	*tmp_s2;
 
-	cmp_s1 = (const unsigned char *)s1;
-	cmp_s2 = (const unsigned char *)s2;
-	i = 0;
+	tmp_s1 = (unsigned char *) s1;
+	tmp_s2 = (unsigned char *) s2;
 	if (n == 0)
 		return (0);
-	while (cmp_s1[i] && cmp_s2[i] && i + 1 < n)
+	i = 0;
+	while (i < n && !(tmp_s1[i] == '\0' && tmp_s2[i] == '\0'))
 	{
-		if (cmp_s1[i] != cmp_s2[i])
-			return (cmp_s1[i] - cmp_s2[i]);
+		if (tmp_s1[i] != tmp_s2[i])
+			return (tmp_s1[i] - tmp_s2[i]);
 		i++;
 	}
-	return (cmp_s1[i] - cmp_s2[i]);
+	return (tmp_s1[i] - tmp_s2[i]);
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize.c                                 :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/26 15:34:56 by hyujo             #+#    #+#             */
-/*   Updated: 2021/11/26 15:34:56 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/24 23:16:49 by dha               #+#    #+#             */
+/*   Updated: 2021/11/29 12:51:48 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 int	ft_lstsize(t_list *lst)
 {
-	size_t	lst_len;
+	int		size;
+	t_list	*curr;
 
-	lst_len = 0;
-	while (lst)
+	size = 0;
+	curr = lst;
+	while (curr)
 	{
-		lst_len++;
-		lst = lst->next;
+		curr = curr -> next;
+		size++;
 	}
-	return ((int)lst_len);
+	return (size);
 }

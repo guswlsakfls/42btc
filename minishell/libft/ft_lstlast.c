@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_lstlast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/26 15:59:02 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/03 14:25:17 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/24 23:16:40 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:43:00 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 t_list	*ft_lstlast(t_list *lst)
 {
-	if (!lst)
-		return (0);
-	while (lst->next)
-		lst = lst->next;
+	while (lst && lst -> next)
+		lst = lst -> next;
 	return (lst);
 }

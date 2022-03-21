@@ -3,58 +3,102 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
+#    By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/11/24 11:39:10 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/10 18:14:51 by hyujo            ###   ########.fr        #
+#    Created: 2021/11/26 20:59:53 by dha               #+#    #+#              #
+#    Updated: 2022/03/19 17:18:39 by dha              ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
+SHELL = /bin/bash
+SP = -\|
+IDX = 0
+
+SRCS = ft_isascii.c \
+	ft_putchar_fd.c \
+	ft_strchr.c \
+	ft_strlen.c \
+	ft_substr.c \
+	ft_atoi.c \
+	ft_isdigit.c \
+	ft_memchr.c \
+	ft_strdup.c \
+	ft_strmapi.c \
+	ft_tolower.c \
+	ft_bzero.c \
+	ft_isprint.c \
+	ft_memcmp.c \
+	ft_putendl_fd.c \
+	ft_striteri.c \
+	ft_strncmp.c \
+	ft_toupper.c \
+	ft_calloc.c \
+	ft_itoa.c \
+	ft_memcpy.c \
+	ft_putnbr_fd.c \
+	ft_strjoin.c \
+	ft_strnstr.c \
+	ft_isalnum.c \
+	ft_memmove.c \
+	ft_putstr_fd.c \
+	ft_strlcat.c \
+	ft_strrchr.c \
+	ft_isalpha.c \
+	ft_memset.c \
+	ft_split.c \
+	ft_strlcpy.c \
+	ft_strtrim.c \
+	get_next_line.c \
+	ft_lstnew.c \
+	ft_lstadd_front.c \
+	ft_lstsize.c \
+	ft_lstlast.c \
+	ft_lstadd_back.c \
+	ft_lstdelone.c \
+	ft_lstclear.c \
+	ft_lstiter.c \
+	ft_lstmap.c \
+	ft_lstdel_back.c \
+	ft_lstdel_front.c \
+	ft_lst_beforelast.c \
+	ft_atol.c \
+	ft_numlen.c \
+	ft_isnum.c \
+	ft_error_exit.c \
+	ft_linelen.c \
+	ft_malloc.c \
+	ft_strapp.c \
+	ft_realloc.c
+
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+OBJS = $(SRCS:.c=.o)
 NAME = libft.a
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
-AR = ar -rcs
-RM = rm -f
+all : $(NAME)
 
-SRCS = ft_memset.c ft_bzero.c ft_memcpy.c ft_memmove.c ft_striteri.c\
-		ft_memchr.c ft_memcmp.c ft_strlen.c ft_strlcpy.c ft_strlcat.c\
-		ft_strchr.c ft_strrchr.c ft_strnstr.c ft_strncmp.c ft_atoi.c\
-		ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c\
-		ft_toupper.c ft_tolower.c ft_calloc.c ft_strdup.c ft_substr.c\
-		ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c ft_strmapi.c\
-		ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c ft_putnbr_fd.c \ ft_error_exit.c
-
-BONUS = ft_lstnew.c ft_lstadd_front.c ft_lstsize.c ft_lstlast.c\
-		ft_lstadd_back.c ft_lstdelone.c ft_lstclear.c ft_lstiter.c\
-		ft_lstmap.c
-
-OBJS = $(SRCS:.c=.o)
-OBJS_BONUS = $(BONUS:.c=.o)
-
-ifdef WITH_BONUS
-    OBJ_FILES = $(OBJS) $(OBJS_BONUS)
-else
-    OBJ_FILES = $(OBJS)
-endif
-
-all: $(NAME)
-
-$(NAME): $(OBJ_FILES)
-	$(AR) $@ $^
+$(NAME) : $(OBJS)
+	@ar rcs $@ $^
+	@printf "\b✅ \n💡 Make $(NAME) Done\n"
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(eval IDX = $(shell expr $(IDX) + 1))
+	$(eval T_IDX = $(shell expr $(IDX) % 2 + 1))
+	$(eval CHR = $(shell echo -n $(SP) | cut -c $(T_IDX)))
+	@if [ $(IDX) = 1 ]; then echo -n "🛠 Compiling ...  "; fi
+	@printf "\b$(CHR)"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
-bonus:
-	make WITH_BONUS=1 all
+clean :
+	@$(RM) $(OBJS)
+	@echo "🗑 Remove $(NAME)'s OBJs Done"
 
-clean:
-	$(RM) $(OBJS) $(OBJS_BONUS)
+fclean : clean
+	@$(RM) $(NAME)
+	@echo "🗑 Remove $(NAME) Done"
 
-fclean: clean
-	$(RM) $(NAME)
+$(OBJS) : $(SRCS) libft.h
 
-re: fclean all
+re : fclean all
 
-.PHONY: bonus all clean fclean re
+.PHONY : clean fclean re all

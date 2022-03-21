@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/16 15:19:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/20 16:01:00 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,22 @@ typedef struct s_minishell
 	int		quit;
 }	t_minishell;
 
+typedef struct s_pline
+{
+	t_list *ifile;
+	t_list *ofile;
+	char *cmd;
+	int	cnt;
+	int pipe_fd[2];
+	int file_fd[2];
+	int is_pipe;
+} t_pline;
+
+typedef struct s_token
+{
+	int type;
+	char *str;
+} t_token;
 
 void	ft_execute(char *str, char **envp);
 void	ft_free_two(char ***split);
@@ -63,11 +79,6 @@ char	**cmd_split(char *s);
 # define OREDIR 8
 # define APPEND 16
 # define HEREDOC 32
-
-typedef struct s_token {
-	int		type;
-	char	*str;
-}				t_token;
 
 t_list	*analyze(char *cmd);
 t_list	*tokenize(char *cmd);

@@ -3,51 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/22 20:55:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/01/28 18:13:23 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/10 01:10:35 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:43:14 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-static long long	ft_check_over(unsigned long long sum, int sign)
+static int	is_space(char c)
 {
-	if (sum > 9223372036854775807 - 1 && sign == -1)
-		exit(0);
-	if (sum > 9223372036854775807 && sign == 1)
-		exit(0);
-	return (sum * sign);
+	if (c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r')
+		return (1);
+	if (c == ' ')
+		return (1);
+	return (0);
 }
 
-static int	ft_issapce(char c)
+int	ft_atoi(const char *str)
 {
-	return ((9 <= c && c <= 13) || c == ' ');
-}
+	int	tot;
+	int	sign;
 
-long long	ft_atoi(const char *str)
-{
-	size_t				i;
-	int					sign;
-	unsigned long long	res;
-
-	i = 0;
-	while (ft_issapce(str[i]))
-		i++;
 	sign = 1;
-	if (str[i] == '+' || str[i] == '-')
+	tot = 0;
+	while (is_space(*str))
+		str++;
+	if (*str == '-' || *str == '+')
 	{
-		if (str[i] == '-')
-			sign *= -1;
-		i++;
+		if (*str == '-')
+			sign = -1;
+		str++;
 	}
-	res = 0;
-	while (ft_isdigit(str[i]) && str[i])
+	while (*str != '\0')
 	{
-		res = res * 10 + str[i] - '0';
-		i++;
+		if (*str < '0' || *str > '9')
+			break ;
+		tot = tot * 10 + (*str - '0');
+		str++;
 	}
-	res = ft_check_over(res, sign);
-	return (res);
+	return (tot * sign);
 }

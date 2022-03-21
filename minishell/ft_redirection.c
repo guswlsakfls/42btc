@@ -3,64 +3,64 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/18 19:16:09 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/21 04:48:43 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_here_doc(t_pline pline, t_list infile)
+void	ft_here_doc(t_list *plines)
 {
 	char	*input;
-	pit_t	pid;
+	t_pline	*heredoc;
+	t_list	*ifile;
+	pid_t	pid;
 
+	heredoc = (t_pline *)plines->content;
 	pid = fork();
 	if (pid < 0)
 		exit(1);
-	if (pipe(pline->pipe_fd) < 0)
+	if (pipe(heredoc->heredoc_fd) < 0)
 		exit(1);
+	ifile = heredoc->ifile;
 	while (1)
 	{
 		input = readline("> ");
 		if (!input)
 			exit(1);
-		if (ft_strncmp(input, infile->name, ft_strlen(infile->name)) != 0)
+		if (ft_strncmp(input, ((t_token *)ifile->content)->str, ft_strlen(((t_token *)ifile->content)->str)) != 0)
 		{
-			ft_putstr_fd(input, pline->pipe_fd[1]); // 계속 데이터가 fd 파일에 쌓인다.
-			ft_putstr_fd("\n", pline->pipe_fd[1]);
+			ft_putstr_fd(input, heredoc->heredoc_fd[1]); // 계속 데이터가 fd 파일에 쌓인다.
+			ft_putstr_fd("\n", heredoc->heredoc_fd[1]);
+			free(input);
 		}
 		else
 		{
-			close(pipe_fd[1]);
+			close(heredoc->heredoc_fd[1]);
 			free(input);
 			break ;
 		}
-		free(input);
 	}
-	close(fd);
 }
 
-void	ft_redir(t_pline pline) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
+void	ft_redir(t_list *plines) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
 {
-	t_list	infile;
-	t_list	heredoc;
-	t_list	outfile;
-	int		fd;
+	t_list	*ifile;
+	t_list	*ofile;
+	t_list	*heredoc;
 
-	infile = pline->infile;
-	outfile = pline->outfile;
-	// heredoc 나오면 제일 먼저 임시파일 만들어 준다.
-	heredoc = pline->infile;
+	heredoc = plines;
+	// heredoc 나오면 제일 먼저 임시파일 만들어 준다. heredoc 찾기 위해 한바퀴
 	while (heredoc)
 	{
-		if (heredoc->type == HEREDOC)
-			ft_here_doc(infile, fd);
+		if (((t_token *)((t_pline *)heredoc->content)->ifile)->type == HEREDOC)
+			ft_here_doc(((t_token *)((t_pline *)heredoc->content)->ifile));
 		heredoc->next;
 	}
-	while (infile)
+	while (plines)
 	{
 		// < 일 때
 		if (infile->type == IREDIR)
@@ -92,7 +92,7 @@ void	ft_redir(t_pline pline) // file open 이 에러가 나면 에러 메시지 
 			// 	unlink(".tmp_heredoc");
 			break ;
 		}
-		infile = infile->next;
+		plines = plines->next;
 	}
 	while (outfile)
 	{

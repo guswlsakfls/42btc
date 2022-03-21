@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/18 18:31:05 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/21 17:19:22 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void ft_sig_handler(int signum)
+{
+	if (signum != SIGINT)
+		return;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 1);
+	rl_redisplay();
+}
+
+void ft_signal()
+{
+	signal(SIGINT, ft_sig_handler); // CTRL + C
+	signal(SIGQUIT, SIG_IGN);		// CTRL + /
+}
 
 void	ft_free_two(char ***split)
 {
@@ -76,75 +92,15 @@ char	*ft_get_path(char *cmd, char **envp)
 	return (0);
 }
 
-int	ft_get_wd_size(char **split)
-{
-	int	i;
-
-	i = 0;
-	while (split[i] != NULL)
-		i++;
-	return (i);
-}
-
-char	*ft_get_wd()
-{
-	char	*wd;
-	char	**split_wd;
-	int		size_split_wd;
-
-	wd = getcwd(NULL, 0);
-	if (wd == NULL)
-		return (NULL);
-	split_wd = ft_split(wd, '/');
-	free(wd);
-	size_split_wd = ft_get_wd_size(split_wd);
-	if (size_split_wd == 1)
-		wd = split_wd[0];
-	else if (size_split_wd == 2)
-		wd = ft_strdup("~");
-	else
-		wd = ft_strdup(split_wd[size_split_wd - 1]);
-	ft_free_two(&split_wd);
-	return (wd);
-}
-
-char	*ft_creat_prompt(char **envp)
-{
-	char	*wd;
-	char	*env;
-	char	*prompt;
-
-	wd = ft_get_wd();
-	wd = ft_strjoin(wd, " "); // ft_strjoin 안에서 free 시켜주는 거로
-	env = ft_get_envp(envp, "USER");
-	env = ft_strjoin(env, " ");
-	prompt = ft_strjoin(env, wd);
-	free(wd);
-	return (ft_strjoin(prompt, "$ "));
-}
-
-void	ft_prompt(t_minishell *minishell
-{
-	char	*prompt;
-
-	prompt = ft_creat_prompt(minishell->envp);
-	// 명령 프롬프트 띄어서 사용자 입력 받음
-	minishell->input = readline(prompt);
-	add_history(minishell->input);
-	if (minishell->input == NULL)
-		exit(0);
-}
-
-void	ft_execute(char *cmd, char **envp)
+void	ft_execute(char **cmds, char **envp)
 {
 	char	*path;
-	char	**cmds;
 
-	cmds = ft_split(cmd, ' ');
 	path = (ft_get_path(cmds[0], envp));
 	if (execve(path, cmds, envp) < 0)
 	{
-		//error 처리 해주기.
+		//error 처리 해주기
+		exit(1);
 	}
 }
 
@@ -176,103 +132,134 @@ void	ft_execute(char *cmd, char **envp)
 // 		ft_exit();
 // }
 
-void	ft_check_pipe(t_cmds *cmd)
-{
-	// if (ft_pipe_check() == true)
-	if (pipe(cmd->pipe_fd) < 0)
-		exit(0);
-}
+// void	ft_check_pipe(t_cmds *cmd)
+// {
+// 	// if (ft_pipe_check() == true)
+// 	if (pipe(cmd->pipe_fd) < 0)
+// 		exit(0);
+// }
 
-void	ft_fork(t_cmds *cur_cmd, t_minishell *minishell)
+void	ft_fork(t_list *plines, t_pline *pline, int pid, char **envp)
 {
+	t_pline	*prev;
+
+	if (plines->prev)
+		prev = ((t_pline *)plines->prev->content);
 	// 포크할 필요가 없으면 pid == 0 으로 들어가 처리 한다.
-	cur_cmd->pid = 0;
+	pid = 0;
 	// if (is_pipe == true) || !(is_built_in)) // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
-	cur_cmd->pid = fork();
-	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
-	if (cur_cmd->pid < 0)
+	pid = fork();
+	if (pid < 0)
 		exit(0);
-	if (cur_cmd->pid == 0)
+	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
+	if (pid > 0)
+	{
+		waitpid(pid, NULL, WUNTRACED); // WUNTRACED 
+		if (prev->is_pipe == ISPIPE && prev->pipe_fd[0] != 0)
+			close(prev->pipe_fd[0]);
+		if (pline->pipe_fd[1])
+			close(pline->pipe_fd[1]);
+	}
+	if (pid == 0)
 	{
 		// 이전에 파이프였다면 이전 STDIN 값을 파이프로 가져온다.
-		if (cur_cmd->previous && cur_cmd->previous->is_pipe)
+		if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
 		{
-			dup2(cur_cmd->pipe_fd[0], STDIN_FILENO);
-			close(cur_cmd->pipe_fd[1]);
+			dup2(prev->pipe_fd[0], STDIN_FILENO);
+			close(pline->pipe_fd[1]);
+		}
+		else if (pline->file_fd[0])
+		{
+			dup2(prev->file_fd[0], STDIN_FILENO);
+			close(pline->file_fd[0]);
 		}
 		// 다음 파이프가 있고, 아웃파일이 없다면. (만약 아웃파일이 있으면 아웃 파일로 STDOUT 해야 하기 때문)
-		if (cur_cmd->is_pipe && !(cur_cmd->file_fd[1]))
+		if (pline->is_pipe == ISPIPE && pline->file_fd[1] != ISPIPE)
 		{
-			close(cur_cmd->pipe_fd[0]);
-			dup2(cur_cmd->pipe_fd[1], STDOUT_FILENO);
+			dup2(pline->pipe_fd[1], STDOUT_FILENO);
+			close(pline->pipe_fd[0]);
+		}
+		else if (prev && prev->file_fd[1] != 0)
+		{
+			dup2(prev->file_fd[1], STDOUT_FILENO);
+			close(pline->file_fd[0]);
 		}
 		// if (ft_bulit_in(str, envp) == true)
 		// 	exit(0);
-		ft_execute(cur_cmd, minishell->envp);
+		ft_execute(pline->cmds, envp);
 	}
 }
 
-void	ft_nanoshell(t_cmds *cmds, t_minishell *minishell)
+void	ft_nanoshell(t_list *plines, char **envp)
 {
-	t_cmds	*cur_cmd;
+	t_list	*head;
+	t_pline	*pline;
 
-	cur_cmd = cmds;
-	while (cur_cmd)
+	head = plines;
+	while (plines)
 	{
-		ft_redir(plines->pline, cur_cmd); // 리스트를 순회하며 infile 과 outfile 나온 fd 를 cur_cmd 에 file_fd[2] 로 넣어 두고 사용.
+		pline = (t_pline *)plines->content;
+		// ft_redir(plines); // 리스트를 순회하며 infile 과 outfile 나온 fd 를 plines 에 file_fd[2] 로 넣어 두고 사용.
 		// ft_check_pipe() // 파이프인지 체크, fork를 할지 말지 체크해야함. // ft_open_pipe() 는 여기에 들어가면 될 것 같음
-		ft_fork(cur_cmd, minishell); // if (is_pipe || is_not_built_in)
+		ft_fork(plines, pline, pline->pid, envp); // if (is_pipe || is_not_built_in)
 		// ft_close_pipe(); 현재 열린 파이프와 이전에 사용된 파이프를 close 해준다.
-		cur_cmd = cur_cmd->next;
-	}
-	// 자식 프로세스를 다 돌고 나올때 까지 부모는 기다려 준다.
-	if (cur_cmd->pid > 0)
-	{
-	waitpid(cur_cmd->pid, NULL, 0);
-	if (minishell->previous->pipe_fd[0])
-		close(minishell->previous->pipe_fd[0]);
-	close(minishell->pipe_fd[1]);
+		// 자식 프로세스를 다 돌고 나올때 까지 부모는 기다려 준다.
+		plines = plines->next;
 	}
 	// ft_close_pipe() // 명령이 끝났으므로 열린 fd는 모두 close 해야 무한루프에 빠지지 않는다.
 }
 
-void	ft_sig_handler(int	signum)
+t_list *ft_init_env(char **envp)
 {
-	if (signum != SIGINT)
-		return;
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 1);
-	rl_redisplay();
+	t_list 	*lst;
+	t_env 	*env;
+	char 	**split;
+	int 	i;
+
+	i = 0;
+	lst = NULL;
+	while (envp[i])
+	{
+		env = (t_env *)ft_malloc(sizeof(t_env), 1);
+		if (!env)
+			return (NULL);
+		split = ft_split(envp[i], '=');
+		env->key = ft_strdup(split[0]);
+		env->value = ft_strdup(split[1]);
+		ft_lstadd_back(&lst, ft_lstnew(env));
+		ft_free_two(&split);
+		i++;
+	}
+	return (lst);
 }
 
-void ft_signal()
+int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **envp
 {
-	signal(SIGINT, ft_sig_handler);  // CTRL + C
-	signal(SIGQUIT, SIG_IGN); // CTRL + /
-}
+	// t_list 	*plines;
+	t_list	*env;
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_minishell	*minishell;
-	t_list		*plines;
-	t_cmds		*cmd;
-
-	minishell = malloc(sizeof(t_minishell));
-	if (!minishell)
+	if (argc > 2)
+		exit(1);
+	if (argv[0] == NULL)
 		exit(1);
 	// 처음에 envp 초기화 해서 가지고 다녀야 한다.
 	printf("\n\nNANOSHELL BY HYUJO & DHA\n\n");
-	ft_signal();
-	while (1)
+	env = ft_init_env(envp);
+	while (env)
 	{
-		// 프롬프트 명령 띄울 때 현재 유저랑 디렉토리 나타내기
-		ft_prompt(minishell);
-		plines = analyze(minishell->input);
-		// cmd = ft_create_cmds(plines) // 여기서 ft_redirection
-		// 파싱한 cmds excute 할 것
-		ft_nanoshell(cmd, minishell);
-		// printf("token : %s\n", token_lst->content->str);
+		printf("key : %s\n", ((t_env *)env->content)->key);
+		printf("value : %s\n", ((t_env *)env->content)->value);
+		env = env->next;
 	}
+	// ft_signal();	
+	// while (1)
+	// {
+	// 	// 프롬프트 명령 띄울 때 현재 유저랑 디렉토리 나타내기
+	// 	plines = analyze(readline("\033[0;91m\033[1mdha's Prompt$ \033[0m"));
+	// 	// cmd = ft_create_cmds(plines) // 여기서 ft_redirection
+	// 	// 파싱한 cmds excute 할 것
+	// 	ft_nanoshell(plines, envp);
+	// 	// printf("token : %s\n", token_lst->content->str);
+	// }
 	return (0);
 }

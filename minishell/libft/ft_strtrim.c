@@ -3,34 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 11:57:54 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/13 16:25:22 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/18 15:43:18 by dha               #+#    #+#             */
+/*   Updated: 2021/11/29 20:23:39 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+static int	is_set(char c, char const *set)
+{
+	int	i;
+
+	i = 0;
+	while (set[i] != '\0')
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	if (c == '\0')
+		return (1);
+	return (0);
+}
+
 char	*ft_strtrim(char const *s1, char const *set)
 {
-	char				*str_trim;
-	size_t				front;
-	size_t				back;
+	size_t	start;
+	size_t	end;
+	char	*ret;
 
-	if (!s1 || !set)
-		return (ft_strdup(""));
-	front = 0;
-	back = ft_strlen(s1);
-	while (s1[front] && ft_strchr(set, s1[front]))
-		front++;
-	while (back > front && ft_strchr(set, s1[back]))
-		back--;
-	if (back == front)
-		return (ft_strdup(""));
-	str_trim = malloc(sizeof(char) * back - front + 2);
-	if (!str_trim)
+	start = 0;
+	end = ft_strlen(s1);
+	while (s1[start] != '\0' && is_set(s1[start], set))
+		start++;
+	while (end > start && is_set(s1[end], set))
+		end--;
+	ret = (char *) malloc(sizeof(char) * (end - start) + 2);
+	if (ret == 0)
 		return (0);
-	ft_strlcpy(str_trim, s1 + front, back - front + 2);
-	return (str_trim);
+	ft_strlcpy(ret, s1 + start, end - start + 2);
+	return (ret);
 }

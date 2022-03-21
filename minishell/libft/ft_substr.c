@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/23 11:01:58 by hyujo             #+#    #+#             */
-/*   Updated: 2021/12/04 17:14:58 by hyujo            ###   ########.fr       */
+/*   Created: 2021/11/20 19:04:30 by dha               #+#    #+#             */
+/*   Updated: 2021/11/28 19:42:29 by dha              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*str;
+	size_t	s_len;
+	char	*ret;
 
-	if (!s)
+	s_len = ft_strlen(s);
+	if (s_len <= start || len == 0 || s_len == 0)
+		return ((char *) ft_calloc(1, 1));
+	if (len > s_len - start)
+		len = s_len - start;
+	ret = (char *) malloc(sizeof(char) * (len + 1));
+	if (ret == 0)
 		return (0);
-	if ((unsigned int)ft_strlen(s) < start)
-		return (ft_strdup(""));
-	if ((unsigned int)ft_strlen(s + start) < len)
-		len = ft_strlen(s + start);
-	str = malloc(sizeof(char) * len + 1);
-	if (!str)
-		return (0);
-	ft_strlcpy(str, s + start, len + 1);
-	return (str);
+	ft_strlcpy(ret, s + start, len + 1);
+	return (ret);
 }
