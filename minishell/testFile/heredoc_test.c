@@ -7,11 +7,16 @@ int	main()
 	int		pipe_fd[2];
 	int		fd;
 
-	fd = open("./temp2.txt", O_WRONLY, O_CREAT, O_APPEND, 0777);
+	fd = open("./temp1.txt", O_WRONLY, O_CREAT, O_APPEND, 0777);
 	if (fd < 0)
 		exit(1);
 	printf("fd : %d\n", fd);
 	close(fd);
+	close(fd);
+	close(fd);
+	close(fd);
+	close(fd);
+	dup2(fd, STDOUT_FILENO);
 	printf("fd : %d\n", fd);
 	//if (pipe(pipe_fd) < 0)
 	//	exit(1);

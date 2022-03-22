@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/21 23:50:02 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/22 22:38:43 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,30 +154,38 @@ void	ft_execute(char **cmds, t_list *env, char **envp)
 // 		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
 // }
 
-// void	ft_built_in(char *cmd)
-// {
-// 	if ((ft_strncmp(cmd, "echo", 5)) == 0)
-// 		ft_echo();
-// 	else if ((ft_strncmp(cmd, "cd", 3)) == 0)
-// 		ft_cd();
-// 	else if ((ft_strncmp(cmd, "pwd", 4)) == 0)
-// 		ft_pwd();
-// 	else if ((ft_strncmp(cmd, "env", 4)) == 0)
-// 		ft_env();
-// 	else if ((ft_strncmp(cmd, "export", 7)) == 0)
-// 		ft_export();
-// 	else if ((ft_strncmp(cmd, "unset", 6)) == 0)
-// 		ft_unset();
-// 	else if ((ft_strncmp(cmd, "exit", 5)) == 0)
-// 		ft_exit();
-// }
+int	ft_built_in(char *cmd)
+{
+	if ((ft_strncmp(cmd, "echo", 5)) == 0)
+		// ft_echo();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "cd", 3)) == 0)
+		// ft_cd();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "pwd", 4)) == 0)
+		// ft_pwd();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "env", 4)) == 0)
+		// ft_env();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "export", 7)) == 0)
+		// ft_export();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "unset", 6)) == 0)
+		// ft_unset();
+		printf("echo\n");
+	else if ((ft_strncmp(cmd, "exit", 5)) == 0)
+		// ft_exit();
+		printf("echo\n");
+	return (0);
+}
 
-// void	ft_check_pipe(t_cmds *cmd)
-// {
-// 	// if (ft_pipe_check() == true)
-// 	if (pipe(cmd->pipe_fd) < 0)
-// 		exit(0);
-// }
+void	ft_check_pipe(t_pline *pline)
+{
+	if (pline->is_pipe == ISPIPE)
+		if (pipe(pline->pipe_fd) < 0)
+			exit(0);
+}
 
 void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 {
@@ -187,7 +195,7 @@ void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 		prev = ((t_pline *)plines->prev->content);
 	// 포크할 필요가 없으면 pid == 0 으로 들어가 처리 한다.
 	pline->pid = 0;
-	if (pline->is_pipe == ISPIPE) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
+	if (pline->is_pipe == ISPIPE || ft_built_in(pline->cmds[0]) == 0) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
 		pline->pid = fork();
 	if (pline->pid < 0)
 		exit(0);
@@ -195,9 +203,10 @@ void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 	if (pline->pid > 0)
 	{
 		waitpid(pline->pid, NULL, WUNTRACED); // WUNTRACED
-		close(pline->pipe_fd[1]); // 지금 pipe_fd[1] 무조건 닫지
+		// close(pline->pipe_fd[1]); // 지금 pipe_fd[1] 무조건 닫지
 		if (prev && prev->pipe_fd[0]) // 이전 파이프 남아 있으면 닫자
 			close(prev->pipe_fd[0]);
+		close(pline->pipe_fd[1]);
 	}
 	// 자식에서 pline->pipe_fd[0] 은 있으면 사용하고 닫음만 잘하자. 인에서 어차피 닫는다.
 	if (pline->pid == 0)
@@ -206,24 +215,26 @@ void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 		if (pline->file_fd[0])
 		{
 			dup2(pline->file_fd[0], STDIN_FILENO);
-			close(pline->file_fd[0]); // 인파이프 중복
-			close(pline->pipe_fd[0]);
+			close(pline->file_fd[0]);
 		}
 		// 이전에 파이프이고 아웃파일 없으면 넘어온거 사용
 		else if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
 		{
 			dup2(prev->pipe_fd[0], STDIN_FILENO);
-			close(pline->pipe_fd[0]); // 인파이프 중복
 			close(prev->pipe_fd[0]);
 		}
-		else
-			close(pline->pipe_fd[0]); // 인파이프 중복 나중에 최적화 하자! // 그냥 입력 필요 없
+		if (pline->is_pipe == ISPIPE)
+			close(pline->pipe_fd[0]);
+		// close(pline->pipe_fd[0]); // 인파이프 중복 나중에 최적화 하자! // 그냥 입력 필요 없
 		// 아웃파일 있으면
 		if (pline->file_fd[1])
 		{
 			dup2(pline->file_fd[1], STDOUT_FILENO);
 			close(pline->file_fd[1]);
-			close(pline->pipe_fd[1]); // 필요없은 파이프 꼭 다 닫기
+			if (pline->is_pipe == ISPIPE)
+			{
+				close(pline->pipe_fd[1]); // 필요없은 파이프 꼭 다 닫기
+			}
 		}
 		// 아웃파일 없고 파이프면
 		else if (pline->is_pipe == ISPIPE && pline->file_fd[1] == 0)
@@ -231,7 +242,7 @@ void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 			dup2(pline->pipe_fd[1], STDOUT_FILENO);
 		}
 		// 그냥 입력, 출력이면
-		else
+		else if (pline->is_pipe == ISPIPE)
 			close(pline->pipe_fd[1]); // 그냥 출력이면 필요 없
 		// if (ft_bulit_in(str, envp) == true)
 		// 	exit(0);
@@ -249,35 +260,46 @@ void	ft_nanoshell(t_list *plines, t_list *env, char **envp)
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
-		// ft_check_pipe() // 파이프인지 체크, fork를 할지 말지 체크해야함. // ft_open_pipe() 는 여기에 들어가면 될 것 같음
+		ft_check_pipe(pline); // 파이프인지 체크, fork를 할지 말지 체크해야함. // ft_open_pipe() 는 여기에 들어가면 될 것 같음
 		ft_fork(cur_plines, pline, env, envp); // if (is_pipe || is_not_built_in)
 		// ft_close_pipe(); 현재 열린 파이프와 이전에 사용된 파이프를 close 해준다.
 		// 자식 프로세스를 다 돌고 나올때 까지 부모는 기다려 준다.
+		// if (pline->heredoc_fd[0] == pline->file_fd[0])
+		// {
+		// 	close(pline->heredoc_fd[0]);
+		// 	close(pline->file_fd[0]);
+		// }
+		// if (pline->file_fd[0])
+		// 	close(pline->file_fd[0]);
 		cur_plines = cur_plines->next;
 	}
-	// ft_close_pipe() // 명령이 끝났으므로 열린 fd는 모두 close 해야 무한루프에 빠지지 않는다.
+		// close(pline->pipe_fd[0]);
+		// close(pline->pipe_fd[1]);
+		// ft_close_pipe() // 명령이 끝났으므로 열린 fd는 모두 close 해야 무한루프에 빠지지 않는다.
 }
 
 t_list *ft_init_env(char **envp)
 {
-	t_list 	*lst;
-	t_env 	*env;
-	char 	**split;
-	int 	i;
+	t_list *lst;
+	t_env *env;
+	char *tmp;
+	int idx[2];
 
-	i = 0;
+	idx[0] = 0;
 	lst = NULL;
-	while (envp[i])
+	while (envp[idx[0]])
 	{
+		idx[1] = 0;
 		env = (t_env *)ft_malloc(sizeof(t_env), 1);
-		if (!env)
-			return (NULL);
-		split = ft_split(envp[i], '=');
-		env->key = ft_strdup(split[0]);
-		env->value = ft_strdup(split[1]);
+		tmp = ft_strdup(envp[idx[0]]);
+		while (tmp[idx[1]] != '=')
+			idx[1]++;
+		tmp[idx[1]] = '\0';
+		env->key = ft_strdup(tmp);
+		env->value = ft_strdup(tmp + idx[1] + 1);
 		ft_lstadd_back(&lst, ft_lstnew(env));
-		ft_free_two(&split);
-		i++;
+		free(tmp);
+		idx[0]++;
 	}
 	return (lst);
 }
@@ -299,6 +321,7 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 	{
 		plines = analyze(readline("\033[0;91m\033[1mdha's Prompt$ \033[0m"));
 		ft_nanoshell(plines, env, envp);
+		free(plines);
 	}
 	return (0);
 }

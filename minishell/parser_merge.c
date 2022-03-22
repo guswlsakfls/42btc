@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 19:52:25 by dha               #+#    #+#             */
-/*   Updated: 2022/03/20 22:33:40 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/22 16:27:32 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int parse_redir(t_pline *pline, t_list **token, int type)
 		return (-1);
 	}
 	((t_token *)next->content)->type = get_type(*token);
-	if (type & IREDIR || type & APPEND)
+	if (type & IREDIR || type & HEREDOC) // 여기 APPEND 였다.
 		ft_lstadd_back(&(pline->ifile), ft_lstnew(token_dup(next->content)));
 	else
 		ft_lstadd_back(&(pline->ofile), ft_lstnew(token_dup(next->content)));
