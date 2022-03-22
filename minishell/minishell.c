@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/22 22:38:43 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/23 00:21:16 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,35 +187,41 @@ void	ft_check_pipe(t_pline *pline)
 			exit(0);
 }
 
-void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
+void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 {
 	t_pline	*prev;
 
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
 	// 포크할 필요가 없으면 pid == 0 으로 들어가 처리 한다.
-	pline->pid = 0;
-	if (pline->is_pipe == ISPIPE || ft_built_in(pline->cmds[0]) == 0) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
-		pline->pid = fork();
-	if (pline->pid < 0)
+	cur->pid = 0;
+	if (cur->is_pipe == ISPIPE || ft_built_in(cur->cmds[0]) == 0) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
+		cur->pid = fork();
+	if (cur->pid < 0)
 		exit(0);
 	ft_signal(); // 자식 프로세스에서 시그널 처리이다.
-	if (pline->pid > 0)
+	if (cur->pid > 0)
 	{
-		waitpid(pline->pid, NULL, WUNTRACED); // WUNTRACED
+		waitpid(cur->pid, NULL, WUNTRACED); // WUNTRACED
 		// close(pline->pipe_fd[1]); // 지금 pipe_fd[1] 무조건 닫지
 		if (prev && prev->pipe_fd[0]) // 이전 파이프 남아 있으면 닫자
 			close(prev->pipe_fd[0]);
-		close(pline->pipe_fd[1]);
+		if (cur->is_pipe == ISPIPE)
+			close(cur->pipe_fd[1]);
+		if (cur->is_pipe == ISPIPE && plines->next == NULL) // 이거는 지금 파이프 인데 다음 커맨드 없으면 인듯?
+			close(cur->pipe_fd[0]);
 	}
 	// 자식에서 pline->pipe_fd[0] 은 있으면 사용하고 닫음만 잘하자. 인에서 어차피 닫는다.
-	if (pline->pid == 0)
+	if (cur->pid == 0)
 	{
+		// 자식에서 안쓰는 파이프 닫음
+		if (cur->is_pipe == ISPIPE)
+			close(cur->pipe_fd[0]);
 		// 현재 인파일이 있으면 사용
-		if (pline->file_fd[0])
+		if (cur->file_fd[0] != 0)
 		{
-			dup2(pline->file_fd[0], STDIN_FILENO);
-			close(pline->file_fd[0]);
+			dup2(cur->file_fd[0], STDIN_FILENO);
+			close(cur->file_fd[0]);
 		}
 		// 이전에 파이프이고 아웃파일 없으면 넘어온거 사용
 		else if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
@@ -223,30 +229,23 @@ void	ft_fork(t_list *plines, t_pline *pline, t_list *env, char **envp)
 			dup2(prev->pipe_fd[0], STDIN_FILENO);
 			close(prev->pipe_fd[0]);
 		}
-		if (pline->is_pipe == ISPIPE)
-			close(pline->pipe_fd[0]);
 		// close(pline->pipe_fd[0]); // 인파이프 중복 나중에 최적화 하자! // 그냥 입력 필요 없
 		// 아웃파일 있으면
-		if (pline->file_fd[1])
+		if (cur->file_fd[1] != 0)
 		{
-			dup2(pline->file_fd[1], STDOUT_FILENO);
-			close(pline->file_fd[1]);
-			if (pline->is_pipe == ISPIPE)
-			{
-				close(pline->pipe_fd[1]); // 필요없은 파이프 꼭 다 닫기
-			}
+			dup2(cur->file_fd[1], STDOUT_FILENO);
+			close(cur->file_fd[1]);
+			close(cur->pipe_fd[1]); // 아웃파일이 있으니 아웃파이프 꼭 다 닫기
 		}
 		// 아웃파일 없고 파이프면
-		else if (pline->is_pipe == ISPIPE && pline->file_fd[1] == 0)
+		else if (cur->is_pipe == ISPIPE && cur->file_fd[1] == 0)
 		{
-			dup2(pline->pipe_fd[1], STDOUT_FILENO);
+			dup2(cur->pipe_fd[1], STDOUT_FILENO);
+			close(cur->pipe_fd[1]); // 이거 추가함
 		}
-		// 그냥 입력, 출력이면
-		else if (pline->is_pipe == ISPIPE)
-			close(pline->pipe_fd[1]); // 그냥 출력이면 필요 없
 		// if (ft_bulit_in(str, envp) == true)
 		// 	exit(0);
-		ft_execute(pline->cmds, env, envp);
+		ft_execute(cur->cmds, env, envp);
 	}
 }
 

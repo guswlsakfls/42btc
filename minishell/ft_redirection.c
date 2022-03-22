@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/22 19:02:41 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/23 00:24:36 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,6 @@ void	ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메
 				if (pline->file_fd[1] != 0)
 				{
 					close(pline->file_fd[1]);
-					pline->file_fd[1] = 0;
 				}
 				pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 				if (pline->file_fd[1] < 0)
