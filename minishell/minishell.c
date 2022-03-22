@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/23 00:21:16 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/23 00:54:48 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 		// close(pline->pipe_fd[1]); // 지금 pipe_fd[1] 무조건 닫지
 		if (prev && prev->pipe_fd[0]) // 이전 파이프 남아 있으면 닫자
 			close(prev->pipe_fd[0]);
-		if (cur->is_pipe == ISPIPE)
+		if (cur->is_pipe == ISPIPE) // 여기 무한 루프 생겼음, 파이프 닫을 필요 없는데 닫아서 생김 슈발
 			close(cur->pipe_fd[1]);
 		if (cur->is_pipe == ISPIPE && plines->next == NULL) // 이거는 지금 파이프 인데 다음 커맨드 없으면 인듯?
 			close(cur->pipe_fd[0]);
@@ -235,6 +235,7 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 		{
 			dup2(cur->file_fd[1], STDOUT_FILENO);
 			close(cur->file_fd[1]);
+			// if (cur->is_pipe == ISPIPE)
 			close(cur->pipe_fd[1]); // 아웃파일이 있으니 아웃파이프 꼭 다 닫기
 		}
 		// 아웃파일 없고 파이프면
