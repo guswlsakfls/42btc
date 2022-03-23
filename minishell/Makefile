@@ -6,7 +6,7 @@
 #    By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/21 23:51:24 by hyunjinjo        ###   ########.fr        #
+#    Updated: 2022/03/23 17:32:31 by hyunjinjo        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,6 +29,7 @@ SRCS = minishell.c \
 		parser_analyze.c \
 		parser_analyze_utils.c \
 		parser_merge_utils.c \
+		ft_built_in.c \
 		ft_redirection.c \
 
 SRCS_TEST = ./testFile/heredoc_test.c \

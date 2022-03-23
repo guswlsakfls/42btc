@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/23 00:54:48 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/23 23:41:55 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,29 @@ char	*ft_get_envp(t_list	*env, char *key)
 // 	return (0);
 // }
 
+char	**ft_join_env(t_list *env)
+{
+	t_list	*list;
+	char	**envp;
+	int		size;
+	char	*tmp;
+
+	size = ft_lstsize(env);
+	envp = malloc(sizeof(char *) * size + 1);
+	list = env;
+	size = 0;
+	while (list)
+	{
+		tmp = ft_strjoin(((t_env *)list->content)->key, "=");
+		envp[size] = ft_strjoin(tmp, ((t_env *)list->content)->value);
+		list = list->next;
+		size++;
+		free(tmp);
+	}
+	envp[++size] = NULL;
+	return (envp);
+}
+
 char *ft_get_path(char *cmd, t_list *env)
 {
 	int 	i;
@@ -154,30 +177,88 @@ void	ft_execute(char **cmds, t_list *env, char **envp)
 // 		// dup2(minishell->pipe_fd[1], STDOUT_FILENO);
 // }
 
-int	ft_built_in(char *cmd)
+void	ft_echo(char **cmds)
 {
-	if ((ft_strncmp(cmd, "echo", 5)) == 0)
-		// ft_echo();
-		printf("echo\n");
-	else if ((ft_strncmp(cmd, "cd", 3)) == 0)
+	int i;
+	int option;
+
+	option = true;
+	i = 1;
+	if (cmds[i] && ft_strncmp(cmds[i], "-n", 3) == false)
+	{
+		option = false;
+		i++;
+	}
+	while (cmds[i])
+	{
+		ft_putstr_fd(cmds[i], 1);
+		if (cmds[i + 1] == NULL)
+			ft_putchar_fd(' ', 1);
+		i++;
+	}
+	if (option)
+		ft_putchar_fd('\n', 1);
+}
+
+// void	ft_cd(char **cmds, t_list *env)
+// {
+// 	char	*old_pwd;
+// 	char	*cur_pwd;
+// 	int		i;
+
+// 	old_pwd = ft_get_envp(env, "PWD");
+// 	i = 1;
+// 	while (cmds[i])
+// 	{
+// 		cur_pwd = ft_
+// 	}
+// }
+
+int	ft_built_in(char **cmds, t_list *env)
+{
+	t_list	*list;
+
+	list = env;
+	if ((ft_strncmp(cmds[0], "echo", 5)) == 0)
+		ft_echo(cmds);
+	else if ((ft_strncmp(cmds[0], "cd", 3)) == 0)
 		// ft_cd();
 		printf("echo\n");
-	else if ((ft_strncmp(cmd, "pwd", 4)) == 0)
+	else if ((ft_strncmp(cmds[0], "pwd", 4)) == 0)
 		// ft_pwd();
 		printf("echo\n");
-	else if ((ft_strncmp(cmd, "env", 4)) == 0)
+	else if ((ft_strncmp(cmds[0], "env", 4)) == 0)
 		// ft_env();
 		printf("echo\n");
-	else if ((ft_strncmp(cmd, "export", 7)) == 0)
+	else if ((ft_strncmp(cmds[0], "export", 7)) == 0)
 		// ft_export();
 		printf("echo\n");
-	else if ((ft_strncmp(cmd, "unset", 6)) == 0)
+	else if ((ft_strncmp(cmds[0], "unset", 6)) == 0)
 		// ft_unset();
 		printf("echo\n");
-	else if ((ft_strncmp(cmd, "exit", 5)) == 0)
+	else if ((ft_strncmp(cmds[0], "exit", 5)) == 0)
 		// ft_exit();
 		printf("echo\n");
 	return (0);
+}
+
+int ft_check_built_in(char *cmd)
+{
+	if ((ft_strncmp(cmd, "echo", 5)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "cd", 3)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "pwd", 4)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "env", 4)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "export", 7)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "unset", 6)) == 0)
+		return (true);
+	else if ((ft_strncmp(cmd, "exit", 5)) == 0)
+		return (true);
+	return (false);
 }
 
 void	ft_check_pipe(t_pline *pline)
@@ -187,7 +268,7 @@ void	ft_check_pipe(t_pline *pline)
 			exit(0);
 }
 
-void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
+void ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 {
 	t_pline	*prev;
 
@@ -195,7 +276,7 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 		prev = ((t_pline *)plines->prev->content);
 	// 포크할 필요가 없으면 pid == 0 으로 들어가 처리 한다.
 	cur->pid = 0;
-	if (cur->is_pipe == ISPIPE || ft_built_in(cur->cmds[0]) == 0) //  !(is_built_in)  // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
+	if (cur->is_pipe == ISPIPE || ft_check_built_in(cur->cmds[0]) == false) // fork 는 파이프가 있거나 execve 를 쓰거나 할 때 분기 한다.
 		cur->pid = fork();
 	if (cur->pid < 0)
 		exit(0);
@@ -235,8 +316,8 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 		{
 			dup2(cur->file_fd[1], STDOUT_FILENO);
 			close(cur->file_fd[1]);
-			// if (cur->is_pipe == ISPIPE)
-			close(cur->pipe_fd[1]); // 아웃파일이 있으니 아웃파이프 꼭 다 닫기
+			if (cur->is_pipe == ISPIPE)
+				close(cur->pipe_fd[1]); // 아웃파일이 있으니 아웃파이프 꼭 다 닫기
 		}
 		// 아웃파일 없고 파이프면
 		else if (cur->is_pipe == ISPIPE && cur->file_fd[1] == 0)
@@ -244,9 +325,8 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 			dup2(cur->pipe_fd[1], STDOUT_FILENO);
 			close(cur->pipe_fd[1]); // 이거 추가함
 		}
-		// if (ft_bulit_in(str, envp) == true)
-		// 	exit(0);
-		ft_execute(cur->cmds, env, envp);
+		if (ft_built_in(cur->cmds, env) == false)
+			ft_execute(cur->cmds, env, envp);
 	}
 }
 
@@ -316,7 +396,7 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 	// 처음에 envp 초기화 해서 가지고 다녀야 한다.
 	printf("\n\nNANOSHELL BY HYUJO & DHA\n\n");
 	env = ft_init_env(envp);
-	ft_signal();	
+	ft_signal();
 	while (1)
 	{
 		plines = analyze(readline("\033[0;91m\033[1mdha's Prompt$ \033[0m"));
