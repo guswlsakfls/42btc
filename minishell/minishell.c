@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/23 23:41:55 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/24 14:18:23 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	ft_free_two(char ***split)
 	*split = NULL;
 }
 
-char	*ft_get_envp(t_list	*env, char *key)
+char	*ft_get_value(t_list *env, char *key)
 {
 	t_list 	*list;
 
@@ -129,29 +129,29 @@ char	**ft_join_env(t_list *env)
 	return (envp);
 }
 
-char *ft_get_path(char *cmd, t_list *env)
+char *ft_get_envp(char *cmd, t_list *env, char *key)
 {
 	int 	i;
-	char 	**paths;
-	char 	*path_list;
-	char 	*path;
+	char 	**values;
+	char 	*value_list;
+	char 	*value;
 
-	paths = ft_split(ft_get_envp(env, "PATH"), ':');
+	values = ft_split(ft_get_value(env, key), ':');
 	i = -1;
-	while (paths[++i])
+	while (values[++i])
 	{
-		path_list = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(path_list, cmd);
-		if (access(path, F_OK) == 0)
+		value_list = ft_strjoin(values[i], "/");
+		value = ft_strjoin(value_list, cmd);
+		if (access(value, F_OK) == 0)
 		{
-			ft_free_two(&paths);
-			free(path_list);
-			return (path);
+			ft_free_two(&values);
+			free(value_list);
+			return (value);
 		}
-		free(path);
-		free(path_list);
+		free(value);
+		free(value_list);
 	}
-	ft_free_two(&paths);
+	ft_free_two(&values);
 	return (0);
 }
 
@@ -159,7 +159,7 @@ void	ft_execute(char **cmds, t_list *env, char **envp)
 {
 	char	*path;
 
-	path = (ft_get_path(cmds[0], env));
+	path = (ft_get_envp(cmds[0], env, "PATH"));
 	if (execve(path, cmds, envp) < 0)
 	{
 		//error 처리 해주기
@@ -200,19 +200,38 @@ void	ft_echo(char **cmds)
 		ft_putchar_fd('\n', 1);
 }
 
-// void	ft_cd(char **cmds, t_list *env)
-// {
-// 	char	*old_pwd;
-// 	char	*cur_pwd;
-// 	int		i;
+bool	ft_check_pwd(char *pwd)
+{
+	if (chdir(pwd) == ERROR)
+	{
+		// error_2("cd", path, strerror(errno), 1);
+		// exit_num_set(1);
+		return (false);
+	}
+	return (true);
+}
 
-// 	old_pwd = ft_get_envp(env, "PWD");
-// 	i = 1;
-// 	while (cmds[i])
-// 	{
-// 		cur_pwd = ft_
-// 	}
+// void	ft_reset_cd(t_env *env, char *prev)
+// {
+// 	// 시그널 처리.
 // }
+
+void	ft_cd(char **cmds, t_list *env)
+{
+	char	*prev_pwd;
+	char	*cur_pwd;
+
+	prev_pwd = ft_get_value(env, "PWD"); // 현재 위치 가짐.
+	if (prev_pwd < 0)
+		exit(1);
+	if (cmds[1] == NULL || ft_strncmp(cmds[1], "~", 2) == 0)
+		cur_pwd = ft_get_value(env, "HOME");
+	else
+		cur_pwd = cmds[1];
+	if (ft_check_pwd(cur_pwd) == false)
+		return ;
+	// ft_reset_cd(env, prev_pwd);
+}
 
 int	ft_built_in(char **cmds, t_list *env)
 {
@@ -222,8 +241,7 @@ int	ft_built_in(char **cmds, t_list *env)
 	if ((ft_strncmp(cmds[0], "echo", 5)) == 0)
 		ft_echo(cmds);
 	else if ((ft_strncmp(cmds[0], "cd", 3)) == 0)
-		// ft_cd();
-		printf("echo\n");
+		ft_cd(cmds, env);
 	else if ((ft_strncmp(cmds[0], "pwd", 4)) == 0)
 		// ft_pwd();
 		printf("echo\n");
@@ -239,7 +257,9 @@ int	ft_built_in(char **cmds, t_list *env)
 	else if ((ft_strncmp(cmds[0], "exit", 5)) == 0)
 		// ft_exit();
 		printf("echo\n");
-	return (0);
+	else
+		return (false);
+	return (true);
 }
 
 int ft_check_built_in(char *cmd)

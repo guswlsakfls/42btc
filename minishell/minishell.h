@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/21 19:08:06 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/24 13:47:02 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,8 @@ char	**cmd_split(char *s);
 # define OREDIR 8
 # define APPEND 16
 # define HEREDOC 32
+
+# define ERROR -1
 
 // analyze
 t_list *analyze(char *cmd);
