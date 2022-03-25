@@ -6,27 +6,27 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/23 00:24:36 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/25 21:59:14 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_input_heredoc(t_list *ifile, t_pline *pline)
+void ft_child_heredoc(t_pline *pline, t_token *heredoc)
 {
-	char	*input;
-	t_token	*heredoc;
+	char *input;
 
-	if (pline->heredoc_fd[0] != 0)
-		close(pline->heredoc_fd[0]);
-	heredoc = (t_token *)ifile->content;
-	if (pipe(pline->heredoc_fd) < 0)
-		exit(1);
+	close(pline->heredoc_fd[0]);
 	while (1)
 	{
-		input = readline("> ");
+		input = ft_readline("heredoc");
 		if (!input)
-			exit(1);
+		{
+			ft_putstr_fd("\x1b[1A", 1);
+			ft_putstr_fd("\033[12C", 1);
+			ft_putstr_fd("exit\n", 1);
+			exit(0);
+		}
 		if (ft_strncmp(input, heredoc->str, ft_strlen(heredoc->str) != 0))
 		{
 			ft_putstr_fd(input, pline->heredoc_fd[1]); // 계속 데이터가 fd 파일에 쌓인다.
@@ -35,22 +35,117 @@ void	ft_input_heredoc(t_list *ifile, t_pline *pline)
 		}
 		else
 		{
-			close(pline->heredoc_fd[1]);
 			free(input);
-			break ;
+			exit(0);
 		}
 	}
 }
 
-void	ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
+void	ft_input_heredoc(t_list *ifile, t_pline *pline)
 {
-	t_list	*ifile;
-	t_list	*ofile;
-	t_list	*list;
-	t_pline	*pline;
+	pid_t	pid;
+	t_token	*heredoc;
 
-	list = plines;
-	// heredoc 나오면 제일 먼저 임시파일 만들어 준다. heredoc 찾기 위해 한바퀴
+	if (pline->heredoc_fd[0] != 0)
+		close(pline->heredoc_fd[0]);
+	heredoc = (t_token *)ifile->content;
+	if (pipe(pline->heredoc_fd) < 0)
+		exit(1);
+	pid = fork();
+	if (pid < 0)
+		exit(1);
+	if (pid > 0)
+	{
+		// signal(SIGINT, SIG_IGN); // CTRL + C
+		// signal(SIGQUIT, SIG_IGN);	// 평소 그리고 히어독은 그냥 무시하기 위해
+		waitpid(pid, NULL, WUNTRACED);
+		close(pline->heredoc_fd[1]);
+	}
+	if (pid == 0)
+		ft_child_heredoc(pline, heredoc);
+}
+
+int	ft_iredir(t_list *ifile, t_pline *pline)
+{
+	if (pline->file_fd[0] != 0) // 중복해서 열려 있으면 닫아주고 다시 연다.
+	{
+		close(pline->file_fd[0]);
+		pline->file_fd[0] = 0;
+	}
+	pline->file_fd[0] = open(((t_token *)ifile->content)->str, O_RDONLY, 0777);
+	if (pline->file_fd[0] < 0)
+		exit(1);
+	if (!(ifile->next))
+	{
+		if (pline->heredoc_fd[0])
+			close(pline->heredoc_fd[0]);
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_hredir(t_pline *pline)
+{
+	if (pline->file_fd[0] != 0) // 중복해서 열려 있으면 닫아주고 다시 연다.
+	{
+		close(pline->file_fd[0]);
+		pline->file_fd[0] = 0;
+	}
+	// 복제해서 사용해야 하는데
+	pline->file_fd[0] = pline->heredoc_fd[0];
+}
+
+void	ft_redir_ifile(t_pline *pline, t_list *ifile)
+{
+	while (ifile)
+	{
+		// < 일 때
+		if (((t_token *)ifile->content)->type == IREDIR)
+		{
+			if (ft_iredir(ifile, pline) == 1)
+				break ;
+		}
+		// << 일 때, here_doc 이다.
+		else
+			ft_hredir(pline);
+		ifile = ifile->next;
+	}
+}
+
+void ft_redir_ofile(t_pline *pline, t_list *ofile)
+{
+	while (ofile)
+	{
+		// > 일 때
+		if (((t_token *)ofile->content)->type == OREDIR)
+		{
+			if (pline->file_fd[1] != 0)
+			{
+				close(pline->file_fd[1]);
+			}
+			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			if (pline->file_fd[1] < 0)
+				exit(1);
+		}
+		else
+		{
+			if (pline->file_fd[1] != 0)
+			{
+				close(pline->file_fd[1]);
+				pline->file_fd[1] = 0;
+			}
+			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			if (pline->file_fd[1] < 0)
+				exit(1);
+		}
+		ofile = ofile->next;
+	}
+}
+
+void	ft_get_heredoc(t_list *list)
+{
+	t_list *ifile;
+
 	while (list)
 	{
 		ifile = ((t_pline *)list->content)->ifile;
@@ -62,73 +157,26 @@ void	ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메
 		}
 		list = list->next;
 	}
+}
+
+void ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
+{
+	t_list	*ifile;
+	t_list	*ofile;
+	t_list	*list;
+	t_pline	*pline;
+
+	list = plines;
+	// heredoc 나오면 제일 먼저 임시파일 만들어 준다. heredoc 찾기 위해 한바퀴
+	ft_get_heredoc(list);
 	list = plines;
 	while (list)
 	{
 		pline = (t_pline *)list->content;
 		ifile = ((t_pline *)list->content)->ifile;
-		while (ifile)
-		{
-			// < 일 때
-			if (((t_token *)ifile->content)->type == IREDIR)
-			{
-				if (pline->file_fd[0] != 0) // 중복해서 열려 있으면 닫아주고 다시 연다.
-				{
-					close(pline->file_fd[0]);
-					pline->file_fd[0] = 0;
-				}	
-				pline->file_fd[0] = open(((t_token *)ifile->content)->str, O_RDONLY, 0777);
-				if (pline->file_fd[0] < 0)
-					exit(1);
-				if (!(ifile->next))
-				{
-					if (pline->heredoc_fd[0])
-						close(pline->heredoc_fd[0]);
-					break ;
-				}
-			}
-			// << 일 때, here_doc 이다.
-			else
-			{
-				if (pline->file_fd[0] != 0) // 중복해서 열려 있으면 닫아주고 다시 연다.
-				{
-					close(pline->file_fd[0]);
-					pline->file_fd[0] = 0;
-				}
-				// 복제해서 사용해야 하는데
-				pline->file_fd[0] = pline->heredoc_fd[0];
-				// dup2(pline->heredoc_fd[0], pline->file_fd[0]);
-				// close(pline->heredoc_fd[0]);
-			}
-			ifile = ifile->next;
-		}
+		ft_redir_ifile(pline, ifile);
 		ofile = ((t_pline *)list->content)->ofile;
-		while (ofile)
-		{
-			// > 일 때
-			if (((t_token *)ofile->content)->type == OREDIR)
-			{
-				if (pline->file_fd[1] != 0)
-				{
-					close(pline->file_fd[1]);
-				}
-				pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_TRUNC, 0777);
-				if (pline->file_fd[1] < 0)
-					exit(1);
-			}
-			else
-			{
-				if (pline->file_fd[1] != 0)
-				{
-					close(pline->file_fd[1]);
-					pline->file_fd[1] = 0;
-				}
-				pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_APPEND, 0777);
-				if (pline->file_fd[1] < 0)
-					exit(1);
-			}
-			ofile = ofile->next;
-		}
+		ft_redir_ofile(pline, ofile);
 		list = list->next;
 	}
 }

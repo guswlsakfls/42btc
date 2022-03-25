@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/24 13:47:02 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/25 21:14:13 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,42 @@ typedef struct s_token
 	char *str;
 } t_token;
 
-void ft_here_doc(t_list heredoc);
+// signal
+void ft_sig_cat(int signum);
+void ft_signal_ign();
+void ft_sig_quit(int signum);
+void ft_sig_int(int signum);
+char *ft_readline(char *status);
+void ft_signal_normal();
+void ft_signal_heredoc();
+void ft_reset_signal();
+
+// 다른거
 void ft_redirection(t_list *plines);
+void ft_input_heredoc(t_list *ifile, t_pline *pline);
+int ft_built_in(char **cmds, t_list *env);
+int ft_check_built_in(char *cmd);
+void ft_echo(char **cmds);
+bool ft_check_pwd(char *pwd);
+void ft_cd(char **cmds, t_list *env);
+char *ft_get_value(t_list *env, char *key);
+char **ft_join_env(t_list *env);
+char *ft_get_envp(char *cmd, t_list *env, char *key);
+t_list *ft_init_env(char **envp);
+void ft_execute(char **cmds, t_list *env, char **envp);
+void ft_check_pipe(t_pline *pline);
+void ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp);
+void ft_nanoshell(t_list *plines, t_list *env, char **envp);
+void ft_check_stdin(t_pline *cur, t_pline *prev);
+void ft_check_stdout(t_pline *cur);
+void ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp);
+void ft_parent_close(t_list *plines, t_pline *cur, t_pline *prev);
+void ft_parent(t_list *plines, t_pline *cur, t_pline *prev);
+void ft_free_two(char ***split);
 
 //dha
 
-char	**cmd_split(char *s);
+char **cmd_split(char *s);
 
 # define CMD 1
 # define PIPE 2

@@ -6,7 +6,7 @@
 /*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/22 15:52:02 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/25 15:35:12 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,14 @@ t_list *analyze(char *cmd)
 	t_list *tmp;
 	// int i;
 
-	if (cmd == NULL)   // input Ctrl + D in prompt
-		return (NULL); // has to be fixed to exit bash
+	add_history(cmd);
+	if (cmd == NULL)
+	{
+		ft_putstr_fd("\x1b[1A", 1);
+		ft_putstr_fd("\033[12C", 1);
+		ft_putstr_fd("exit\n", 1);
+		exit(0);
+	} // has to be fixed to exit bash
 	tokens = tokenize(cmd);
 	free(cmd);
 	tmp = tokens;
