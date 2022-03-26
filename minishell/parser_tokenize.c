@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenize.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 20:19:46 by dha               #+#    #+#             */
-/*   Updated: 2022/03/20 22:31:47 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/26 20:37:04 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int get_cmd_len(char *s)
+static int	get_cmd_len(char *s)
 {
-	char *start;
-	int opened;
+	char	*start;
+	int		opened;
 
 	start = s;
 	opened = 0;
@@ -24,10 +24,9 @@ int get_cmd_len(char *s)
 	while (*s != '\0')
 	{
 		if (!opened && (*s == ' ' || is_symbol(s)))
-			break;
-		opened ^= (*s == '\'') << 1;
-		opened ^= (*s == '\"') << 2;
-		opened |= (!opened && (*s == '\\' || *s == ';')) << 3;
+			break ;
+		opened ^= (*s == '\'' && !(opened & 2));
+		opened ^= (*s == '\"' && !(opened & 1)) << 1;
 		s++;
 	}
 	if (opened)
@@ -35,10 +34,10 @@ int get_cmd_len(char *s)
 	return (s - start);
 }
 
-int cnt_words(char *s)
+static int	cnt_words(char *s)
 {
-	int cnt;
-	int cmd_len;
+	int		cnt;
+	int		cmd_len;
 
 	cnt = 0;
 	while (*s != '\0')
@@ -46,7 +45,7 @@ int cnt_words(char *s)
 		while (*s == ' ')
 			s++;
 		if (*s == '\0')
-			break;
+			break ;
 		cmd_len = get_cmd_len(s);
 		if (!cmd_len)
 			return (0);
@@ -56,27 +55,27 @@ int cnt_words(char *s)
 	return (cnt);
 }
 
-char **cmd_split(char *s)
+char	**cmd_split(char *s)
 {
-	char **words;
-	char *word;
-	int cmd_len;
-	int word_cnt;
-	int idx;
+	char	**words;
+	char	*word;
+	int		cmd_len;
+	int		word_cnt;
+	int		idx;
 
 	word_cnt = cnt_words(s);
 	if (word_cnt == 0)
 		return (NULL);
-	words = (char **)ft_malloc(sizeof(char *), word_cnt + 1);
+	words = (char **) ft_malloc(sizeof(char *), word_cnt + 1);
 	idx = 0;
 	while (*s != '\0')
 	{
 		while (*s == ' ')
 			s++;
 		if (*s == '\0')
-			break;
+			break ;
 		cmd_len = get_cmd_len(s);
-		word = ft_malloc(sizeof(char), cmd_len);
+		word = ft_malloc(sizeof(char), cmd_len + 1);
 		strlcpy(word, s, cmd_len + 1);
 		words[idx++] = word;
 		s += cmd_len;
@@ -85,19 +84,21 @@ char **cmd_split(char *s)
 	return (words);
 }
 
-t_list *tokenize(char *cmd)
+t_list	*tokenize(char *cmd)
 {
-	char **cmds;
-	t_list *token_lst;
-	t_token *token;
-	int i;
+	char	**cmds;
+	t_list	*token_lst;
+	t_token	*token;
+	int		i;
 
 	i = 0;
-	cmds = cmd_split(cmd);
 	token_lst = NULL;
+	cmds = cmd_split(cmd);
+	if (cmds == NULL)
+		return (NULL);
 	while (cmds[i])
 	{
-		token = (t_token *)ft_malloc(sizeof(t_token), 1);
+		token = (t_token *) ft_malloc(sizeof(t_token), 1);
 		token->str = cmds[i];
 		token->type |= token_type(cmds[i]);
 		ft_lstadd_back(&token_lst, ft_lstnew(token));

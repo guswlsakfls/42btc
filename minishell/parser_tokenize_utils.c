@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenize_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 20:44:56 by dha               #+#    #+#             */
-/*   Updated: 2022/03/20 19:32:15 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/26 20:37:15 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int is_symbol(char *cmd)
+int	is_symbol(char *cmd)
 {
 	if (!strncmp("<<", cmd, 2) || !strncmp(">>", cmd, 2))
 		return (2);
@@ -21,7 +21,7 @@ int is_symbol(char *cmd)
 	return (0);
 }
 
-int token_type(char *cmd)
+int	token_type(char *cmd)
 {
 	if (!strncmp("<<", cmd, 2))
 		return (HEREDOC);
@@ -34,19 +34,4 @@ int token_type(char *cmd)
 	if (*cmd == '|')
 		return (PIPE);
 	return (CMD);
-}
-
-void token_clear(t_list **lst, void (*del)(void *))
-{
-	t_list *tmp;
-
-	if (lst == 0)
-		return;
-	while (*lst)
-	{
-		tmp = *lst;
-		del(((t_token *)(*lst)->content)->str);
-		*lst = tmp->next;
-		ft_lstdelone(tmp, del);
-	}
 }

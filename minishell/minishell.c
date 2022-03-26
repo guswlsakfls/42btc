@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/25 19:14:33 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/26 21:13:27 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,11 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 		exit(1);
 	// 처음에 envp 초기화 해서 가지고 다녀야 한다.
 	printf("\n\nNANOSHELL BY HYUJO & DHA\n\n");
-	env = ft_init_env(envp);
+	env = ft_init_envs(envp);
 	rl_catch_signals = 0; // 0이면 시그널 처리 출력 x
 	while (1)
 	{
-		plines = analyze(ft_readline(NULL));
+		plines = analyze(ft_readline(NULL), env);
 		ft_nanoshell(plines, env, envp);
 		free(plines);
 	}

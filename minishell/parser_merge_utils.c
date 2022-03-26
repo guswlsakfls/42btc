@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   parser_merge_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 22:13:27 by dha               #+#    #+#             */
-/*   Updated: 2022/03/20 22:32:12 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/26 20:35:31 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int get_type(t_list *token)
+int	get_type(t_list *token)
 {
 	return (((t_token *)token->content)->type);
 }
 
-t_token *token_dup(t_token *token)
+t_token	*token_dup(t_token *token)
 {
-	t_token *new;
+	t_token	*new;
 
 	new = ft_malloc(sizeof(t_token), 1);
 	new->type = token->type;
@@ -27,20 +27,46 @@ t_token *token_dup(t_token *token)
 	return (new);
 }
 
-void ft_stradd(t_pline *pline, int *idx, char *new)
+void	ft_stradd(t_pline *pline, int *idx, char *new)
 {
-	// if (new)
-	// 	printf("idx: %d %s\n", *idx, new);
 	if (pline->cnt == *idx)
 	{
-		pline->cmds = (char **)ft_realloc(pline->cmds, sizeof(char *) * pline->cnt, sizeof(char *) * pline->cnt * 2);
+		pline->cmds = (char **) ft_realloc(pline->cmds, sizeof(char *)
+				* pline->cnt, sizeof(char *) * pline->cnt * 2);
 		pline->cnt = pline->cnt * 2;
 	}
 	pline->cmds[(*idx)++] = ft_strdup(new);
 	if (!new)
 	{
-		pline->cmds = (char **)ft_realloc(pline->cmds, sizeof(char *) * *idx, sizeof(char *) * pline->cnt);
+		pline->cmds = (char **) ft_realloc(pline->cmds, sizeof(char *)
+				* *idx, sizeof(char *) * pline->cnt);
 		*idx = pline->cnt;
-		return;
+		return ;
 	}
+}
+
+void	clear_pline(void *pline)
+{
+	int		i;
+	t_pline	*tmp;
+
+	tmp = (t_pline *)pline;
+	clear_tokens(&tmp->ifile);
+	clear_tokens(&tmp->ofile);
+	i = 0;
+	while (tmp->cmds[i])
+	{
+		free(tmp->cmds[i]);
+		i++;
+	}
+	free(tmp->cmds);
+	free(pline);
+}
+
+t_list	*merge_err(t_list **plines, t_cursor *cur)
+{
+	ft_lstclear(plines, clear_pline);
+	free(cur);
+	*plines = NULL;
+	return (NULL);
 }

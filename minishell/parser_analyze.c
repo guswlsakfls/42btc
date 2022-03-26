@@ -3,69 +3,69 @@
 /*                                                        :::      ::::::::   */
 /*   parser_analyze.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/25 15:35:12 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/26 21:24:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token *get_t(t_pline *pline, int i)
+static void	cntl_D(void)
 {
-	if (i)
-		return ((t_token *)pline->ifile->content);
-	else
-		return ((t_token *)pline->ofile->content);
+	ft_putstr_fd("\x1b[1A", 1);
+	ft_putstr_fd("\033[12C", 1);
+	ft_putstr_fd("exit\n", 1);
+	exit(EXIT_SUCCESS);
 }
 
-t_list *analyze(char *cmd)
+t_list	*analyze(char *cmd, t_list *envs)
 {
-	t_list *tokens;
-	t_list *plines;
-	t_list *tmp;
-	// int i;
+	t_list	*tokens;
+	t_list	*plines;
 
-	add_history(cmd);
 	if (cmd == NULL)
-	{
-		ft_putstr_fd("\x1b[1A", 1);
-		ft_putstr_fd("\033[12C", 1);
-		ft_putstr_fd("exit\n", 1);
-		exit(0);
-	} // has to be fixed to exit bash
+		cntl_D();
 	tokens = tokenize(cmd);
-	free(cmd);
-	tmp = tokens;
-	if (tokens == NULL)
-		return (NULL);
 	plines = merge_token(tokens);
-	tokens_clear(&tokens);
-	tokens = NULL;
-	// system("leaks minishell");
-	// printf("-----------\n");
+	optimize(plines, envs);
+	free(cmd);
+	if (tokens)
+		clear_tokens(&tokens);
+	// int		i;
+	// t_list	*tmp;
+	// t_list	*tmp_ifile;
+	// t_list	*tmp_ofile;
 	// tmp = plines;
 	// while (tmp)
 	// {
 	// 	i = 0;
+	// 	tmp_ifile = ((t_pline *)tmp->content)->ifile;
+	// 	tmp_ofile = ((t_pline *)tmp->content)->ofile;
 	// 	while (((t_pline *)tmp->content)->cmds[i])
 	// 	{
-	// 		printf("%d: %s\n", i, ((t_pline *)tmp->content)->cmds[i]);
+	// 		if (ft_strncmp(((t_pline *)tmp->content)->cmds[i], "env", 0) == 0)
+	// 			builtin_env(((t_pline *)tmp->content)->cmds, &envs);
+	// 		if (ft_strncmp(((t_pline *)tmp->content)->cmds[i], "export", 0) == 0)
+	// 			builtin_export(((t_pline *)tmp->content)->cmds, &envs);
+	// 		if (ft_strncmp(((t_pline *)tmp->content)->cmds[i], "unset", 0) == 0)
+	// 			builtin_unset(((t_pline *)tmp->content)->cmds, &envs);
 	// 		i++;
 	// 	}
-	// 	// while (((t_pline *)tmp->content)->ifile)
-	// 	// {
-	// 	// 	printf("%s ", get_t(tmp->content, 1)->str);
-	// 	// 	((t_pline *)tmp->content)->ifile = ((t_pline *)tmp->content)->ifile->next;
-	// 	// }
-	// 	// while (((t_pline *)tmp->content)->ofile)
-	// 	// {
-	// 	// 	printf("%s ", get_t(tmp->content, 0)->str);
-	// 	// 	((t_pline *)tmp->content)->ofile = ((t_pline *)tmp->content)->ofile->next;
-	// 	// }
-	// 	// printf("\n");
+	// 	while (tmp_ifile)
+	// 	{
+	// 		printf("i: %s ", ((t_token *)tmp_ifile->content)->str);
+	// 		tmp_ifile = tmp_ifile->next;
+	// 	}
+	// 	while (tmp_ofile)
+	// 	{
+	// 		printf("o: %s ", ((t_token *)tmp_ofile->content)->str);
+	// 		tmp_ofile = tmp_ofile->next;
+	// 	}
+	// 	printf("\n");
 	// 	tmp = tmp->next;
 	// }
+	// system("leaks minishell");
 	return (plines);
 }

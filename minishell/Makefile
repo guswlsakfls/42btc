@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+         #
+#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/25 19:17:40 by hyunjinjo        ###   ########.fr        #
+#    Updated: 2022/03/26 20:53:33 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,19 +23,27 @@ RL_INC = $(RL_DIR)/include
 RL_LIB = $(RL_DIR)/lib
 
 SRCS = minishell.c \
+		parser_analyze.c \
+		parser_analyze_utils.c \
 		parser_tokenize.c \
 		parser_tokenize_utils.c \
 		parser_merge.c \
-		parser_analyze.c \
-		parser_analyze_utils.c \
 		parser_merge_utils.c \
+		parser_optimize.c \
+		parser_optimize_utils.c \
+		builtin_env.c \
+		builtin_export.c \
+		builtin_export_arg.c \
+		builtin_export_no_arg.c \
+		builtin_unset.c \
+		builtin_utils.c \
 		ft_built_in.c \
 		ft_redirection.c \
 		ft_signal.c \
 		ft_env.c \
 		ft_excute.c \
 		ft_nanoshell.c \
-		ft_parent_child.c \
+		ft_parent_child.c
 
 SRCS_TEST = ./testFile/heredoc_test.c \
 			# ./testFile/test_utils.c \
