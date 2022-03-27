@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_nanoshell.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/27 19:49:30 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 02:23:25 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,42 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
 		ft_child(cur, prev, env, envp);
 }
 
-void	ft_nanoshell(t_list *plines, t_list *env, char **envp)
+void ft_check_cmds_null(t_pline *cur, t_list *plines)
+{
+	t_pline	*prev;
+
+	if (plines->prev)
+		prev = ((t_pline *)plines->prev->content);
+	if (cur->heredoc_fd[0])
+		close(cur->heredoc_fd[0]);
+	if (cur->file_fd[0] != 0)
+		close(cur->file_fd[0]);
+	else if (prev && prev->is_pipe == ISPIPE && prev->file_fd[1] == 0)
+		close(prev->pipe_fd[0]);
+}
+
+	void ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini)
 {
 	t_list	*cur_plines;
 	t_pline	*pline;
 
 	cur_plines = plines;
-	ft_redirection(cur_plines);
+	ft_redirection(cur_plines, mini);
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
-		if (pline->cmds[0] == NULL) // cmds 가 없으면 파일 체크하고 그냥 출력없이 지나가야함.
+		if (mini->statlog == 256) // 히어독 ctrl+c 일 때
 		{
-			cur_plines = cur_plines->next;
-			continue ;
+			if (pline->heredoc_fd[0] != 0)
+				close(pline->heredoc_fd[0]);
 		}
-		ft_check_pipe(pline);
-		ft_fork(cur_plines, pline, env, envp);
+		else if (pline->cmds == NULL || pline->cmds[0] == NULL) // cmds 가 없으면 파일 체크하고 그냥 출력없이 지나가야함.
+			ft_check_cmds_null(pline, cur_plines);
+		else
+		{
+			ft_check_pipe(pline);
+			ft_fork(cur_plines, pline, env, envp);
+		}
 		cur_plines = cur_plines->next;
 	}
 }

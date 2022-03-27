@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parent_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/27 18:00:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 01:36:34 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_check_stdout(t_pline *cur)
 
 void	ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp)
 {
-	rl_catch_signals = 1; // 1이면 시그널 처리 출력
+	rl_catch_signals = 1;
 	ft_check_stdin(cur, prev);
 	ft_check_stdout(cur);
 	if (ft_built_in(cur->cmds, env) == false)

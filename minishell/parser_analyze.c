@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_analyze.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 21:24:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 00:02:15 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_list	*analyze(char *cmd, t_list *envs)
 
 	if (cmd == NULL)
 		cntl_D();
+	add_history(cmd);
 	tokens = tokenize(cmd);
 	plines = merge_token(tokens);
 	optimize(plines, envs);

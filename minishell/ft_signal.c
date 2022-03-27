@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/27 21:25:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 01:31:14 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,6 @@ void	ft_sig_heredoc(int signum)
 	if (signum != SIGINT)
 		return;
 	printf("\n");
-	// rl_on_new_line();
-	// rl_replace_line("", 1);
-	// rl_redisplay(); // 이거 없애면 컨트롤 씨 했을 때 두번 출력 사라짐.
 	exit(1);        // 히어독일때
 }
 

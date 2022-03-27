@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/27 21:24:05 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 01:54:41 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,10 @@ void ft_child_heredoc(t_pline *pline, t_token *heredoc)
 // 	tcsetattr(STDIN_FILENO, TCSANOW, &(pline->new_term));
 // }
 
-void	ft_input_heredoc(t_list *ifile, t_pline *pline)
+void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini)
 {
 	pid_t	pid;
 	t_token	*heredoc;
-	struct termios	org_term;
-	struct termios	new_term;
 
 	if (pline->heredoc_fd[0] != 0) // heredoc 도 0 으로 초기화 해서 들어와야함.
 		close(pline->heredoc_fd[0]);
@@ -78,17 +76,11 @@ void	ft_input_heredoc(t_list *ifile, t_pline *pline)
 		exit(1);
 	if (pid > 0)
 	{
-		tcgetattr(STDIN_FILENO, &(org_term));
-		tcgetattr(STDIN_FILENO, &(new_term));
-		pline->org_term.c_lflag &= ~ISIG;
-		tcsetattr(STDIN_FILENO, TCSANOW, &(new_term));
-		ft_signal_heredoc();
-		// ft_termios_isig(pline);
-		// signal(SIGINT, SIG_IGN); // CTRL + C
-		// signal(SIGQUIT, SIG_IGN);	// 평소 그리고 히어독은 그냥 무시하기 위해
+		signal(SIGINT, SIG_IGN); // CTRL + C
+		signal(SIGQUIT, SIG_IGN);	// 평소 그리고 히어독은 그냥 무시하기 위해
 		close(pline->heredoc_fd[1]);
-		waitpid(pid, NULL, WUNTRACED);
-		// tcsetattr(STDIN_FILENO, TCSANOW, &(pline->org_term));
+		waitpid(pid, &(mini->statlog), WUNTRACED);
+		printf("stat %d\n", mini->statlog);
 	}
 	if (pid == 0)
 		ft_child_heredoc(pline, heredoc);
@@ -169,7 +161,7 @@ void ft_redir_ofile(t_pline *pline, t_list *ofile)
 	}
 }
 
-void	ft_get_heredoc(t_list *list)
+void	ft_get_heredoc(t_list *list, t_mini *mini)
 {
 	t_list *ifile;
 
@@ -179,14 +171,14 @@ void	ft_get_heredoc(t_list *list)
 		while (ifile)
 		{
 			if (((t_token *)ifile->content)->type == HEREDOC)
-				ft_input_heredoc(ifile, (t_pline *)list->content);
+				ft_input_heredoc(ifile, (t_pline *)list->content, mini);
 			ifile = ifile->next;
 		}
 		list = list->next;
 	}
 }
 
-void ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
+void ft_redirection(t_list *plines, t_mini *mini) // file open 이 에러가 나면 에러 메시지 띄우고 다음 파일 오픈으로 감
 {
 	t_list	*ifile;
 	t_list	*ofile;
@@ -195,7 +187,7 @@ void ft_redirection(t_list *plines) // file open 이 에러가 나면 에러 메
 
 	list = plines;
 	// heredoc 나오면 제일 먼저 임시파일 만들어 준다. heredoc 찾기 위해 한바퀴
-	ft_get_heredoc(list);
+	ft_get_heredoc(list, mini);
 	list = plines;
 	while (list)
 	{

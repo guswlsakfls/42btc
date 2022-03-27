@@ -61,7 +61,6 @@ int main(void)
 		// ft_termios_isig(pline);
 		// signal(SIGINT, SIG_IGN); // CTRL + C
 		// signal(SIGQUIT, SIG_IGN);	// 평소 그리고 히어독은 그냥 무시하기 위해
-		printf("1\n");
 		close(fd[1]);
 		waitpid(pid, NULL, 0);
 		tcsetattr(STDIN_FILENO, TCSANOW, &(org_term));
@@ -70,3 +69,40 @@ int main(void)
 	if (pid == 0)
 		ft_child_heredoc(fd);
 }
+
+// void handler(int signum)
+// {
+// 	if (signum != SIGINT)
+// 		return;
+// 	write(STDOUT_FILENO, "\n", 1);
+// 	if (rl_on_new_line() == -1)
+// 		exit(1);
+// 	rl_replace_line("다시", 1);
+// 	rl_redisplay();
+// }
+
+// int main(void)
+// {
+// 	int ret;
+// 	char *line;
+
+// 	signal(SIGINT, handler);
+// 	while (true)
+// 	{
+// 		line = readline("input> ");
+// 		if (line)
+// 		{
+// 			ret = strcmp(line, "bye");
+// 			if (ret)
+// 				printf("output> %s\n", line);
+// 			add_history(line);
+// 			free(line);
+// 			line = NULL;
+// 			if (!ret)
+// 				break;
+// 		}
+// 		else
+// 			return (1);
+// 	}
+// 	return (0);
+// }

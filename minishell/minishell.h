@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/27 17:46:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 01:52:27 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,13 @@
 
 # define ISPIPE 1
 
+typedef struct s_mini
+{
+	struct termios org_term;
+	struct termios new_term;
+	int				statlog;
+}	t_mini;
+
 typedef struct s_env
 {
 	char *key;
@@ -44,8 +51,6 @@ typedef struct s_pline
 {
 	t_list			*ifile;
 	t_list			*ofile;
-	struct termios	org_term;
-	struct termios	new_term;
 	char			**cmds;
 	int				cnt;
 	int				pipe_fd[2];
@@ -71,10 +76,11 @@ char	*ft_readline(char *status);
 void	ft_signal_normal();
 void	ft_signal_heredoc();
 void	ft_reset_signal();
+void 	ft_termios_echoctl(t_mini *mini);
 
-// 다른거
-void ft_redirection(t_list *plines);
-void ft_input_heredoc(t_list *ifile, t_pline *pline);
+	// 다른거
+	void ft_redirection(t_list *plines, t_mini *mini);
+void ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini);
 int ft_built_in(char **cmds, t_list *env);
 int ft_check_built_in(char *cmd);
 void ft_echo(char **cmds);
@@ -87,17 +93,18 @@ t_list *ft_init_env(char **envp);
 void ft_execute(char **cmds, t_list *env, char **envp);
 void ft_check_pipe(t_pline *pline);
 void ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp);
-void ft_nanoshell(t_list *plines, t_list *env, char **envp);
+void ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini);
 void ft_check_stdin(t_pline *cur, t_pline *prev);
 void ft_check_stdout(t_pline *cur);
 void ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp);
 void ft_parent_close(t_list *plines, t_pline *cur, t_pline *prev);
 void ft_parent(t_list *plines, t_pline *cur, t_pline *prev);
 void ft_free_two(char ***split);
+void ft_get_heredoc(t_list *list, t_mini *mini);
 
-//dha
+	//dha
 
-char **cmd_split(char *s);
+	char **cmd_split(char *s);
 
 # define CMD 1
 # define PIPE 2
