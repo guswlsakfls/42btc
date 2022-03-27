@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/26 19:18:36 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/27 19:49:30 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,11 @@ void	ft_nanoshell(t_list *plines, t_list *env, char **envp)
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
+		if (pline->cmds[0] == NULL) // cmds 가 없으면 파일 체크하고 그냥 출력없이 지나가야함.
+		{
+			cur_plines = cur_plines->next;
+			continue ;
+		}
 		ft_check_pipe(pline);
 		ft_fork(cur_plines, pline, env, envp);
 		cur_plines = cur_plines->next;

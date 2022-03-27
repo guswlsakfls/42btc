@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/26 21:13:27 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/27 19:17:22 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_free_two(char ***split)
 
 int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **envp
 {
-	t_list 	*plines;
+	t_list	*plines;
 	t_list	*env;
 
 	if (argc > 2)
@@ -46,6 +46,7 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 	{
 		plines = analyze(ft_readline(NULL), env);
 		ft_nanoshell(plines, env, envp);
+		// system("leaks minishell");
 		free(plines);
 	}
 	return (0);

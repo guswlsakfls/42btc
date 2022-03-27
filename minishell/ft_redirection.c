@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/26 19:18:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/27 21:24:05 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,33 @@ void ft_child_heredoc(t_pline *pline, t_token *heredoc)
 	}
 }
 
+// void	ft_termios_isig(t_pline *pline)
+// {
+// 	tcgetattr(STDIN_FILENO, &(pline->org_term));
+// 	// pline->org_term.c_lflag &= ~ICANON; // 이 플래그가 on되어있으면 정규모드 off면 비정규모드이다.
+// 	// 정규모드 : 터미널 기본입력모드로 한줄씩 받는것이다. 비정규모드 : 한글자씩 받는것이다.
+// 	// pline->org_term.c_lflag &= ~ECHO; // off하면 반향되지않는다. 즉 입력받지 않음 abc입력해도 안뜸
+// 	pline->org_term.c_lflag &= ~ISIG;
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &(pline->org_term));
+// }
+
+// void	ft_termios_isig(t_pline *pline)
+// {
+// 	tcgetattr(STDIN_FILENO, &(pline->org_term));
+// 	tcgetattr(STDIN_FILENO, &(pline->new_term));
+// 	pline->org_term.c_lflag &= ~ICANON; // 이 플래그가 on되어있으면 정규모드 off면 비정규모드이다.
+// 	// 정규모드 : 터미널 기본입력모드로 한줄씩 받는것이다. 비정규모드 : 한글자씩 받는것이다.
+// 	pline->org_term.c_lflag &= ~ECHO; // off하면 반향되지않는다. 즉 입력받지 않음 abc입력해도 안뜸
+// 	// pline->new_term.c_lflag &= ~ECHOCTL;
+// 	tcsetattr(STDIN_FILENO, TCSANOW, &(pline->new_term));
+// }
+
 void	ft_input_heredoc(t_list *ifile, t_pline *pline)
 {
 	pid_t	pid;
 	t_token	*heredoc;
+	struct termios	org_term;
+	struct termios	new_term;
 
 	if (pline->heredoc_fd[0] != 0) // heredoc 도 0 으로 초기화 해서 들어와야함.
 		close(pline->heredoc_fd[0]);
@@ -55,10 +78,17 @@ void	ft_input_heredoc(t_list *ifile, t_pline *pline)
 		exit(1);
 	if (pid > 0)
 	{
-		signal(SIGINT, SIG_IGN); // CTRL + C
+		tcgetattr(STDIN_FILENO, &(org_term));
+		tcgetattr(STDIN_FILENO, &(new_term));
+		pline->org_term.c_lflag &= ~ISIG;
+		tcsetattr(STDIN_FILENO, TCSANOW, &(new_term));
+		ft_signal_heredoc();
+		// ft_termios_isig(pline);
+		// signal(SIGINT, SIG_IGN); // CTRL + C
 		// signal(SIGQUIT, SIG_IGN);	// 평소 그리고 히어독은 그냥 무시하기 위해
 		close(pline->heredoc_fd[1]);
-		waitpid(pid, NULL, 0);
+		waitpid(pid, NULL, WUNTRACED);
+		// tcsetattr(STDIN_FILENO, TCSANOW, &(pline->org_term));
 	}
 	if (pid == 0)
 		ft_child_heredoc(pline, heredoc);

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/26 21:14:04 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/27 17:46:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,18 @@ typedef struct s_env
 
 typedef struct s_pline
 {
-	t_list	*ifile;
-	t_list	*ofile;
-	char	**cmds;
-	int		cnt;
-	int		pipe_fd[2];
-	int		file_fd[2];
-	int		heredoc_fd[2];
-	int		is_pipe;
-	int		pid;
-} t_pline;
+	t_list			*ifile;
+	t_list			*ofile;
+	struct termios	org_term;
+	struct termios	new_term;
+	char			**cmds;
+	int				cnt;
+	int				pipe_fd[2];
+	int				file_fd[2];
+	int				heredoc_fd[2];
+	int				is_pipe;
+	int				pid;
+}	t_pline;
 
 typedef struct s_token
 {
