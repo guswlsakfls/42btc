@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:14:17 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/26 21:12:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/28 21:50:03 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ char	**ft_join_env(t_list *env)
 
 char	*ft_get_envp(char *cmd, t_list *env, char *key)
 {
-	int		i;
-	char	**values;
-	char	*value_list;
-	char	*value;
+	int			i;
+	char		**values;
+	char		*value_list;
+	char		*value;
+	struct stat	file_info;
 
 	values = ft_split(ft_get_value(env, key), ':');
 	i = -1;
@@ -72,7 +73,7 @@ char	*ft_get_envp(char *cmd, t_list *env, char *key)
 	{
 		value_list = ft_strjoin(values[i], "/");
 		value = ft_strjoin(value_list, cmd);
-		if (access(value, F_OK) == 0) // access 사용하면 안된다. 다른거로 교체
+		if (stat(value, &file_info) == 0)
 		{
 			ft_free_two(&values);
 			free(value_list);
@@ -82,7 +83,7 @@ char	*ft_get_envp(char *cmd, t_list *env, char *key)
 		free(value_list);
 	}
 	ft_free_two(&values);
-	return (0);
+	return (NULL);
 }
 
 t_list	*ft_init_envs(char **envp)

@@ -3,21 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/28 01:54:46 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/28 21:11:14 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_termios_org(t_mini *mini)
+{
+	tcsetattr(STDIN_FILENO, TCSANOW, &(mini->org_term));
+}
+
 void	ft_termios_echoctl(t_mini *mini)
 {
 	tcgetattr(STDIN_FILENO, &(mini->org_term));
 	tcgetattr(STDIN_FILENO, &(mini->new_term));
-	// mini->new_term.c_lflag &= ~ISIG; // off하면 반향되지않는다. 즉 입력받지 않음 abc입력해도 안뜸
 	mini->new_term.c_lflag &= ~ECHOCTL;
+}
+
+void	ft_termios_new(t_mini *mini)
+{
 	tcsetattr(STDIN_FILENO, TCSANOW, &(mini->new_term));
 }
 
@@ -38,7 +46,7 @@ void	ft_free_two(char ***split)
 	*split = NULL;
 }
 
-int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **envp
+int	main(int argc, char **argv, char **envp)
 {
 	t_list	*plines;
 	t_list	*env;
@@ -51,14 +59,13 @@ int main(int argc, char ** argv, char** envp) //  int argc, char **argv, char **
 	printf("\n\nNANOSHELL BY HYUJO & DHA\n\n");
 	env = ft_init_envs(envp);
 	mini = malloc(sizeof(t_mini));
+	ft_termios_echoctl(mini);
 	while (1)
 	{
-		ft_termios_echoctl(mini);
-		plines = analyze(ft_readline(NULL), env);
+		ft_termios_new(mini);
+		plines = analyze(ft_readline(NULL), env, mini);
 		ft_nanoshell(plines, env, envp, mini);
-		// system("leaks minishell");
 		free(plines);
 	}
-	free(mini);
 	return (0);
 }
