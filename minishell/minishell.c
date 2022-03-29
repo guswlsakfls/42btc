@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/28 21:11:14 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:01:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	ft_termios_org(t_mini *mini)
 void	ft_termios_echoctl(t_mini *mini)
 {
 	tcgetattr(STDIN_FILENO, &(mini->org_term));
-	tcgetattr(STDIN_FILENO, &(mini->new_term));
+	mini->new_term = mini->org_term;
 	mini->new_term.c_lflag &= ~ECHOCTL;
 }
 

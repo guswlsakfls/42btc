@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+         #
+#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/27 23:08:51 by hyunjinjo        ###   ########.fr        #
+#    Updated: 2022/03/29 19:05:34 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,12 +31,6 @@ SRCS = minishell.c \
 		parser_merge_utils.c \
 		parser_optimize.c \
 		parser_optimize_utils.c \
-		builtin_env.c \
-		builtin_export.c \
-		builtin_export_arg.c \
-		builtin_export_no_arg.c \
-		builtin_unset.c \
-		builtin_utils.c \
 		ft_built_in.c \
 		ft_redirection.c \
 		ft_signal.c \
@@ -44,6 +38,18 @@ SRCS = minishell.c \
 		ft_excute.c \
 		ft_nanoshell.c \
 		ft_parent_child.c
+		# builtin_env.c \
+		# builtin_export.c \
+		# builtin_export_arg.c \
+		# builtin_export_no_arg.c \
+		# builtin_echo.c \
+		# builtin_unset.c \
+		# builtin_cd.c \
+		# builtin_pwd.c \
+		# builtin_exit.c \
+		# builtin_utils.c \
+		# builtin_errors.c 
+
 
 SRCS_TEST = ./testFile/heredoc_test.c \
 			# ./testFile/test_utils.c \

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/28 21:18:13 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 19:08:39 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,21 +21,24 @@ void	ft_check_pipe(t_pline *pline)
 	}
 }
 
-void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp)
+void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp, t_mini *mini)
 {
 	t_pline	*prev;
 
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
 	cur->pid = 0;
-	if (cur->is_pipe == ISPIPE || ft_check_built_in(cur->cmds[0]) == false)
+	if (cur->is_pipe == ISPIPE || ft_check_built_in(cur->cmds[0]) == 1)
 		cur->pid = fork();
 	if (cur->pid < 0)
 		exit(0);
 	if (cur->pid > 0)
 		ft_parent(cur, prev);
 	if (cur->pid == 0)
+	{
+		ft_termios_org(mini);
 		ft_child(cur, prev, env, envp);
+	}
 }
 
 void	ft_check_cmds_null(t_pline *cur, t_list *plines)
@@ -67,6 +70,29 @@ void	ft_close_fd(t_list *plines)
 	}
 }
 
+void	ft_waitpid(t_list *cur_plines)
+{
+	t_pline	*pline;
+
+	while (cur_plines)
+	{
+		pline = (t_pline *)cur_plines->content;
+		waitpid(pline->pid, NULL, WUNTRACED);
+		cur_plines = cur_plines->next;
+	}
+}
+
+int	ft_check_statlog(t_mini *mini, t_list *cur_plines)
+{
+	if (mini->statlog == 256)
+	{
+		ft_close_fd(cur_plines);
+		mini->statlog = 0;
+		return (0);
+	}
+	return (1);
+}
+
 void	ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini)
 {
 	t_list	*cur_plines;
@@ -74,13 +100,8 @@ void	ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini)
 
 	cur_plines = plines;
 	ft_redirection(cur_plines, mini);
-	if (mini->statlog == 256)
-	{
-		ft_close_fd(cur_plines);
-		mini->statlog = 0;
+	if (ft_check_statlog(mini, cur_plines) == 0)
 		return ;
-	}
-	// ft_termios_org(mini);
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
@@ -89,8 +110,10 @@ void	ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini)
 		else
 		{
 			ft_check_pipe(pline);
-			ft_fork(cur_plines, pline, env, envp);
+			ft_fork(cur_plines, pline, env, envp, mini);
 		}
 		cur_plines = cur_plines->next;
 	}
+	cur_plines = plines;
+	ft_waitpid(cur_plines);
 }

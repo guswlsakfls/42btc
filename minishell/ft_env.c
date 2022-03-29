@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:14:17 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/28 21:50:03 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:11:34 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,18 @@ char	**ft_join_env(t_list *env)
 	size = 0;
 	while (list)
 	{
+		if (ft_strncmp(((t_env *)list->content)->key, "?", 2) == 0)
+		{
+			list = list->next;
+			continue ;
+		}
 		tmp = ft_strjoin(((t_env *)list->content)->key, "=");
 		envp[size] = ft_strjoin(tmp, ((t_env *)list->content)->value);
 		list = list->next;
 		size++;
 		free(tmp);
 	}
-	envp[++size] = NULL;
+	envp[size] = NULL;
 	return (envp);
 }
 
@@ -90,7 +95,6 @@ t_list	*ft_init_envs(char **envp)
 {
 	t_list	*envs;
 	t_env	*env;
-	char	*tmp;
 	int		idx[2];
 
 	idx[0] = 0;
@@ -99,17 +103,16 @@ t_list	*ft_init_envs(char **envp)
 	{
 		idx[1] = 0;
 		env = (t_env *)ft_malloc(sizeof(t_env), 1);
-		tmp = ft_strdup(envp[idx[0]++]);
-		while (tmp[idx[1]] != '=')
+		while (envp[idx[0]][idx[1]] != '=')
 			idx[1]++;
-		tmp[idx[1]] = '\0';
-		env->key = ft_strdup(tmp);
+		envp[idx[0]][idx[1]] = '\0';
+		env->key = ft_substr(envp[idx[0]], 0, idx[1]);
 		if (ft_strncmp(env->key, "SHLVL", 6) == 0)
-			env->value = ft_itoa(ft_atoi(tmp + idx[1] + 1) + 1);
+			env->value = ft_itoa(ft_atoi(envp[idx[0]] + idx[1] + 1) + 1);
 		else
-			env->value = ft_strdup(tmp + idx[1] + 1);
+			env->value = ft_strdup(envp[idx[0]] + idx[1] + 1);
 		ft_lstadd_back(&envs, ft_lstnew(env));
-		free(tmp);
+		idx[0]++;
 	}
 	ft_init_exit_status(&envs);
 	return (envs);

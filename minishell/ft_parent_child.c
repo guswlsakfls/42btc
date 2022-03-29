@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/28 20:25:25 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 19:04:53 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp)
 {
 	ft_check_stdin(cur, prev);
 	ft_check_stdout(cur);
-	if (ft_built_in(cur->cmds, env) == false)
+	// if (ft_built_in(cur->cmds, env) == false)
 		ft_execute(cur->cmds, env, envp);
 }
 
@@ -64,6 +64,5 @@ void	ft_parent(t_pline *cur, t_pline *prev)
 {
 	signal(SIGINT, ft_sig_child);
 	signal(SIGQUIT, ft_sig_quit);
-	waitpid(cur->pid, NULL, WUNTRACED);
 	ft_parent_close(cur, prev);
 }

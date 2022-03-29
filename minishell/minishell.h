@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/28 21:34:42 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 18:46:30 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,6 @@
 # include <term.h>
 # include <sys/stat.h>
 
-# define ISPIPE 1
-
 typedef struct s_mini
 {
 	struct termios	org_term;
@@ -42,7 +40,7 @@ typedef struct s_env
 	char	*value;
 }	t_env;
 
-	typedef struct s_cursor
+typedef struct s_cursor
 {
 	t_list	*start;
 	t_list	*pre_pipe;
@@ -92,7 +90,7 @@ char	*ft_get_envp(char *cmd, t_list *env, char *key);
 t_list	*ft_init_env(char **envp);
 void	ft_execute(char **cmds, t_list *env, char **envp);
 void	ft_check_pipe(t_pline *pline);
-void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp);
+void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp, t_mini *mini);
 void	ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini);
 void	ft_check_stdin(t_pline *cur, t_pline *prev);
 void	ft_check_stdout(t_pline *cur);
@@ -113,9 +111,14 @@ char	**cmd_split(char *s);
 # define APPEND 16
 # define HEREDOC 32
 
+# define ISPIPE 1
+
 # define ERR_PRPT "nano: "
 # define ERR_SYX "syntax error near unexpected token "
 # define ERR_NVI "\': not a valid identifier"
+# define ERR_ONS ": OLDPWD not set"
+# define ERR_HNS ": HOME not set"
+# define ERR_NMA ": numeric argument required"
 
 # define ERROR -1
 
@@ -146,28 +149,34 @@ void	get_env_values(char **values, char **cmd, t_list *envs);
 void	append_env_values(char **values, char **cmd);
 
 //utils
-int 	error_invalid_identifier(char *func, char *arg);
+int		error_invalid_identifier(char *func, char *arg);
 int		is_exist_key(char *key, t_list **envs);
 
 // builtin
 // echo
-int	builtin_echo(char **argv, t_list **envs);
+int		builtin_echo(char **argv, t_list **envs);
 // cd
-int	builtin_cd(char **argv, t_list **envs);
+int		builtin_cd(char **argv, t_list **envs);
 // pwd
-int	builtin_pwd(char **argv, t_list **envs);
+int		builtin_pwd(char **argv, t_list **envs);
 // env
 int		builtin_env(char **argv, t_list **envs);
-
-t_list	*ft_init_envs(char **envp);
 // export
-int 	builtin_export(char **argv, t_list **envs);
+int		builtin_export(char **argv, t_list **envs);
 int		export_no_arg(t_list *envs);
 int		export_arg(char *arg, t_list **envs);
+int		swap_value(char *value, t_list *envs);
 // unset
 int		builtin_unset(char **argv, t_list **envs);
 // exit
-int	builtin_exit(char **argv, t_list **envs);
+int		builtin_exit(char **argv, t_list **envs);
+// utils
+int		is_exist_key(char *key, t_list **envs);
+// error
+int		error_invalid_identifier(char *func, char *arg);
+int		error_env_not_set(char *func, char *arg);
+int		error_numeric_arg(char *func, char *arg);
+
 // dha
 
 #endif
