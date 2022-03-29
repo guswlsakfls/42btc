@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/29 19:43:42 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 02:12:07 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
-# include <stdbool.h>
 # include <stdio.h>
 # include <string.h>
 # include <unistd.h>
@@ -68,34 +67,45 @@ typedef struct s_token
 // signal
 void	ft_sig_child(int signum);
 void	ft_sig_heredoc(int signum);
-void	ft_sig_cat(int signum);
 void	ft_sig_quit(int signum);
 void	ft_sig_int(int signum);
 char	*ft_readline(char *status);
+
+// termios
 void	ft_termios_echoctl(t_mini *mini);
 void	ft_termios_org(t_mini *mini);
 void	ft_termios_new(t_mini *mini);
 
-// 다른거
-void	ft_redirection(t_list *plines, t_mini *mini);
+// redirection
+void 	ft_redirection(t_list *plines, t_mini *mini);
 void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini);
+void 	ft_get_heredoc(t_list *plines, t_mini *mini);
+
+// excute
+void 	ft_execute(char **cmds, t_list *env);
+void	ft_check_pipe(t_pline *pline);
+void 	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
+void 	ft_check_stdin(t_pline *cur, t_pline *prev);
+void 	ft_check_stdout(t_pline *cur);
+void 	ft_child(t_pline *cur, t_pline *prev, t_list *env);
+void 	ft_parent_close(t_pline *cur, t_pline *prev);
+void 	ft_parent(t_pline *cur, t_pline *prev);
+int 	ft_check_statlog(t_mini *mini, t_list *cur_plines);
+
+// built_in
 int		ft_built_in(char **cmds, t_list *env);
 int		ft_check_built_in(char *cmd);
+
+// envp
 char	*ft_get_value(t_list *env, char *key);
 char	**ft_join_env(t_list *env);
 char	*ft_get_envp(char *cmd, t_list *env, char *key);
 t_list	*ft_init_envs(char **envp);
-void	ft_execute(char **cmds, t_list *env, char **envp);
-void	ft_check_pipe(t_pline *pline);
-void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp, t_mini *mini);
-void	ft_nanoshell(t_list *plines, t_list *env, char **envp, t_mini *mini);
-void	ft_check_stdin(t_pline *cur, t_pline *prev);
-void	ft_check_stdout(t_pline *cur);
-void	ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp);
-void	ft_parent_close(t_pline *cur, t_pline *prev);
-void	ft_parent(t_pline *cur, t_pline *prev);
+
+// main and utils
+void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
 void	ft_free_two(char ***split);
-void	ft_get_heredoc(t_list *plines, t_mini *mini);
+int ft_error_print(char *cmd, char *msg, int exitnum);
 
 //dha
 

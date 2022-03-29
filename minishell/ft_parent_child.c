@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parent_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/29 20:47:33 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 01:58:38 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,17 @@ void	ft_check_stdout(t_pline *cur)
 	}
 }
 
-void	ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp)
+void	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 {
 	ft_check_stdin(cur, prev);
 	ft_check_stdout(cur);
-	if (ft_built_in(cur->cmds, env) == 1)
-		ft_execute(cur->cmds, env, envp);
+	if (ft_built_in(cur->cmds, env) == 0)
+	{
+		if (cur->is_pipe == ISPIPE || prev->is_pipe == ISPIPE)
+			exit(1);
+	}
+	else 
+		ft_execute(cur->cmds, env);
 }
 
 void	ft_parent_close(t_pline *cur, t_pline *prev)

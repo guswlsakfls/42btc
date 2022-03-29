@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/29 22:14:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 01:57:30 by hyunjinjo        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int	ft_iredir(t_list *ifile, t_pline *pline)
 		close(pline->file_fd[0]);
 	pline->file_fd[0] = open(((t_token *)ifile->content)->str, O_RDONLY, 0777);
 	if (pline->file_fd[0] < 0)
-		printf("bash: %s: No such file or directory\n",
-			((t_token *)ifile->content)->str);
+		ft_error_print(((t_token *)ifile->content)->str // 여기에 exit staus 하면 될 듯
+			, "No such file or directory", 1);
 	return (0);
 }
 
@@ -121,14 +121,14 @@ void ft_redir_ofile(t_pline *pline, t_list *ofile)
 {
 	while (ofile)
 	{
-		// > 일 때
 		if (((t_token *)ofile->content)->type == OREDIR)
 		{
 			if (pline->file_fd[1] != 0)
 				close(pline->file_fd[1]);
 			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (pline->file_fd[1] < 0)
-				exit(1);
+				ft_error_print(((t_token *)ofile->content)->str
+					, "No such file or directory", 1);
 		}
 		else
 		{
@@ -139,7 +139,8 @@ void ft_redir_ofile(t_pline *pline, t_list *ofile)
 			}
 			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (pline->file_fd[1] < 0)
-				exit(1);
+				ft_error_print(((t_token *)ofile->content)->str
+					, "No such file or directory", 1);
 		}
 		ofile = ofile->next;
 	}
