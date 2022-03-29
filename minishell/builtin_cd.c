@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:20:57 by dha               #+#    #+#             */
-/*   Updated: 2022/03/29 18:53:49 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 19:34:52 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	builtin_cd(char **argv, t_list **envs)
 	char	*cwd;
 	char	*tmp;
 
+	tmp = NULL;
 	cwd = getcwd(NULL, 1024);
 	if (cwd == NULL)
 	{

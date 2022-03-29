@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/28 18:41:50 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 22:14:45 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int	ft_iredir(t_list *ifile, t_pline *pline)
 		close(pline->file_fd[0]);
 	pline->file_fd[0] = open(((t_token *)ifile->content)->str, O_RDONLY, 0777);
 	if (pline->file_fd[0] < 0)
-		printf("bash: %s: No such file or directory\n", ((t_token *)ifile->content)->str);
+		printf("bash: %s: No such file or directory\n",
+			((t_token *)ifile->content)->str);
 	return (0);
 }
 

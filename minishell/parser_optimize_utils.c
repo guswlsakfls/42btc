@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 20:36:41 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/26 21:22:47 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 20:57:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	ft_envcnt(char *str)
 		}
 		if (*str == '\0')
 			break ;
-		if (!(ft_isalnum(*(++str)) && *str != '?') || flag & 1)
+		if ((!ft_isalnum(*(++str)) && *str != '?') || flag & 1)
 			continue ;
 		cnt++;
 		while (ft_isalnum(*str) || *str == '?')

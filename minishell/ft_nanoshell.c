@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/29 19:08:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 20:48:51 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	ft_check_pipe(t_pline *pline)
 void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp, t_mini *mini)
 {
 	t_pline	*prev;
+	int		backup_pid[2];
 
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
@@ -32,13 +33,17 @@ void	ft_fork(t_list *plines, t_pline *cur, t_list *env, char **envp, t_mini *min
 		cur->pid = fork();
 	if (cur->pid < 0)
 		exit(0);
-	if (cur->pid > 0)
-		ft_parent(cur, prev);
+	backup_pid[0] = dup(STDIN_FILENO);
+	backup_pid[1] = dup(STDOUT_FILENO);
 	if (cur->pid == 0)
 	{
 		ft_termios_org(mini);
 		ft_child(cur, prev, env, envp);
 	}
+	ft_parent(cur, prev);
+	if (dup2(backup_pid[0], STDIN_FILENO) < 0
+		|| dup2(backup_pid[1], STDOUT_FILENO) < 0)
+		exit(1);
 }
 
 void	ft_check_cmds_null(t_pline *cur, t_list *plines)
@@ -77,7 +82,8 @@ void	ft_waitpid(t_list *cur_plines)
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
-		waitpid(pline->pid, NULL, WUNTRACED);
+		if (pline->pid > 0)
+			waitpid(pline->pid, NULL, WUNTRACED);
 		cur_plines = cur_plines->next;
 	}
 }

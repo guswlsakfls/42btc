@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/29 19:04:53 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 20:47:33 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,14 @@ void	ft_check_stdin(t_pline *cur, t_pline *prev)
 		close(cur->pipe_fd[0]);
 	if (cur->file_fd[0] != 0)
 	{
-		dup2(cur->file_fd[0], STDIN_FILENO);
+		if (dup2(cur->file_fd[0], STDIN_FILENO) < 0)
+			exit(1);
 		close(cur->file_fd[0]);
 	}
 	else if (prev && prev->is_pipe == ISPIPE)
 	{
-		dup2(prev->pipe_fd[0], STDIN_FILENO);
+		if (dup2(prev->pipe_fd[0], STDIN_FILENO) < 0)
+			exit(1);
 		close(prev->pipe_fd[0]);
 	}
 }
@@ -32,14 +34,16 @@ void	ft_check_stdout(t_pline *cur)
 {
 	if (cur->file_fd[1] != 0)
 	{
-		dup2(cur->file_fd[1], STDOUT_FILENO);
+		if (dup2(cur->file_fd[1], STDOUT_FILENO) < 0)
+			exit(1);
 		close(cur->file_fd[1]);
 		if (cur->is_pipe == ISPIPE)
 			close(cur->pipe_fd[1]);
 	}
 	else if (cur->is_pipe == ISPIPE && cur->file_fd[1] == 0)
 	{
-		dup2(cur->pipe_fd[1], STDOUT_FILENO);
+		if (dup2(cur->pipe_fd[1], STDOUT_FILENO) < 0)
+			exit(1);
 		close(cur->pipe_fd[1]);
 	}
 }
@@ -48,7 +52,7 @@ void	ft_child(t_pline *cur, t_pline *prev, t_list *env, char **envp)
 {
 	ft_check_stdin(cur, prev);
 	ft_check_stdout(cur);
-	// if (ft_built_in(cur->cmds, env) == false)
+	if (ft_built_in(cur->cmds, env) == 1)
 		ft_execute(cur->cmds, env, envp);
 }
 

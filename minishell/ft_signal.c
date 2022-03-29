@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/28 20:25:20 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/29 21:45:01 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	ft_sig_heredoc(int signum)
 	if (signum != SIGINT)
 		return ;
 	printf("\n");
-	exit(1);
+	exit(0);
 }
 
 char	*ft_readline(char *status)
