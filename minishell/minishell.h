@@ -6,7 +6,11 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2022/03/30 16:50:36 by hyujo            ###   ########.fr       */
+=======
+/*   Updated: 2022/03/30 17:08:49 by dha              ###   ########seoul.kr  */
+>>>>>>> f1171aac3cec1d31ab9ccead5ee37828365288d1
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +122,8 @@ char	**cmd_split(char *s, t_list *envs);
 # define PIPE 2
 # define IREDIR 4
 # define OREDIR 8
-# define APPEND 16
-# define HEREDOC 32
+# define HEREDOC 16
+# define APPEND 32
 
 # define ISPIPE 1
 
