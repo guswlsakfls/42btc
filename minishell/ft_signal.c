@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 02:05:51 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/30 10:08:06 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_readline(char *status)
 	{
 		signal(SIGINT, ft_sig_int);
 		signal(SIGQUIT, SIG_IGN);
-		input = readline("\033[0;91m\033[1mdha's Prompt$ \033[0m");
+		input = readline("\033[0;91m\033[1mnano$ \033[0m");
 	}
 	else if (ft_strncmp("heredoc", status, 7) == 0)
 	{
