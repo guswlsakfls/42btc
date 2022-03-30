@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:31:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:45:27 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,10 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		ft_termios_new(mini);
-		plines = analyze(ft_readline(NULL), env, mini);
+		plines = analyze(ft_readline(NULL, env), env, mini);
+		printf("err: %d\n", errno);
+		if (plines == NULL)
+			continue ;
 		ft_nanoshell(plines, env, mini);
 		ft_lstclear(&plines, clear_pline);
 	}

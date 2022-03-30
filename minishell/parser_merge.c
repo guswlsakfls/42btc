@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 19:52:25 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 09:54:03 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 16:15:12 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	store_cmds(t_list **plines, t_cursor *cur, t_list *token)
 	return (0);
 }
 
-t_list	*merge_token(t_list *tokens)
+t_list	*merge_token(t_list *tokens, t_list *envs)
 {
 	t_list		*plines;
 	t_cursor	*cur;
@@ -95,13 +95,13 @@ t_list	*merge_token(t_list *tokens)
 		if (get_type(tokens) & PIPE)
 		{
 			if (store_cmds(&plines, cur, tokens) == -1)
-				return (merge_err(&plines, cur));
+				return (merge_err(&plines, cur, envs));
 			cur->start = cur->start->next;
 		}
 		tokens = tokens->next;
 	}
 	if (store_cmds(&plines, cur, NULL) == -1)
-		return (merge_err(&plines, cur));
+		return (merge_err(&plines, cur, envs));
 	free(cur);
 	return (plines);
 }

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 16:34:11 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:50:36 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ typedef struct s_token
 // signal
 void	ft_sig_heredoc(int signum);
 void	ft_sig_int(int signum);
-char	*ft_readline(char *status);
+char	*ft_readline(char *status, t_list *env);
 
 // termios
 void	ft_termios_echoctl(t_mini *mini);
@@ -76,9 +76,11 @@ void	ft_termios_org(t_mini *mini);
 void	ft_termios_new(t_mini *mini);
 
 // redirection
-int		ft_redirection(t_list *plines, t_mini *mini);
-void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini);
-void	ft_get_heredoc(t_list *plines, t_mini *mini);
+int		ft_redirection(t_list *plines, t_mini *mini, t_list *env);
+void	ft_input_heredoc(t_list *ifile, t_pline *pline,
+			t_mini *mini, t_list *env);
+void	ft_get_heredoc(t_list *plines, t_mini *mini, t_list *env);
+void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env);
 
 // excute
 void	ft_execute(char **cmds, t_list *env);
@@ -110,7 +112,7 @@ int		ft_error_execve(char **cmds);
 
 //dha
 
-char	**cmd_split(char *s);
+char	**cmd_split(char *s, t_list *envs);
 
 # define CMD 1
 # define PIPE 2
@@ -134,21 +136,22 @@ char	**cmd_split(char *s);
 t_list	*analyze(char *cmd, t_list *envs, t_mini *mini);
 void	clear_tokens(t_list **tokens);
 void	syntax_err_msg(int type);
+void	set_exit_status(int value, t_list *env);
 
 // tokenize
-t_list	*tokenize(char *cmd);
+t_list	*tokenize(char *cmd, t_list *envs);
 int		is_symbol(char *cmd);
 int		token_type(char *cmd);
 
 // merge
-t_list	*merge_token(t_list *tokens);
+t_list	*merge_token(t_list *tokens, t_list *envs);
 int		get_type(t_list *token);
 int		parse_cmd(t_pline *pline, t_list **token);
 int		close_front_pipe(t_list **plines, int flag, \
 	t_cursor *cur, t_list **token);
 void	ft_stradd(t_pline *pline, int *idx, char *new);
 t_token	*token_dup(t_token *token);
-t_list	*merge_err(t_list **plines, t_cursor *cur);
+t_list	*merge_err(t_list **plines, t_cursor *cur, t_list *envs);
 void	clear_pline(void *pline);
 
 // optimize

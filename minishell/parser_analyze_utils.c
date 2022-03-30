@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_analyze_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 19:29:38 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/26 20:35:00 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:05:40 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,11 @@ void	clear_tokens(t_list **tokens)
 	ft_lstiter(*tokens, free_token_str);
 	ft_lstclear(tokens, free);
 	*tokens = NULL;
+}
+
+void	set_exit_status(int value, t_list *env)
+{
+	is_exist_key(strdup("?"), &env);
+	swap_value(ft_itoa(value), env);
+	return ;
 }

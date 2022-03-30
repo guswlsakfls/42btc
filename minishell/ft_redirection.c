@@ -6,20 +6,20 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 15:42:16 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:50:19 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void ft_child_heredoc(t_pline *pline, t_token *heredoc)
+void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env)
 {
 	char	*input;
 
 	close(pline->heredoc_fd[0]);
 	while (1)
 	{
-		input = ft_readline("heredoc");
+		input = ft_readline("heredoc", env);
 		if (!input)
 		{
 			ft_putstr_fd("\x1b[1A", 1);
@@ -40,7 +40,8 @@ void ft_child_heredoc(t_pline *pline, t_token *heredoc)
 	}
 }
 
-void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini)
+void	ft_input_heredoc(t_list *ifile, t_pline *pline,
+		t_mini *mini, t_list *env)
 {
 	pid_t	pid;
 	t_token	*heredoc;
@@ -61,7 +62,7 @@ void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini)
 		waitpid(pid, &(mini->statlog), WUNTRACED);
 	}
 	if (pid == 0)
-		ft_child_heredoc(pline, heredoc);
+		ft_child_heredoc(pline, heredoc, env);
 }
 
 int	ft_iredir(t_list *ifile, t_pline *pline)
@@ -129,7 +130,7 @@ int	ft_redir_ofile(t_pline *pline, t_list *ofile)
 	return (0);
 }
 
-void	ft_get_heredoc(t_list *plines, t_mini *mini)
+void	ft_get_heredoc(t_list *plines, t_mini *mini, t_list *env)
 {
 	t_list	*ifile;
 
@@ -139,7 +140,7 @@ void	ft_get_heredoc(t_list *plines, t_mini *mini)
 		while (ifile)
 		{
 			if (((t_token *)ifile->content)->type == HEREDOC)
-				ft_input_heredoc(ifile, (t_pline *)plines->content, mini);
+				ft_input_heredoc(ifile, (t_pline *)plines->content, mini, env);
 			if (mini->statlog == 256)
 				return ;
 			ifile = ifile->next;
@@ -148,7 +149,7 @@ void	ft_get_heredoc(t_list *plines, t_mini *mini)
 	}
 }
 
-int	ft_redirection(t_list *plines, t_mini *mini)
+int	ft_redirection(t_list *plines, t_mini *mini, t_list *env)
 {
 	t_list	*ifile;
 	t_list	*ofile;
@@ -158,7 +159,7 @@ int	ft_redirection(t_list *plines, t_mini *mini)
 
 	status = 0;
 	cur_plines = plines;
-	ft_get_heredoc(cur_plines, mini);
+	ft_get_heredoc(cur_plines, mini, env);
 	if (mini->statlog == 256)
 		return (1);
 	cur_plines = plines;
