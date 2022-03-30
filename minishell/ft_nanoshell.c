@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 15:06:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 15:49:28 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	ft_close_fd(t_list *plines)
 	}
 }
 
-void	ft_waitpid(t_list *cur_plines)
+void	ft_waitpid(t_list *cur_plines, t_mini *mini, t_list *env)
 {
 	t_pline	*pline;
 	int		statlog;
@@ -101,10 +101,14 @@ void	ft_waitpid(t_list *cur_plines)
 			waitpid(pline->pid, &statlog, WUNTRACED);
 		if (statlog == 2)
 			ft_putstr_fd("\n", 1);
-		if (statlog == 3)
+		else if (statlog == 3)
 			ft_putstr_fd("Quit: 3\n", 1);
 		cur_plines = cur_plines->next;
 	}
+	if (mini->statlog != 0)
+		statlog = mini->statlog;
+	is_exist_key(strdup("?"), &env);
+	swap_value(ft_itoa(statlog), env);
 }
 
 int	ft_check_statlog(t_mini *mini, t_list *cur_plines)
@@ -142,5 +146,5 @@ void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini)
 		cur_plines = cur_plines->next;
 	}
 	cur_plines = plines;
-	ft_waitpid(cur_plines);
+	ft_waitpid(cur_plines, mini, env);
 }
