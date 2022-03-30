@@ -6,13 +6,13 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 20:19:46 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 09:55:58 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 16:14:57 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	get_cmd_len(char *s)
+static int	get_cmd_len(char *s, t_list *envs)
 {
 	char	*start;
 	int		opened;
@@ -35,12 +35,13 @@ static int	get_cmd_len(char *s)
 			ft_putendl_fd("nano: single quote is not closed", 2);
 		if (opened & 2)
 			ft_putendl_fd("nano: double quote is not closed", 2);
+		set_exit_status(1, envs);
 		return (0);
 	}
 	return (s - start);
 }
 
-static int	cnt_words(char *s)
+static int	cnt_words(char *s, t_list *envs)
 {
 	int		cnt;
 	int		cmd_len;
@@ -52,7 +53,7 @@ static int	cnt_words(char *s)
 			s++;
 		if (*s == '\0')
 			break ;
-		cmd_len = get_cmd_len(s);
+		cmd_len = get_cmd_len(s, envs);
 		if (!cmd_len)
 			return (0);
 		s += cmd_len;
@@ -61,7 +62,7 @@ static int	cnt_words(char *s)
 	return (cnt);
 }
 
-char	**cmd_split(char *s)
+char	**cmd_split(char *s, t_list *envs)
 {
 	char	**words;
 	char	*word;
@@ -69,7 +70,7 @@ char	**cmd_split(char *s)
 	int		word_cnt;
 	int		idx;
 
-	word_cnt = cnt_words(s);
+	word_cnt = cnt_words(s, envs);
 	if (word_cnt == 0)
 		return (NULL);
 	words = (char **) ft_malloc(sizeof(char *), word_cnt + 1);
@@ -80,7 +81,7 @@ char	**cmd_split(char *s)
 			s++;
 		if (*s == '\0')
 			break ;
-		cmd_len = get_cmd_len(s);
+		cmd_len = get_cmd_len(s, envs);
 		word = ft_malloc(sizeof(char), cmd_len + 1);
 		strlcpy(word, s, cmd_len + 1);
 		words[idx++] = word;
@@ -90,7 +91,7 @@ char	**cmd_split(char *s)
 	return (words);
 }
 
-t_list	*tokenize(char *cmd)
+t_list	*tokenize(char *cmd, t_list *envs)
 {
 	char	**cmds;
 	t_list	*token_lst;
@@ -99,7 +100,7 @@ t_list	*tokenize(char *cmd)
 
 	i = 0;
 	token_lst = NULL;
-	cmds = cmd_split(cmd);
+	cmds = cmd_split(cmd, envs);
 	if (cmds == NULL)
 		return (NULL);
 	while (cmds[i])

@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 22:13:27 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 09:54:21 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 16:21:02 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,9 @@ void	clear_pline(void *pline)
 	free(pline);
 }
 
-t_list	*merge_err(t_list **plines, t_cursor *cur)
+t_list	*merge_err(t_list **plines, t_cursor *cur, t_list *envs)
 {
+	set_exit_status(258, envs);
 	ft_lstclear(plines, clear_pline);
 	free(cur);
 	*plines = NULL;

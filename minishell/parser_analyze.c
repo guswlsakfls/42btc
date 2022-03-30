@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 10:08:46 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 16:06:38 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ t_list	*analyze(char *cmd, t_list *envs, t_mini *mini)
 	if (cmd == NULL)
 		cntl_D(mini);
 	add_history(cmd);
-	tokens = tokenize(cmd);
-	plines = merge_token(tokens);
+	tokens = tokenize(cmd, envs);
+	plines = merge_token(tokens, envs);
 	optimize(plines, envs);
 	free(cmd);
 	if (tokens)
