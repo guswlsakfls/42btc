@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 10:26:58 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 11:08:01 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 		if (cur->is_pipe == ISPIPE || (prev && prev->is_pipe == ISPIPE))
 			exit(1);
 	}
-	else 
+	else
 		ft_execute(cur->cmds, env);
 }
 

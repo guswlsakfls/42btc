@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/10 00:42:38 by dha               #+#    #+#             */
-/*   Updated: 2022/03/29 19:44:20 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 11:07:32 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void		ft_error_exit(char *msg);
 size_t		ft_linelen(const char *s);
 void		*ft_malloc(size_t size, size_t cnt);
 char		*ft_strapp(char *s1, char *s2);
-void	    *ft_realloc(void *ptr, int pre_size, int new_size);
+void		*ft_realloc(void *ptr, int pre_size, int new_size);
 void		ft_strarr_clear(char ***strarr);
 
 #endif

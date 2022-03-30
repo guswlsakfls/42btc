@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 20:36:41 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 10:53:22 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 11:28:54 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	*env_value(char *key, t_list *envs)
 	{
 		envs = envs->next;
 	}
+	free(key);
 	if (envs)
 		return (((t_env *)envs->content)->value);
 	else
@@ -27,7 +28,7 @@ char	*env_value(char *key, t_list *envs)
 
 int	is_env_char(int	n)
 {
-	if (ft_isalnum(n) || n == '?' || n == '_' || n == '{' || n == '}')
+	if (ft_isalnum(n) || n == '?' || n == '_')
 		return (1);
 	return (0);
 }
@@ -61,7 +62,6 @@ void	get_env_values(char **values, char **cmd, t_list *envs)
 {
 	int		flag;
 	int		*idx;
-	char	*key;
 
 	flag = 0;
 	idx = ft_malloc(sizeof(int), 3);
@@ -76,14 +76,11 @@ void	get_env_values(char **values, char **cmd, t_list *envs)
 			break ;
 		if (!is_env_char((*cmd)[++idx[0]]) || flag & 1)
 			continue ;
-		if ((*cmd)[idx[0]] == '{')
-			idx[0]++;
 		idx[1] = idx[0];
-		while (is_env_char((*cmd)[idx[0]]) && (*cmd)[idx[0]] != '}')
+		while (is_env_char((*cmd)[idx[0]]))
 			idx[0]++;
-		key = ft_substr(*cmd, idx[1], idx[0] - idx[1]);
-		values[idx[2]++] = env_value(key, envs);
-		free(key);
+		values[idx[2]++] = env_value(ft_substr(*cmd, \
+			idx[1], idx[0] - idx[1]), envs);
 	}
 	free(idx);
 }
@@ -101,7 +98,8 @@ void	append_env_values_iter(char **values, char **cmd, \
 		}
 		if ((*cmd)[idx[1]] == '\0')
 			break ;
-		if ((*cmd)[idx[1]] == '$' && idx[4] & 1)
+		if ((*cmd)[idx[1]] == '$' && (idx[4] & 1 || \
+			!is_env_char((*cmd)[idx[1] + 1])))
 			new_cmd[idx[0]++] = (*cmd)[idx[1]];
 		if (!is_env_char((*cmd)[++idx[1]]) || idx[4] & 1)
 			continue ;
