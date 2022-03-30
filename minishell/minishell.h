@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 02:12:07 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/30 10:03:02 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,20 @@ void	ft_termios_org(t_mini *mini);
 void	ft_termios_new(t_mini *mini);
 
 // redirection
-void 	ft_redirection(t_list *plines, t_mini *mini);
+void	ft_redirection(t_list *plines, t_mini *mini);
 void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini);
-void 	ft_get_heredoc(t_list *plines, t_mini *mini);
+void	ft_get_heredoc(t_list *plines, t_mini *mini);
 
 // excute
-void 	ft_execute(char **cmds, t_list *env);
+void	ft_execute(char **cmds, t_list *env);
 void	ft_check_pipe(t_pline *pline);
-void 	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
-void 	ft_check_stdin(t_pline *cur, t_pline *prev);
-void 	ft_check_stdout(t_pline *cur);
-void 	ft_child(t_pline *cur, t_pline *prev, t_list *env);
-void 	ft_parent_close(t_pline *cur, t_pline *prev);
-void 	ft_parent(t_pline *cur, t_pline *prev);
-int 	ft_check_statlog(t_mini *mini, t_list *cur_plines);
+void	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
+void	ft_check_stdin(t_pline *cur, t_pline *prev);
+void	ft_check_stdout(t_pline *cur);
+void	ft_child(t_pline *cur, t_pline *prev, t_list *env);
+void	ft_parent_close(t_pline *cur, t_pline *prev);
+void	ft_parent(t_pline *cur, t_pline *prev);
+int		ft_check_statlog(t_mini *mini, t_list *cur_plines);
 
 // built_in
 int		ft_built_in(char **cmds, t_list *env);
@@ -105,7 +105,7 @@ t_list	*ft_init_envs(char **envp);
 // main and utils
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
 void	ft_free_two(char ***split);
-int ft_error_print(char *cmd, char *msg, int exitnum);
+int		ft_error_print(char *cmd, char *msg, int exitnum);
 
 //dha
 
@@ -143,17 +143,20 @@ int		token_type(char *cmd);
 t_list	*merge_token(t_list *tokens);
 int		get_type(t_list *token);
 int		parse_cmd(t_pline *pline, t_list **token);
-int		close_front_pipe(t_list **plines, int flag, t_cursor *cur, t_list **token);
+int		close_front_pipe(t_list **plines, int flag, \
+	t_cursor *cur, t_list **token);
 void	ft_stradd(t_pline *pline, int *idx, char *new);
 t_token	*token_dup(t_token *token);
 t_list	*merge_err(t_list **plines, t_cursor *cur);
+void	clear_pline(void *pline);
 
 // optimize
 void	optimize(t_list *plines, t_list *envs);
 int		ft_envcnt(char *str);
 char	*env_value(char *key, t_list *envs);
 void	get_env_values(char **values, char **cmd, t_list *envs);
-void	append_env_values(char **values, char **cmd);
+void	append_env_values_iter(char **values, char **cmd, \
+	char *new_cmd, int *idx);
 
 //utils
 int		error_invalid_identifier(char *func, char *arg);

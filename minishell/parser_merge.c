@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_merge.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/12 19:52:25 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 20:35:17 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:54:03 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	parse_cmds(t_cursor *cur, t_list *token, t_pline *pline)
 	while (cur->start != token)
 	{
 		type = get_type(cur->start);
-		if (!(get_type(cur->start) & CMD + PIPE))
+		if (!(get_type(cur->start) & (CMD | PIPE)))
 			err_num = parse_redir(pline, &(cur->start), type);
 		else
 			ft_stradd(pline, &idx, ((t_token *)cur->start->content)->str);
@@ -63,8 +63,11 @@ int	store_cmds(t_list **plines, t_cursor *cur, t_list *token)
 	t_pline	*pline;
 
 	if (cur->start == token \
-		|| (token && token->next && get_type(token->next) & 2))
+		|| (token && token->next && get_type(token->next) & PIPE))
+	{
+		syntax_err_msg(PIPE);
 		return (-1);
+	}
 	pline = ft_malloc(sizeof(t_pline), 1);
 	pline->cmds = ft_malloc(sizeof(char *), 4);
 	pline->cnt = 4;

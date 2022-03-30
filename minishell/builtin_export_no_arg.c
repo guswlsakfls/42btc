@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_export_no_arg.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:40:31 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 20:49:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:54:37 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,9 @@ int	export_no_arg(t_list *envs)
 		{
 			ft_putstr_fd("=\"", 1);
 			ft_putstr_fd(((t_env *)ptr->content)->value, 1);
-			ft_putendl_fd("\"", 1);
+			ft_putstr_fd("\"", 1);
 		}
+		write(1, "\n", 1);
 		ptr = ptr->next;
 	}
 	ft_lstclear(&sorted_envs, free);

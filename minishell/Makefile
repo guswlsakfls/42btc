@@ -3,20 +3,22 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
+#    By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/29 19:38:02 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/30 09:59:32 by dha              ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minishell.a
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
-AR = ar -rcs
-RM = rm -f
+CC = cc
+CFLAGS = -Wall -Wextra -Werror
+AR = ar rcs
+RM = rm -rf
+NAME = minishell
 
-LIB_DIR = ./libft
+LIBFT_DIR = ./libft
+LIBFT_NAME = ft
+LIBFT = $(LIBFT_DIR)/lib$(LIBFT_NAME).a
 
 RL_DIR = $(shell brew --prefix readline)
 RL_INC = $(RL_DIR)/include
@@ -48,7 +50,10 @@ SRCS = minishell.c \
 		builtin_pwd.c \
 		builtin_exit.c \
 		builtin_utils.c \
-		builtin_errors.c 
+		builtin_errors.c
+INCS = minishell.h
+OBJ_DIR = ./obj
+OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
 
 
 SRCS_TEST = ./testFile/heredoc_test.c \
@@ -57,16 +62,18 @@ SRCS_TEST = ./testFile/heredoc_test.c \
 			# ./testFile/tokenize.c \
 			# ./testFile/tokenize_utils.c
 
-OBJS = $(SRCS:.c=.o)
-
 %o: %c
 	$(CC) -c $(CFLAGS) -I $(RL_INC) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
 
-$(NAME): $(OBJS)
-	$(MAKE) -C $(LIB_DIR)
-	cp $(LIB_DIR)/libft.a $@
-	$(AR) $@ $^
-	$(CC) -L$(RL_LIB) -lreadline -lhistory $@ -o minishell
+$(NAME): $(LIBFT) $(OBJS) $(INCS)
+	@$(CC) $(CFLAGS) $(OBJS) \
+	-L $(LIBFT_DIR) -l$(LIBFT_NAME) \
+	-L $(RL_LIB) -lreadline -lhistory -o $@
+	@printf "💡 Make $(NAME) Done\n"
+
+$(OBJ_DIR)/%.o : %.c
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -I $(LIBFT_DIR) -I $(RL_INC) -c $< -o $@ -g
 
 all: $(NAME)
 
@@ -74,14 +81,28 @@ all: $(NAME)
 test :
 	gcc -ItestFile/*.h -lreadline -lhistory -L$(RL_LIB) -I$(RL_INC) $(SRCS_TEST) ./testFile/libft/*.c -g
 
-clean:
-	$(RM) $(OBJS) $(OBJS_BONUS)
-	$(MAKE) -C $(LIB_DIR) clean
+clean :
+	@$(RM) $(OBJ_DIR)
+	@echo "🗑 Remove $(NAME)'s OBJs Done"
 
-fclean: clean
-	$(RM) $(NAME)
-	$(MAKE) -C $(LIB_DIR) fclean
+fclean : clean
+	@$(RM) $(NAME)
+	@echo "🗑 Remove $(NAME) Done"
+
+wclean : fclean $(LIBFT_NAME)_fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+rr : wclean all
+
+.PHONY : all clean fclean wclean re rr \
+	$(LIBFT_NAME)_clean $(LIBFT_NAME)_fclean
+
+$(LIBFT) :
+	@make -C $(LIBFT_DIR)
+
+$(LIBFT_NAME)_clean :
+	@make -C $(LIBFT_DIR) clean
+
+$(LIBFT_NAME)_fclean :
+	@make -C $(LIBFT_DIR) fclean

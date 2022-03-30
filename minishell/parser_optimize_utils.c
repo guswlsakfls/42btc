@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_optimize_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 20:36:41 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/29 20:57:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:55:40 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,13 @@ char	*env_value(char *key, t_list *envs)
 		return ("");
 }
 
+int	is_env_char(int	n)
+{
+	if (ft_isalnum(n) || n == '?' || n == '_')
+		return (1);
+	return (0);
+}
+
 int	ft_envcnt(char *str)
 {
 	int	cnt;
@@ -41,10 +48,10 @@ int	ft_envcnt(char *str)
 		}
 		if (*str == '\0')
 			break ;
-		if ((!ft_isalnum(*(++str)) && *str != '?') || flag & 1)
+		if (!is_env_char(*(++str)) || flag & 1)
 			continue ;
 		cnt++;
-		while (ft_isalnum(*str) || *str == '?')
+		while (is_env_char(*str))
 			str++;
 	}
 	return (cnt);
@@ -67,10 +74,10 @@ void	get_env_values(char **values, char **cmd, t_list *envs)
 		}
 		if ((*cmd)[idx[0]++] == '\0')
 			break ;
-		if ((!ft_isalnum((*cmd)[idx[0]]) && (*cmd)[idx[0]] != '?') || flag & 1)
+		if (!is_env_char((*cmd)[idx[0]]) || flag & 1)
 			continue ;
 		idx[1] = idx[0];
-		while (ft_isalnum((*cmd)[idx[0]]) || (*cmd)[idx[0]] == '?')
+		while (is_env_char((*cmd)[idx[0]]))
 			idx[0]++;
 		key = ft_substr(*cmd, idx[1], idx[0] - idx[1]);
 		values[idx[2]++] = env_value(key, envs);
@@ -94,32 +101,13 @@ void	append_env_values_iter(char **values, char **cmd, \
 			new_cmd[idx[0]++] = (*cmd)[idx[1]];
 		if ((*cmd)[idx[1]++] == '\0')
 			break ;
-		if ((!ft_isalnum((*cmd)[idx[1]]) && (*cmd)[idx[1]] != '?' \
-			&& (*cmd)[idx[1]] != '_') || idx[4] & 1)
+		if (!is_env_char((*cmd)[idx[1]]) || idx[4] & 1)
 			continue ;
-		while (ft_isalnum((*cmd)[idx[1]]) || (*cmd)[idx[1]] == '?' || \
-			(*cmd)[idx[1]] == '_')
+		while (is_env_char((*cmd)[idx[1]]))
 			idx[1]++;
 		idx[2] = 0;
 		while ((*values)[idx[2]])
 			new_cmd[idx[0]++] = (*values)[idx[2]++];
 		values++;
 	}
-}
-
-void	append_env_values(char **values, char **cmd)
-{
-	int		len;
-	int		*idx;
-	char	*new_cmd;
-
-	len = ft_strlen(*cmd);
-	idx = ft_malloc(sizeof(int), 5);
-	while (values[idx[3]])
-		len += ft_strlen(values[idx[3]++]);
-	new_cmd = ft_malloc(sizeof(char), len + 1);
-	append_env_values_iter(values, cmd, new_cmd, idx);
-	free(*cmd);
-	free(idx);
-	*cmd = new_cmd;
 }

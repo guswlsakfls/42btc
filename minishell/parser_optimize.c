@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_optimize.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 20:36:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/29 20:57:24 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:55:22 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,23 @@ void	quote_removal(char **cmd)
 	tmp = *cmd;
 	*cmd = ft_strdup(*cmd);
 	free(tmp);
+}
+
+void	append_env_values(char **values, char **cmd)
+{
+	int		len;
+	int		*idx;
+	char	*new_cmd;
+
+	len = ft_strlen(*cmd);
+	idx = ft_malloc(sizeof(int), 5);
+	while (values[idx[3]])
+		len += ft_strlen(values[idx[3]++]);
+	new_cmd = ft_malloc(sizeof(char), len + 1);
+	append_env_values_iter(values, cmd, new_cmd, idx);
+	free(*cmd);
+	free(idx);
+	*cmd = new_cmd;
 }
 
 void	env_expansion(char **cmd, t_list *envs)

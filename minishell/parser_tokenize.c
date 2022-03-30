@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenize.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 20:19:46 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 20:37:04 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:55:58 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,13 @@ static int	get_cmd_len(char *s)
 		s++;
 	}
 	if (opened)
+	{
+		if (opened & 1)
+			ft_putendl_fd("nano: single quote is not closed", 2);
+		if (opened & 2)
+			ft_putendl_fd("nano: double quote is not closed", 2);
 		return (0);
+	}
 	return (s - start);
 }
 

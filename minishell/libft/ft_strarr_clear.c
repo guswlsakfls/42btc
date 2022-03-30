@@ -1,33 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strncmp.c                                       :+:      :+:    :+:   */
+/*   ft_strarr_clear.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/10 01:02:48 by dha               #+#    #+#             */
-/*   Updated: 2022/03/25 20:22:50 by dha              ###   ########seoul.kr  */
+/*   Created: 2022/03/29 19:41:57 by dha               #+#    #+#             */
+/*   Updated: 2022/03/29 19:46:04 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
+void	ft_strarr_clear(char ***strarr)
 {
-	size_t			i;
-	unsigned char	*tmp_s1;
-	unsigned char	*tmp_s2;
+	int	idx;
 
-	tmp_s1 = (unsigned char *) s1;
-	tmp_s2 = (unsigned char *) s2;
-	if (n == 0)
-		n = 2147483647;
-	i = 0;
-	while (i < n && tmp_s1[i] && tmp_s2[i])
+	idx = 0;
+	while ((*strarr)[idx])
 	{
-		if (tmp_s1[i] != tmp_s2[i])
-			break ;
-		i++;
+		free((*strarr)[idx]);
+		idx++;
 	}
-	return (tmp_s1[i] - tmp_s2[i]);
+	free(*strarr);
+	*strarr = NULL;
+	return ;
 }

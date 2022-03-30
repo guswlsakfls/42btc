@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/05 10:07:44 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 01:57:43 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/30 10:03:35 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_termios_new(mini);
 		plines = analyze(ft_readline(NULL), env, mini);
 		ft_nanoshell(plines, env, mini);
-		free(plines);
+		ft_lstclear(&plines, clear_pline);
 	}
 	return (0);
 }

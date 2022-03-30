@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_merge_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/13 22:13:27 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 20:35:31 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 09:54:21 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,9 @@ void	ft_stradd(t_pline *pline, int *idx, char *new)
 
 void	clear_pline(void *pline)
 {
-	int		i;
-	t_pline	*tmp;
-
-	tmp = (t_pline *)pline;
-	clear_tokens(&tmp->ifile);
-	clear_tokens(&tmp->ofile);
-	i = 0;
-	while (tmp->cmds[i])
-	{
-		free(tmp->cmds[i]);
-		i++;
-	}
-	free(tmp->cmds);
+	ft_strarr_clear(&(((t_pline *)pline)->cmds));
+	clear_tokens(&((t_pline *)pline)->ifile);
+	clear_tokens(&((t_pline *)pline)->ofile);
 	free(pline);
 }
 

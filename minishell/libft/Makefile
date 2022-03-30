@@ -6,7 +6,7 @@
 #    By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/26 20:59:53 by dha               #+#    #+#              #
-#    Updated: 2022/03/19 17:18:39 by dha              ###   ########seoul.kr   #
+#    Updated: 2022/03/29 19:45:30 by dha              ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,8 @@ SRCS = ft_isascii.c \
 	ft_linelen.c \
 	ft_malloc.c \
 	ft_strapp.c \
-	ft_realloc.c
+	ft_realloc.c \
+	ft_strarr_clear.c
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
