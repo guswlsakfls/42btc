@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 15:54:28 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 16:38:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 19:03:25 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ t_list	*analyze(char *cmd, t_list *envs, t_mini *mini)
 
 	if (cmd == NULL)
 		cntl_D(mini);
-	add_history(cmd);
+	if (cmd != NULL)
+		add_history(cmd);
 	tokens = tokenize(cmd, envs);
 	plines = merge_token(tokens, envs);
 	optimize(plines, envs);

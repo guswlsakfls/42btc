@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:14:17 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 12:52:14 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 20:43:56 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ char	*ft_get_envp(char *cmd, t_list *env, char *key)
 	struct stat	file_info;
 
 	values = ft_split(ft_get_value(env, key), ':');
+	// if (values == NULL)
+
 	i = -1;
 	while (values[++i])
 	{

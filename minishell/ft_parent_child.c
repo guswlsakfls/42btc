@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 16:01:58 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 19:42:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,10 @@ void	ft_parent_close(t_pline *cur, t_pline *prev)
 		close(prev->pipe_fd[0]);
 	if (cur->is_pipe == ISPIPE)
 		close(cur->pipe_fd[1]);
+	if (cur->file_fd[0] > 0)
+		close(cur->file_fd[0]);
+	if (cur->file_fd[1] > 0)
+		close(cur->file_fd[1]);
 }
 
 void	ft_parent(t_pline *cur, t_pline *prev)

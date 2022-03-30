@@ -6,11 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-<<<<<<< HEAD
-/*   Updated: 2022/03/30 16:50:36 by hyujo            ###   ########.fr       */
-=======
-/*   Updated: 2022/03/30 17:08:49 by dha              ###   ########seoul.kr  */
->>>>>>> f1171aac3cec1d31ab9ccead5ee37828365288d1
+/*   Updated: 2022/03/30 20:14:38 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,21 +77,34 @@ void	ft_termios_new(t_mini *mini);
 
 // redirection
 int		ft_redirection(t_list *plines, t_mini *mini, t_list *env);
+void	ft_get_heredoc(t_list *plines, t_mini *mini, t_list *env);
+void	ft_close_file_fd(t_pline *pline);
+int		ft_redir_ofile(t_pline *pline, t_list *ofile);
+
+// utils2
 void	ft_input_heredoc(t_list *ifile, t_pline *pline,
 			t_mini *mini, t_list *env);
-void	ft_get_heredoc(t_list *plines, t_mini *mini, t_list *env);
 void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env);
+int		ft_redir_ifile(t_pline *pline, t_list *ifile);
+void	ft_hredir(t_pline *pline);
+int		ft_iredir(t_list *ifile, t_pline *pline);
 
 // excute
 void	ft_execute(char **cmds, t_list *env);
 void	ft_check_pipe(t_pline *pline);
-int		ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
 void	ft_check_stdin(t_pline *cur, t_pline *prev);
 void	ft_check_stdout(t_pline *cur);
 int		ft_child(t_pline *cur, t_pline *prev, t_list *env);
 void	ft_parent_close(t_pline *cur, t_pline *prev);
 void	ft_parent(t_pline *cur, t_pline *prev);
-int		ft_check_statlog(t_mini *mini, t_list *cur_plines);
+int		ft_check_statlog(t_mini *mini, t_list *cur_plines, t_list *env);
+
+// nanoshell
+void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
+int		ft_check_stat_env(int statlog);
+int		ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
+void	ft_check_cmds_null(t_pline *cur, t_list *plines);
+void	ft_close_fd(t_list *plines);
 
 // built_in
 int		ft_built_in(char **cmds, t_list *env);
@@ -108,11 +117,20 @@ char	**ft_join_env(t_list *env);
 char	*ft_get_envp(char *cmd, t_list *env, char *key);
 t_list	*ft_init_envs(char **envp);
 
-// main, error and utils
+// main, error
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
 void	ft_free_two(char ***split);
 int		ft_error_print(char *cmd, char *msg, int exitnum);
 int		ft_error_execve(char **cmds);
+
+// utils1
+void	ft_check_pipe(t_pline *pline);
+int		ft_check_file(t_pline *cur);
+void	ft_backup_pid(int *backup_pid);
+void	ft_waitpid(t_list *cur_plines, t_mini *mini, t_list *env, int status);
+
+// utils2
+void	ft_check_fork(t_pline *cur, t_pline *prev);
 
 //dha
 

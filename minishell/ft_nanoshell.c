@@ -6,59 +6,37 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 16:47:56 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 20:29:29 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_check_pipe(t_pline *pline)
-{
-	if (pline->is_pipe == ISPIPE)
-	{
-		if (pipe(pline->pipe_fd) < 0)
-			exit(0);
-	}
-}
-
-int	ft_check_file(t_pline *cur)
-{
-	if (ft_check_built_in(cur->cmds[0]) == 0 && cur->is_pipe != ISPIPE)
-	{
-		if (cur->file_fd[0] < 0 || cur->file_fd[1] < 0)
-			return (1);
-	}
-	return (0);
-}
-
 int	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini)
 {
 	t_pline	*prev;
 	int		backup_pid[2];
+	int		status;
 
+	status = 0;
 	prev = NULL;
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
 	cur->pid = 0;
-	if ((prev && prev->is_pipe == ISPIPE) ||
-		cur->is_pipe == ISPIPE || ft_check_built_in(cur->cmds[0]) == 1)
-		cur->pid = fork();
-	if (cur->pid < 0)
-		exit(0);
-	backup_pid[0] = dup(STDIN_FILENO);
-	backup_pid[1] = dup(STDOUT_FILENO);
+	ft_check_fork(cur, prev);
+	ft_backup_pid(backup_pid);
 	if (cur->pid == 0)
 	{
 		if (ft_check_file(cur) == 1)
 			return (1);
 		ft_termios_org(mini);
-		return (ft_child(cur, prev, env));
+		status = ft_child(cur, prev, env);
 	}
 	ft_parent(cur, prev);
 	if (dup2(backup_pid[0], STDIN_FILENO) < 0
 		|| dup2(backup_pid[1], STDOUT_FILENO) < 0)
 		exit(1);
-	return (0);
+	return (status);
 }
 
 void	ft_check_cmds_null(t_pline *cur, t_list *plines)
@@ -94,50 +72,15 @@ int	ft_check_stat_env(int statlog)
 {
 	if (statlog == 2)
 	{
-		statlog = 130;
+		statlog = 130 * 256;
 		ft_putstr_fd("\n", 1);
 	}
 	else if (statlog == 3)
 	{
-		statlog = 131;
+		statlog = 131 * 256;
 		ft_putstr_fd("Quit: 3\n", 1);
 	}
-	else if (statlog == 32512)
-		return (127);
-	else if (statlog == 32256)
-		return (126);
 	return (statlog);
-}
-
-void	ft_waitpid(t_list *cur_plines, t_mini *mini, t_list *env, int status)
-{
-	t_pline	*pline;
-	int		statlog;
-
-	statlog = status;
-	while (cur_plines)
-	{
-		pline = (t_pline *)cur_plines->content;
-		if (pline->pid > 0)
-			waitpid(pline->pid, &statlog, WUNTRACED);
-		statlog = ft_check_stat_env(statlog);
-		cur_plines = cur_plines->next;
-	}
-	if (mini->statlog != 0)
-		statlog = mini->statlog;
-	is_exist_key(strdup("?"), &env);
-	swap_value(ft_itoa(statlog), env);
-}
-
-int	ft_check_statlog(t_mini *mini, t_list *cur_plines)
-{
-	if (mini->statlog == 256)
-	{
-		ft_close_fd(cur_plines);
-		mini->statlog = 0;
-		return (0);
-	}
-	return (1);
 }
 
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini)
@@ -146,9 +89,10 @@ void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini)
 	t_pline	*pline;
 	int		status;
 
+	mini->statlog = 0;
 	cur_plines = plines;
 	status = ft_redirection(cur_plines, mini, env);
-	if (ft_check_statlog(mini, cur_plines) == 0)
+	if (ft_check_statlog(mini, cur_plines, env) == 0)
 		return ;
 	mini->statlog = status;
 	while (cur_plines)

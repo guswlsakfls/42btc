@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 12:38:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 19:43:57 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,4 @@ int	builtin_exit(char **argv, t_list **envs)
 	is_exist_key(ft_strdup("?"), &tmp);
 	swap_value(ft_itoa(exit_status), tmp);
 	exit(exit_status);
-	return (exit_status);
 }

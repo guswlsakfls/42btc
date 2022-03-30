@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/30 14:52:08 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/30 18:47:23 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,6 +40,9 @@ SRCS = minishell.c \
 		ft_excute.c \
 		ft_nanoshell.c \
 		ft_parent_child.c \
+		ft_utils1.c \
+		ft_utils2.c \
+		ft_utils_redir.c \
 		builtin_env.c \
 		builtin_export.c \
 		builtin_export_arg.c \
@@ -54,13 +57,6 @@ SRCS = minishell.c \
 INCS = minishell.h
 OBJ_DIR = ./obj
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRCS:.c=.o))
-
-
-SRCS_TEST = ./testFile/heredoc_test.c \
-			# ./testFile/test_utils.c \
-			# ./testFile/analyze.c \
-			# ./testFile/tokenize.c \
-			# ./testFile/tokenize_utils.c
 
 %o: %c
 	$(CC) -c $(CFLAGS) -I $(RL_INC) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:13:15 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 16:15:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 20:43:45 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,8 @@ void	ft_execute(char **cmds, t_list *env)
 		path = cmds[0];
 	else
 		path = (ft_get_envp(cmds[0], env, "PATH"));
+	printf("1\n");
+	printf("PATH : %s\n", path);
 	if (execve(path, cmds, ft_join_env(env)) < 0)
 	{
 		exit_status = ft_error_execve(cmds);
