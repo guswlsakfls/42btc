@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 10:03:02 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 15:10:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/history.h>
 # include <term.h>
 # include <sys/stat.h>
+# include <errno.h>
 
 typedef struct s_mini
 {
@@ -65,9 +66,7 @@ typedef struct s_token
 }	t_token;
 
 // signal
-void	ft_sig_child(int signum);
 void	ft_sig_heredoc(int signum);
-void	ft_sig_quit(int signum);
 void	ft_sig_int(int signum);
 char	*ft_readline(char *status);
 
@@ -77,7 +76,7 @@ void	ft_termios_org(t_mini *mini);
 void	ft_termios_new(t_mini *mini);
 
 // redirection
-void	ft_redirection(t_list *plines, t_mini *mini);
+int		ft_redirection(t_list *plines, t_mini *mini);
 void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini);
 void	ft_get_heredoc(t_list *plines, t_mini *mini);
 
@@ -95,6 +94,7 @@ int		ft_check_statlog(t_mini *mini, t_list *cur_plines);
 // built_in
 int		ft_built_in(char **cmds, t_list *env);
 int		ft_check_built_in(char *cmd);
+int		ft_check_file(t_pline *cur);
 
 // envp
 char	*ft_get_value(t_list *env, char *key);
@@ -102,10 +102,11 @@ char	**ft_join_env(t_list *env);
 char	*ft_get_envp(char *cmd, t_list *env, char *key);
 t_list	*ft_init_envs(char **envp);
 
-// main and utils
+// main, error and utils
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
 void	ft_free_two(char ***split);
 int		ft_error_print(char *cmd, char *msg, int exitnum);
+int		ft_error_execve(char **cmds);
 
 //dha
 

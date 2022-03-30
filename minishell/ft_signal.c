@@ -3,37 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 10:08:06 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 14:15:57 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_sig_quit(int signum)
-{
-	if (signum != SIGQUIT)
-		return ;
-	printf("Quit: 3\n");
-}
-
 void	ft_sig_int(int signum)
 {
+	printf("111111\n");
 	if (signum != SIGINT)
 		return ;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 1);
 	rl_redisplay();
-}
-
-void	ft_sig_child(int signum)
-{
-	if (signum != SIGINT)
-		return ;
-	printf("\n");
 }
 
 void	ft_sig_heredoc(int signum)

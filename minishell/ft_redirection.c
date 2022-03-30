@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_redirection.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 01:57:30 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/30 15:10:06 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,12 @@ void	ft_input_heredoc(t_list *ifile, t_pline *pline, t_mini *mini)
 
 int	ft_iredir(t_list *ifile, t_pline *pline)
 {
-	if (pline->file_fd[0] != 0) // 중복해서 열려 있으면 닫아주고 다시 연다.
+	if (pline->file_fd[0] != 0)
 		close(pline->file_fd[0]);
 	pline->file_fd[0] = open(((t_token *)ifile->content)->str, O_RDONLY, 0777);
 	if (pline->file_fd[0] < 0)
-		ft_error_print(((t_token *)ifile->content)->str // 여기에 exit staus 하면 될 듯
-			, "No such file or directory", 1);
+		return (ft_error_print(((t_token *)ifile->content)->str,
+				"No such file or directory", 1));
 	return (0);
 }
 
@@ -103,21 +103,22 @@ void	ft_hredir(t_pline *pline)
 	pline->file_fd[0] = pline->heredoc_fd[0];
 }
 
-void	ft_redir_ifile(t_pline *pline, t_list *ifile)
+int	ft_redir_ifile(t_pline *pline, t_list *ifile)
 {
 	while (ifile)
 	{
 		if (((t_token *)ifile->content)->type == IREDIR)
-			ft_iredir(ifile, pline);
+			return (ft_iredir(ifile, pline));
 		if (ifile->next == NULL)
 			break ;
 		ifile = ifile->next;
 	}
 	if (ifile && ((t_token *)ifile->content)->type == HEREDOC)
 		ft_hredir(pline);
+	return (0);
 }
 
-void ft_redir_ofile(t_pline *pline, t_list *ofile)
+int	ft_redir_ofile(t_pline *pline, t_list *ofile)
 {
 	while (ofile)
 	{
@@ -125,10 +126,11 @@ void ft_redir_ofile(t_pline *pline, t_list *ofile)
 		{
 			if (pline->file_fd[1] != 0)
 				close(pline->file_fd[1]);
-			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+			pline->file_fd[1] = open(((t_token *)ofile->content)->str,
+					O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (pline->file_fd[1] < 0)
-				ft_error_print(((t_token *)ofile->content)->str
-					, "No such file or directory", 1);
+				return (ft_error_print(((t_token *)ofile->content)->str,
+						"No such file or directory", 1));
 		}
 		else
 		{
@@ -137,18 +139,20 @@ void ft_redir_ofile(t_pline *pline, t_list *ofile)
 				close(pline->file_fd[1]);
 				pline->file_fd[1] = 0;
 			}
-			pline->file_fd[1] = open(((t_token *)ofile->content)->str, O_WRONLY | O_CREAT | O_APPEND, 0777);
+			pline->file_fd[1] = open(((t_token *)ofile->content)->str,
+					O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (pline->file_fd[1] < 0)
-				ft_error_print(((t_token *)ofile->content)->str
-					, "No such file or directory", 1);
+				return (ft_error_print(((t_token *)ofile->content)->str,
+						"No such file or directory", 1));
 		}
 		ofile = ofile->next;
 	}
+	return (0);
 }
 
 void	ft_get_heredoc(t_list *plines, t_mini *mini)
 {
-	t_list *ifile;
+	t_list	*ifile;
 
 	while (plines)
 	{
@@ -165,25 +169,28 @@ void	ft_get_heredoc(t_list *plines, t_mini *mini)
 	}
 }
 
-void ft_redirection(t_list *plines, t_mini *mini)
+int	ft_redirection(t_list *plines, t_mini *mini)
 {
 	t_list	*ifile;
 	t_list	*ofile;
 	t_list	*cur_plines;
 	t_pline	*pline;
+	int		status;
 
+	status = 0;
 	cur_plines = plines;
 	ft_get_heredoc(cur_plines, mini);
 	if (mini->statlog == 256)
-		return ;
+		return (1);
 	cur_plines = plines;
 	while (cur_plines)
 	{
 		pline = (t_pline *)cur_plines->content;
 		ifile = ((t_pline *)cur_plines->content)->ifile;
-		ft_redir_ifile(pline, ifile);
+		status = ft_redir_ifile(pline, ifile);
 		ofile = ((t_pline *)cur_plines->content)->ofile;
-		ft_redir_ofile(pline, ofile);
+		status = ft_redir_ofile(pline, ofile);
 		cur_plines = cur_plines->next;
 	}
+	return (status);
 }

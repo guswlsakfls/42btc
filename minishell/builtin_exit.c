@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 10:24:57 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 12:38:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,6 @@ int	builtin_exit(char **argv, t_list **envs)
 	tmp = *envs;
 	is_exist_key(ft_strdup("?"), &tmp);
 	swap_value(ft_itoa(exit_status), tmp);
-	exit(EXIT_SUCCESS);
+	exit(exit_status);
 	return (exit_status);
 }
