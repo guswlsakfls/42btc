@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/29 18:42:17 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 10:24:57 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int	builtin_exit(char **argv, t_list **envs)
 {
 	unsigned char	exit_status;
+	t_list			*tmp;
 
 	exit_status = 0;
 	printf("exit\n");
@@ -26,14 +27,13 @@ int	builtin_exit(char **argv, t_list **envs)
 			return (1);
 		}
 		if (!ft_isnum(argv[1]))
-		{
 			exit_status = error_numeric_arg("exit", ERR_NMA);
-		}
 		else
 			exit_status = ft_atoi(argv[1]);
 	}
-	is_exist_key(ft_strdup("?"), envs);
-	swap_value(ft_itoa(exit_status), *envs);
+	tmp = *envs;
+	is_exist_key(ft_strdup("?"), &tmp);
+	swap_value(ft_itoa(exit_status), tmp);
 	exit(EXIT_SUCCESS);
 	return (exit_status);
 }
