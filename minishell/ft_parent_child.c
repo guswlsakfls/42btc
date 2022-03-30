@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_parent_child.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyunjinjo <hyunjinjo@student.42.fr>        +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 01:58:38 by hyunjinjo        ###   ########.fr       */
+/*   Updated: 2022/03/30 10:26:58 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 	ft_check_stdout(cur);
 	if (ft_built_in(cur->cmds, env) == 0)
 	{
-		if (cur->is_pipe == ISPIPE || prev->is_pipe == ISPIPE)
+		if (cur->is_pipe == ISPIPE || (prev && prev->is_pipe == ISPIPE))
 			exit(1);
 	}
 	else 

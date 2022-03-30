@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 20:36:41 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 09:55:40 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 10:53:22 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*env_value(char *key, t_list *envs)
 
 int	is_env_char(int	n)
 {
-	if (ft_isalnum(n) || n == '?' || n == '_')
+	if (ft_isalnum(n) || n == '?' || n == '_' || n == '{' || n == '}')
 		return (1);
 	return (0);
 }
@@ -72,12 +72,14 @@ void	get_env_values(char **values, char **cmd, t_list *envs)
 			flag ^= ((*cmd)[idx[0]] == '\'' && !(flag & 2));
 			flag ^= ((*cmd)[idx[0]++] == '\"' && !(flag & 1)) << 1;
 		}
-		if ((*cmd)[idx[0]++] == '\0')
+		if ((*cmd)[idx[0]] == '\0')
 			break ;
-		if (!is_env_char((*cmd)[idx[0]]) || flag & 1)
+		if (!is_env_char((*cmd)[++idx[0]]) || flag & 1)
 			continue ;
+		if ((*cmd)[idx[0]] == '{')
+			idx[0]++;
 		idx[1] = idx[0];
-		while (is_env_char((*cmd)[idx[0]]))
+		while (is_env_char((*cmd)[idx[0]]) && (*cmd)[idx[0]] != '}')
 			idx[0]++;
 		key = ft_substr(*cmd, idx[1], idx[0] - idx[1]);
 		values[idx[2]++] = env_value(key, envs);
@@ -97,11 +99,11 @@ void	append_env_values_iter(char **values, char **cmd, \
 			idx[4] ^= ((*cmd)[idx[1]] == '\"' && !(idx[4] & 1)) << 1;
 			new_cmd[idx[0]++] = (*cmd)[idx[1]++];
 		}
+		if ((*cmd)[idx[1]] == '\0')
+			break ;
 		if ((*cmd)[idx[1]] == '$' && idx[4] & 1)
 			new_cmd[idx[0]++] = (*cmd)[idx[1]];
-		if ((*cmd)[idx[1]++] == '\0')
-			break ;
-		if (!is_env_char((*cmd)[idx[1]]) || idx[4] & 1)
+		if (!is_env_char((*cmd)[++idx[1]]) || idx[4] & 1)
 			continue ;
 		while (is_env_char((*cmd)[idx[1]]))
 			idx[1]++;
