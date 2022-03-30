@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:20:57 by dha               #+#    #+#             */
-/*   Updated: 2022/03/29 19:34:52 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 12:22:18 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	change_dir(char **argv, char *tmp, t_list **envs)
 	if (!argv[1] || !ft_strncmp(argv[1], "#", 0) || \
 		!ft_strncmp(argv[1], "~", 0))
 	{
-		tmp = env_value("HOME", *envs);
+		tmp = env_value(strdup("HOME"), *envs);
 		if (tmp[0] == '\0')
 			return (error_env_not_set(argv[0], ERR_HNS));
 		ch_flag = chdir(tmp);
 	}
 	else if (!ft_strncmp(argv[1], "-", 0))
 	{
-		tmp = env_value("OLDPWD", *envs);
+		tmp = env_value(strdup("OLDPWD"), *envs);
 		if (tmp[0] == '\0')
 			return (error_env_not_set(argv[0], ERR_ONS));
 		ch_flag = chdir(tmp);
