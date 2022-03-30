@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 14:16:14 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:01:58 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	ft_check_stdout(t_pline *cur)
 	}
 }
 
-void	ft_child(t_pline *cur, t_pline *prev, t_list *env)
+int	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 {
 	ft_check_stdin(cur, prev);
 	ft_check_stdout(cur);
@@ -59,6 +59,7 @@ void	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 	}
 	else
 		ft_execute(cur->cmds, env);
+	return (0);
 }
 
 void	ft_parent_close(t_pline *cur, t_pline *prev)

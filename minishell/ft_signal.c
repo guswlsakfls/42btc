@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 14:15:57 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:34:18 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 void	ft_sig_int(int signum)
 {
-	printf("111111\n");
 	if (signum != SIGINT)
 		return ;
 	printf("\n");

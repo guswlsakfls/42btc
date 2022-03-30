@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 15:10:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 16:34:11 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ void	ft_get_heredoc(t_list *plines, t_mini *mini);
 // excute
 void	ft_execute(char **cmds, t_list *env);
 void	ft_check_pipe(t_pline *pline);
-void	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
+int		ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini);
 void	ft_check_stdin(t_pline *cur, t_pline *prev);
 void	ft_check_stdout(t_pline *cur);
-void	ft_child(t_pline *cur, t_pline *prev, t_list *env);
+int		ft_child(t_pline *cur, t_pline *prev, t_list *env);
 void	ft_parent_close(t_pline *cur, t_pline *prev);
 void	ft_parent(t_pline *cur, t_pline *prev);
 int		ft_check_statlog(t_mini *mini, t_list *cur_plines);
