@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 21:45:45 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 21:52:32 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	builtin_exit(char **argv, t_list **envs)
 	t_list			*tmp;
 
 	exit_status = 0;
-	if (!isatty(0) || !isatty(1))
+	if (isatty(0) && isatty(1))
 		printf("exit\n");
 	if (argv[1])
 	{
