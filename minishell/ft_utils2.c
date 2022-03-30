@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 18:28:12 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 19:42:54 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 21:34:12 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,14 @@ void	ft_check_fork(t_pline *cur, t_pline *prev)
 		cur->pid = fork();
 	if (cur->pid < 0)
 		exit(0);
+}
+
+void	ft_init_exit_status(t_list	**envs)
+{
+	t_env	*env;
+
+	env = (t_env *)ft_malloc(sizeof(t_env), 1);
+	env->key = ft_strdup("?");
+	env->value = ft_itoa(0);
+	ft_lstadd_back(envs, ft_lstnew(env));
 }

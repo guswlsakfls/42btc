@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 20:14:38 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 21:35:31 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,6 +116,7 @@ char	*ft_get_value(t_list *env, char *key);
 char	**ft_join_env(t_list *env);
 char	*ft_get_envp(char *cmd, t_list *env, char *key);
 t_list	*ft_init_envs(char **envp);
+char	*ft_value_list(char **values, char *cmd);
 
 // main, error
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
@@ -131,6 +132,7 @@ void	ft_waitpid(t_list *cur_plines, t_mini *mini, t_list *env, int status);
 
 // utils2
 void	ft_check_fork(t_pline *cur, t_pline *prev);
+void	ft_init_exit_status(t_list	**envs);
 
 //dha
 

@@ -6,21 +6,11 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:14:17 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 20:43:56 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 21:37:10 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_init_exit_status(t_list	**envs)
-{
-	t_env	*env;
-
-	env = (t_env *)ft_malloc(sizeof(t_env), 1);
-	env->key = ft_strdup("?");
-	env->value = ft_itoa(0);
-	ft_lstadd_back(envs, ft_lstnew(env));
-}
 
 char	*ft_get_value(t_list *env, char *key)
 {
@@ -64,16 +54,12 @@ char	**ft_join_env(t_list *env)
 	return (envp);
 }
 
-char	*ft_get_envp(char *cmd, t_list *env, char *key)
+char	*ft_value_list(char **values, char *cmd)
 {
-	int			i;
-	char		**values;
 	char		*value_list;
-	char		*value;
+	int			i;
 	struct stat	file_info;
-
-	values = ft_split(ft_get_value(env, key), ':');
-	// if (values == NULL)
+	char		*value;
 
 	i = -1;
 	while (values[++i])
@@ -87,11 +73,25 @@ char	*ft_get_envp(char *cmd, t_list *env, char *key)
 			return (value);
 		}
 		free(value_list);
-		if (values[i + 1] == NULL)
-			break ;
 		free(value);
+		value = NULL;
 	}
-	ft_free_two(&values);
+	return (value);
+}
+
+char	*ft_get_envp(char *cmd, t_list *env, char *key)
+{
+	char		**values;
+	char		*value;
+	char		*n;
+
+	n = ft_get_value(env, key);
+	if (n == NULL)
+		return (NULL);
+	values = ft_split(n, ':');
+	value = ft_value_list(values, cmd);
+	if (value == NULL)
+		free(values);
 	return (value);
 }
 

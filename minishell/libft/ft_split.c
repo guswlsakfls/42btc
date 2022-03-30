@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 16:08:57 by dha               #+#    #+#             */
-/*   Updated: 2021/11/29 16:38:18 by dha              ###   ########.fr       */
+/*   Updated: 2022/03/30 21:35:06 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,8 @@ char	**ft_split(char const *s, char c)
 {
 	char	**words;
 
+	if (s == NULL)
+		return (NULL);
 	words = (char **) malloc(sizeof(char *) * (count_words(s, c) + 1));
 	if (words == 0)
 		return (0);

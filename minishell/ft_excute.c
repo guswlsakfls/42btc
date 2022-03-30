@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:13:15 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 20:43:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 21:15:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_error_execve(char **cmds)
 	else if (ft_strchr(cmds[0], '/'))
 		return (ft_error_print(cmds[0],
 				"No such file or directory", 127));
-	else if (errno == 2)
+	else if (errno == 2 || errno == 14)
 		return (ft_error_print(cmds[0], "command not found", 127));
 	else
 	{
@@ -44,8 +44,6 @@ void	ft_execute(char **cmds, t_list *env)
 		path = cmds[0];
 	else
 		path = (ft_get_envp(cmds[0], env, "PATH"));
-	printf("1\n");
-	printf("PATH : %s\n", path);
 	if (execve(path, cmds, ft_join_env(env)) < 0)
 	{
 		exit_status = ft_error_execve(cmds);
