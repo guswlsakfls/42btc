@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 21:53:51 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/30 22:00:15 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_exit(char **argv, t_list **envs)
 			ft_putendl_fd("nano: exit: too many arguments", 2);
 			return (1);
 		}
-		if (!ft_isnum(argv[1]) || argv[1][0] == '-')
+		if (!ft_isnum(argv[1]))
 			exit_status = error_numeric_arg("exit", ERR_NMA);
 		else
 			exit_status = ft_atoi(argv[1]);
