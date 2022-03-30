@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_exit.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:39 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 19:43:57 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/30 21:45:45 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ int	builtin_exit(char **argv, t_list **envs)
 	t_list			*tmp;
 
 	exit_status = 0;
-	printf("exit\n");
+	if (!isatty(0) || !isatty(1))
+		printf("exit\n");
 	if (argv[1])
 	{
 		if (argv[2])
