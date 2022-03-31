@@ -3,19 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   ft_signal.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 20:33:29 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 10:27:34 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+const t_list	*envptr;
+
 void	ft_sig_int(int signum)
 {
 	if (signum != SIGINT)
 		return ;
+	set_exit_status(1, (t_list *)envptr);
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 1);
@@ -34,13 +37,13 @@ char	*ft_readline(char *status, t_list *env)
 {
 	char	*input;
 
-	(void )env;
+	envptr = env;
 	input = NULL;
 	if (status == NULL)
 	{
 		signal(SIGINT, ft_sig_int);
 		signal(SIGQUIT, SIG_IGN);
-		input = readline("\033[0;91m\033[1mnano$ \033[0m");
+		input = readline("\033[0;91;1mnano$ \033[0m");
 	}
 	else if (ft_strncmp("heredoc", status, 7) == 0)
 	{
