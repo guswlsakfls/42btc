@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:21:29 by dha               #+#    #+#             */
-/*   Updated: 2022/03/31 20:13:53 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/31 21:38:54 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 
 void	check_flag(char **argv, int *idx, int *flag)
 {
-	idx[0]++;
+	idx[0] = 1;
 	while (argv[idx[0]] && argv[idx[0]][0] == '-')
 	{
 		idx[1] = 0;
+		if (!argv[idx[0]][1])
+			break ;
 		while (argv[idx[0]][++idx[1]])
 		{
 			if (argv[idx[0]][idx[1]] != 'n')
