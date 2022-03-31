@@ -6,19 +6,19 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 12:23:14 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/31 10:27:34 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/31 10:39:46 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-const t_list	*envptr;
+static t_list	*s_envptr;
 
 void	ft_sig_int(int signum)
 {
 	if (signum != SIGINT)
 		return ;
-	set_exit_status(1, (t_list *)envptr);
+	set_exit_status(1, (t_list *)s_envptr);
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 1);
@@ -37,7 +37,7 @@ char	*ft_readline(char *status, t_list *env)
 {
 	char	*input;
 
-	envptr = env;
+	s_envptr = env;
 	input = NULL;
 	if (status == NULL)
 	{
