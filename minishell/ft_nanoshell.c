@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/31 10:58:58 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 17:17:04 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini)
 	if (dup2(backup_pid[0], STDIN_FILENO) < 0
 		|| dup2(backup_pid[1], STDOUT_FILENO) < 0)
 		exit(1);
+	close(backup_pid[0]);
+	close(backup_pid[1]);
 	return (status);
 }
 
