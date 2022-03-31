@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/17 12:33:03 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 20:34:33 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 20:06:29 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_redir_ofile(t_pline *pline, t_list *ofile)
 					O_WRONLY | O_CREAT | O_TRUNC, 0777);
 			if (pline->file_fd[1] < 0)
 				return (ft_error_print(((t_token *)ofile->content)->str,
-						"No such file or directory", 1));
+						"Permission denied", 1));
 		}
 		else
 		{
@@ -40,7 +40,7 @@ int	ft_redir_ofile(t_pline *pline, t_list *ofile)
 					O_WRONLY | O_CREAT | O_APPEND, 0777);
 			if (pline->file_fd[1] < 0)
 				return (ft_error_print(((t_token *)ofile->content)->str,
-						"No such file or directory", 1));
+						"Permission denied", 1));
 		}
 		ofile = ofile->next;
 	}
@@ -72,9 +72,7 @@ int	ft_redirection(t_list *plines, t_mini *mini, t_list *env)
 	t_list	*ofile;
 	t_list	*cur_plines;
 	t_pline	*pline;
-	int		status;
 
-	status = 0;
 	cur_plines = plines;
 	ft_get_heredoc(cur_plines, mini, env);
 	if (mini->statlog == 256)
@@ -84,10 +82,12 @@ int	ft_redirection(t_list *plines, t_mini *mini, t_list *env)
 	{
 		pline = (t_pline *)cur_plines->content;
 		ifile = ((t_pline *)cur_plines->content)->ifile;
-		status = ft_redir_ifile(pline, ifile);
+		if (ft_redir_ifile(pline, ifile) == 1)
+			return (1);
 		ofile = ((t_pline *)cur_plines->content)->ofile;
-		ft_redir_ofile(pline, ofile);
+		if (ft_redir_ofile(pline, ofile) == 1)
+			return (1);
 		cur_plines = cur_plines->next;
 	}
-	return (status);
+	return (0);
 }
