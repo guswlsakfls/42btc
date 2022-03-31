@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:06:32 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 19:42:43 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 10:28:19 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ft_child(t_pline *cur, t_pline *prev, t_list *env)
 	if (ft_built_in(cur->cmds, env) == 0)
 	{
 		if (cur->is_pipe == ISPIPE || (prev && prev->is_pipe == ISPIPE))
-			exit(0);
+			exit(1);
 	}
 	else
 		ft_execute(cur->cmds, env);
