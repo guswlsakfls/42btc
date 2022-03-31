@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
+#    By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/03/30 18:47:23 by hyujo            ###   ########.fr        #
+#    Updated: 2022/03/31 09:07:11 by dha              ###   ########seoul.kr   #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,10 +72,6 @@ $(OBJ_DIR)/%.o : %.c
 	@$(CC) $(CFLAGS) -I $(LIBFT_DIR) -I $(RL_INC) -c $< -o $@ -g
 
 all: $(NAME)
-
-# 테스트 해보려고 만듬
-test :
-	gcc -ItestFile/*.h -lreadline -lhistory -L$(RL_LIB) -I$(RL_INC) $(SRCS_TEST) ./testFile/libft/*.c -g
 
 clean :
 	@$(RM) $(OBJ_DIR)
