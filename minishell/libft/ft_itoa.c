@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 17:30:14 by dha               #+#    #+#             */
-/*   Updated: 2021/11/28 19:43:07 by dha              ###   ########.fr       */
+/*   Updated: 2022/03/31 09:00:30 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ char	*ft_itoa(int n)
 	unsigned char	i;
 
 	len = alen(n);
-	ret = (char *) malloc(sizeof(char) * (len + 1));
+	ret = (char *) ft_malloc(sizeof(char), (len + 1));
 	if (ret == 0)
 		return (0);
 	i = 0;

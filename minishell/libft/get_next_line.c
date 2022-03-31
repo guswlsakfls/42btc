@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/10 16:08:01 by dha               #+#    #+#             */
-/*   Updated: 2022/01/27 16:58:43 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/31 09:03:02 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*gnl_strjoin(char *s1, char *s2)
 
 	s1_len = ft_strlen(s1);
 	len = s1_len + ft_strlen(s2);
-	str = (char *) malloc(sizeof(char) * (len + 1));
+	str = (char *) ft_malloc(sizeof(char), (len + 1));
 	if (str == 0)
 		return (0);
 	i = 0;
@@ -110,7 +110,7 @@ char	*get_next_line(int fd)
 		backup[fd] = ft_strdup("");
 	if (backup[fd] == 0)
 		return (0);
-	buffer = (char *) malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	buffer = (char *) ft_malloc(sizeof(char), (BUFFER_SIZE + 1));
 	if (buffer == 0)
 	{
 		free(backup[fd]);

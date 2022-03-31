@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:18:53 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 20:35:23 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 11:15:25 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ void	ft_waitpid(t_list *cur_plines, t_mini *mini, t_list *env, int status)
 	int		statlog;
 
 	mini->statlog = 0;
-	statlog = status;
-	while (cur_plines)
+	statlog = status * 256;
+	while (cur_plines && !status)
 	{
 		pline = (t_pline *)cur_plines->content;
 		if (pline->pid > 0)

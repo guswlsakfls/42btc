@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/30 20:34:10 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 11:21:08 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env)
 		input = ft_readline("heredoc", env);
 		if (!input)
 		{
-			ft_putstr_fd("\x1b[1A", 1);
-			ft_putstr_fd("\033[2C", 1);
 			exit(0);
 		}
 		if (ft_strncmp(input, heredoc->str, ft_strlen(heredoc->str) != 0))
