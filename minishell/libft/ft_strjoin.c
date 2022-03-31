@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 15:29:00 by dha               #+#    #+#             */
-/*   Updated: 2021/12/08 20:27:26 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/03/31 09:01:59 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*str;
 
 	len = ft_strlen(s1) + ft_strlen(s2);
-	str = (char *) malloc(sizeof(char) * (len + 1));
+	str = (char *) ft_malloc(sizeof(char), (len + 1));
 	if (str == 0)
 		return (0);
 	i = 0;

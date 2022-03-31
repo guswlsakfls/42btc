@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 16:08:57 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 21:35:06 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/03/31 09:01:30 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static char	*split_each(char const *str, int len)
 	int		i;
 
 	i = 0;
-	word = (char *) malloc(sizeof(char) * (len + 1));
+	word = (char *) ft_malloc(sizeof(char), (len + 1));
 	if (word == 0)
 		return (0);
 	while (i < len)
@@ -95,7 +95,7 @@ char	**ft_split(char const *s, char c)
 
 	if (s == NULL)
 		return (NULL);
-	words = (char **) malloc(sizeof(char *) * (count_words(s, c) + 1));
+	words = (char **) ft_malloc(sizeof(char *), (count_words(s, c) + 1));
 	if (words == 0)
 		return (0);
 	ft_split_behave(s, c, words);
