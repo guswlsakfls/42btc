@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/31 20:11:53 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/01 13:43:10 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include "libft.h"
 # include <stdio.h>
-# include <string.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
