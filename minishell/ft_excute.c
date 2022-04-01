@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_excute.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:13:15 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 22:15:30 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 13:36:13 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 
 int	ft_error_execve(char **cmds)
 {
-	if (errno == 2 || errno == 14 || cmds[0][0] == '\0')
+	if (ft_strchr(cmds[0], '/'))
+		return (ft_error_print(cmds[0],
+				"No such file or directory", 127));
+	else if (errno == 2 || errno == 14 || cmds[0][0] == '\0')
 		return (ft_error_print(cmds[0], "command not found", 127));
 	else if (errno == 13)
 		return (ft_error_print(cmds[0], "is a directory", 126));
-	else if (ft_strchr(cmds[0], '/'))
-		return (ft_error_print(cmds[0],
-				"No such file or directory", 127));
 	else
 	{
 		perror("nano");
