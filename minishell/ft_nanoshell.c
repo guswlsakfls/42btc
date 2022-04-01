@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/04/01 15:00:05 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:34:15 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini)
 	mini->statlog = 0;
 	cur_plines = plines;
 	status = ft_redirection(cur_plines, mini, env);
-	if (ft_check_statlog(mini, cur_plines, env, status) == 0)
+	if (ft_check_statlog(mini, cur_plines, env) == 0)
 		return ;
 	mini->statlog = status;
 	while (cur_plines)

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:18:53 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/01 14:36:44 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:33:22 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,12 @@ void	ft_backup_pid(int *backup_pid)
 	backup_pid[1] = dup(STDOUT_FILENO);
 }
 
-int	ft_check_statlog(t_mini *mini, t_list *cur_plines, t_list *env, int status)
+int	ft_check_statlog(t_mini *mini, t_list *cur_plines, t_list *env)
 {
 	if (mini->statlog == 256)
 	{
 		ft_close_fd(cur_plines);
 		set_exit_status(mini->statlog / 256, env);
-		mini->statlog = 0;
-		return (0);
-	}
-	else if (status == 1)
-	{
-		ft_close_fd(cur_plines);
-		set_exit_status(1, env);
 		mini->statlog = 0;
 		return (0);
 	}
