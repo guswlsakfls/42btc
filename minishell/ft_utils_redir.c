@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/01 14:58:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:44:44 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env)
 		{
 			exit(0);
 		}
-		if (ft_strncmp(input, heredoc->str, ft_strlen(heredoc->str) != 0))
+		if (ft_strncmp(input, heredoc->str, 0) != 0)
 		{
 			ft_putstr_fd(input, pline->heredoc_fd[1]);
 			ft_putstr_fd("\n", pline->heredoc_fd[1]);
