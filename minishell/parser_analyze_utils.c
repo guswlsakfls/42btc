@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_analyze_utils.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/20 19:29:38 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 17:38:20 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 18:26:05 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	clear_tokens(t_list **tokens)
 
 void	set_exit_status(int value, t_list *env)
 {
-	is_exist_key(strdup("?"), &env);
+	is_exist_key(ft_strdup("?"), &env);
 	swap_value(ft_itoa(value), env);
 	return ;
 }

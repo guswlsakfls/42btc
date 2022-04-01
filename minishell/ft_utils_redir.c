@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/01 17:21:31 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 16:44:44 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,7 @@ int	ft_redir_ifile(t_pline *pline, t_list *ifile)
 		if (((t_token *)ifile->content)->type == IREDIR)
 		{
 			if (ft_iredir(ifile, pline) == 1)
-			{
-				if (pline->file_fd[0] != 0)
-					close(pline->heredoc_fd[0]);
-			}
-			return (1);
+				return (1);
 		}
 		if (ifile->next == NULL)
 			break ;

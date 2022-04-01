@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_tokenize_utils.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 20:44:56 by dha               #+#    #+#             */
-/*   Updated: 2022/03/26 20:37:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 18:27:19 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	is_symbol(char *cmd)
 {
-	if (!strncmp("<<", cmd, 2) || !strncmp(">>", cmd, 2))
+	if (!ft_strncmp("<<", cmd, 0) || !ft_strncmp(">>", cmd, 0))
 		return (2);
 	if (*cmd == '|' || *cmd == '<' || *cmd == '>')
 		return (1);
@@ -23,9 +23,9 @@ int	is_symbol(char *cmd)
 
 int	token_type(char *cmd)
 {
-	if (!strncmp("<<", cmd, 2))
+	if (!ft_strncmp("<<", cmd, 0))
 		return (HEREDOC);
-	if (!strncmp(">>", cmd, 2))
+	if (!ft_strncmp(">>", cmd, 0))
 		return (APPEND);
 	if (*cmd == '<')
 		return (IREDIR);

@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 22:20:57 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 12:22:18 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/01 18:31:38 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	change_dir(char **argv, char *tmp, t_list **envs)
 	if (!argv[1] || !ft_strncmp(argv[1], "#", 0) || \
 		!ft_strncmp(argv[1], "~", 0))
 	{
-		tmp = env_value(strdup("HOME"), *envs);
+		tmp = env_value(ft_strdup("HOME"), *envs);
 		if (tmp[0] == '\0')
 			return (error_env_not_set(argv[0], ERR_HNS));
 		ch_flag = chdir(tmp);
 	}
 	else if (!ft_strncmp(argv[1], "-", 0))
 	{
-		tmp = env_value(strdup("OLDPWD"), *envs);
+		tmp = env_value(ft_strdup("OLDPWD"), *envs);
 		if (tmp[0] == '\0')
 			return (error_env_not_set(argv[0], ERR_ONS));
 		ch_flag = chdir(tmp);
