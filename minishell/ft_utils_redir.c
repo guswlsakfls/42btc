@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/03/31 11:21:08 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 14:58:39 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ int	ft_redir_ifile(t_pline *pline, t_list *ifile)
 	while (ifile)
 	{
 		if (((t_token *)ifile->content)->type == IREDIR)
-			return (ft_iredir(ifile, pline));
+		{
+			if (ft_iredir(ifile, pline) == 1)
+				return (1);
+		}
 		if (ifile->next == NULL)
 			break ;
 		ifile = ifile->next;

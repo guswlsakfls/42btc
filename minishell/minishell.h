@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/12 12:22:29 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/01 13:43:10 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/01 14:35:11 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	ft_check_stdout(t_pline *cur);
 int		ft_child(t_pline *cur, t_pline *prev, t_list *env);
 void	ft_parent_close(t_pline *cur, t_pline *prev);
 void	ft_parent(t_pline *cur, t_pline *prev);
-int		ft_check_statlog(t_mini *mini, t_list *cur_plines, t_list *env);
+int		ft_check_statlog(t_mini *mini, t_list *cur_plines, t_list *env, int status);
 
 // nanoshell
 void	ft_nanoshell(t_list *plines, t_list *env, t_mini *mini);
