@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_utils_redir.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
+/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/01 16:44:44 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/03 14:27:20 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_child_heredoc(t_pline *pline, t_token *heredoc, t_list *env)
 }
 
 void	ft_input_heredoc(t_list *ifile, t_pline *pline,
-		t_mini *mini, t_list *env)
+					  t_mini *mini, t_list *env)
 {
 	pid_t	pid;
 	t_token	*heredoc;
@@ -88,7 +88,11 @@ int	ft_redir_ifile(t_pline *pline, t_list *ifile)
 		if (((t_token *)ifile->content)->type == IREDIR)
 		{
 			if (ft_iredir(ifile, pline) == 1)
-				return (1);
+			{
+				if (pline->file_fd[0] != 0)
+					close(pline->heredoc_fd[0]);
+			}
+			return (1);
 		}
 		if (ifile->next == NULL)
 			break ;
