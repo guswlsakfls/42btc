@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/06 20:19:46 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 16:14:57 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/01 18:26:28 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ char	**cmd_split(char *s, t_list *envs)
 			break ;
 		cmd_len = get_cmd_len(s, envs);
 		word = ft_malloc(sizeof(char), cmd_len + 1);
-		strlcpy(word, s, cmd_len + 1);
+		ft_strlcpy(word, s, cmd_len + 1);
 		words[idx++] = word;
 		s += cmd_len;
 	}

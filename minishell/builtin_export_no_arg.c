@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 13:40:31 by dha               #+#    #+#             */
-/*   Updated: 2022/03/30 09:54:37 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/01 18:30:30 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	export_no_arg(t_list *envs)
 	ptr = sorted_envs;
 	while (ptr)
 	{
-		if (strncmp(((t_env *)ptr->content)->key, "?", 2) == 0)
+		if (ft_strncmp(((t_env *)ptr->content)->key, "?", 2) == 0)
 		{
 			ptr = ptr->next;
 			continue ;

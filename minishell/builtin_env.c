@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 10:14:23 by dha               #+#    #+#             */
-/*   Updated: 2022/03/29 18:41:28 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/01 18:31:18 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_env(char **argv, t_list **envs)
 	}
 	while (*envs)
 	{
-		if (strncmp(((t_env *)(*envs)->content)->key, "?", 2) == 0 \
+		if (ft_strncmp(((t_env *)(*envs)->content)->key, "?", 2) == 0 \
 			|| ((t_env *)(*envs)->content)->value == NULL)
 		{
 			*envs = (*envs)->next;
