@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:11:02 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/04/01 16:34:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/03 14:01:34 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	ft_fork(t_list *plines, t_pline *cur, t_list *env, t_mini *mini)
 	if (plines->prev)
 		prev = ((t_pline *)plines->prev->content);
 	cur->pid = 0;
-	ft_check_fork(cur, prev);
+	// ft_check_fork(cur, prev);
 	ft_backup_pid(backup_pid);
 	if (cur->pid == 0)
 	{
