@@ -6,7 +6,7 @@
 /*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:13:15 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/04/01 13:39:34 by dha              ###   ########seoul.kr  */
+/*   Updated: 2022/04/03 14:17:18 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_error_execve(char **cmds)
 {
-	if (errno == 13)
+	if (errno == 13 && cmds[0][0] != '\0')
 		return (ft_error_print(cmds[0], "is a directory", 126));
 	else if (ft_strchr(cmds[0], '/'))
 		return (ft_error_print(cmds[0],
