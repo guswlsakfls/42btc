@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: dha <dha@student.42seoul.kr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/25 19:14:17 by hyunjinjo         #+#    #+#             */
-/*   Updated: 2022/03/30 21:37:10 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/03 14:09:30 by dha              ###   ########seoul.kr  */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,9 @@ char	**ft_join_env(t_list *env)
 			continue ;
 		}
 		tmp = ft_strjoin(((t_env *)list->content)->key, "=");
-		envp[size] = ft_strjoin(tmp, ((t_env *)list->content)->value);
+		if (((t_env *)list->content)->value)
+			envp[size++] = ft_strjoin(tmp, ((t_env *)list->content)->value);
 		list = list->next;
-		size++;
 		free(tmp);
 	}
 	envp[size] = NULL;
