@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/05 17:06:28 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/05 18:34:23 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,9 +27,9 @@ OBJS = $(SRCS:.c=.o)
 
 
 %o: %c
-	$(CC) -c $(CFLAGS) $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	$(CC) -c $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
 
-$(NAME): $(OBJ_FILES)
+$(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)
 	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^

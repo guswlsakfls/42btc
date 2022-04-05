@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/02 16:45:40 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/05 19:07:06 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,55 +15,37 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-pthread_mutex_t	mutex;
-int				g_number;
+pthread_mutex_t mutex_lock;
 
-void	print_index_loop(char *str, int max)
+int	g_count;
+
+void	*t_func(void *data)
 {
-	int i;
+	int			i;
+	char		*thread_name;
 
-	i = 0;
-    pthread_mutex_lock(&mutex);
-	while (i < max)
+	thread_name = (char *)data;
+	pthread_mutex_lock(&mutex_lock);
+	g_count = 0;
+	i = -1;
+	while (++i < 3)
 	{
-		g_number++;
-		printf("[%s] %d\n", str, g_number);
-		usleep(1000 * 100);
-		++i;
+		printf("%s COUNT %d\n%d\n", thread_name, g_count, i);
+		g_count++;
+		sleep(1);
 	}
-    pthread_mutex_unlock(&mutex);
+	pthread_mutex_unlock(&mutex_lock);
 }
 
-void	*thread_routine(void *arg)
+int	main(void)
 {
-	print_index_loop((char *)arg , 5);
-	return (NULL);
-}
+	pthread_t p_thread1;
+	pthread_t p_thread2;
 
-int main()
-{
-	pthread_t	tid;
-	void		*t_res;
-	int			state;
-	int			create_res;
-	int			join_res;
-
-	//pthread_mutex_init -- create a mutex
-	//		args:	1. mutex()
-	//				2. attr(속성) if it's NULL --> default attributes are used.
-	//				success: 0, fail: errno
-
-	g_number = 0;
-	state = pthread_mutex_init(&mutex, NULL);
-	if (state)
-	{
-		printf("fail to init mutex\n");
-		exit(1);
-	}
-	create_res = pthread_create(&tid, NULL, thread_routine, (void *)"thread");
-	if (create_res != 0)
-		return (1);
-	thread_routine((void *)"main");
-	join_res = pthread_join(tid, NULL);
-	printf("join result: %d\n", join_res);
+	pthread_mutex_init(&mutex_lock, NULL);
+	pthread_create(&p_thread1, NULL, t_func, (void *)"Thread1");
+	pthread_create(&p_thread2, NULL, t_func, (void *)"Thread2");
+	pthread_join(p_thread1, NULL);
+	pthread_join(p_thread2, NULL);
+	return (0);
 }
