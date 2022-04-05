@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/30 17:22:48 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/03 14:27:20 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/03 14:45:24 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int	ft_redir_ifile(t_pline *pline, t_list *ifile)
 			{
 				if (pline->file_fd[0] != 0)
 					close(pline->heredoc_fd[0]);
+				return (1);
 			}
-			return (1);
 		}
 		if (ifile->next == NULL)
 			break ;
