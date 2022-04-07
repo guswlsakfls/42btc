@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/05 18:34:23 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/07 17:56:17 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ RM = rm -f
 
 LIB_DIR = ./libft
 
-SRCS = philoshopers.c
+SRCS = philo.c \
+		ft_utils1.c
 
 # BONUS = pipex_bonus.c ft_pipex_utils_bonus.c
 
