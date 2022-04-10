@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/07 19:24:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/10 19:53:09 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 typedef struct s_arg
 {
 	int	num_philo;
-	int	num_fork;
 	int	die_ms;
 	int	eat_ms;
 	int	sleep_ms;
@@ -44,7 +43,7 @@ typedef struct s_philo
 	int			end_ms;
 	int			num_eat;
 	int			flag_eat;
-	// struct s_rule     *rule;
+	int			num;
 }	t_philo;
 
 typedef struct s_data
@@ -54,7 +53,7 @@ typedef struct s_data
 	int				*philo_fork;
 	int				th_index;
 	int				routine_arg;
-	struct s_mutex	mutex;
+	struct s_mutex	*mutex;
 	struct timeval	start_tv;
 	struct timeval	life_tv;
 }	t_data;
@@ -65,5 +64,6 @@ void		ft_bzero(void *s, size_t n);
 static int	ft_issapce(char c);
 long long	ft_atoi(const char *str);
 int			ft_isdigit(int c);
+void		*ft_philo_routine(void *routine_arg);
 
 #endif

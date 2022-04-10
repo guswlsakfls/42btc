@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/07 17:56:17 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/08 11:20:02 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ OBJS = $(SRCS:.c=.o)
 
 
 %o: %c
-	$(CC) -c $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	$(CC) $(CFLAGS) -lpthread -c $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
 
 $(NAME): $(OBJS)
 	$(MAKE) all -C $(LIB_DIR)

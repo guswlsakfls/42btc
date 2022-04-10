@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/07 19:44:40 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/08 11:29:07 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,32 +105,6 @@ int	ft_fork_mutex_init(t_data *data)
 	return (SUCCESS);
 }
 
-void	*ft_philo_routine(void *routine_arg)
-{
-	t_data	*data;
-	t_arg	*arg;
-	t_philo	*philo;
-
-	data = (t_data *)routine_arg;
-	arg = data->arg;
-	philo = &(data->philo[data->th_index]);
-	philo->num = data->th_index;
-	pthread_mutex_lock(&(data->ft_mutex));
-	data->timestamp_start_ms = get_time_ms();
-	pthread_mutex_unlock(&(base->ft_mutex));
-	wait_create_thread(base, arg, philo);
-	if (philo->num % 2 == 1)
-		usleep(200 * (arg->num_philo - philo->num + 1));
-	if ((act_except(base, arg, philo)) == IS_FINISH)
-		return ((void **)IS_FINISH);
-	while (base->is_finish != IS_FINISH)
-	{
-		if ((philo_act(base, arg, philo)) == IS_FINISH)
-			break ;
-	}
-	return ((void **)IS_FINISH);
-}
-
 int	ft_philo_pthread(t_data *data, t_arg *arg, t_philo *philo)
 {
 	int		i;
@@ -140,7 +114,7 @@ int	ft_philo_pthread(t_data *data, t_arg *arg, t_philo *philo)
 	{
 		data->th_index = i;
 		pthread_create(philo[data->th_index].tid, NULL, \
-						(void *)ft_philo_routine, (void *)data->routine_arg);
+						ft_philo_routine, data);
 		usleep(200);
 		i++;
 	}
