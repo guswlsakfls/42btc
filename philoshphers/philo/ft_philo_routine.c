@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:25:42 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/08 11:28:41 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/12 20:44:14 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,17 @@
 
 void	*ft_philo_routine(void *routine_arg)
 {
-	t_data	*data;
-	t_arg	*arg;
 	t_philo	*philo;
+	t_data	*data;
 
-	data = (t_data *)routine_arg;
-	arg = data->arg;
-	philo = &(data->philo[data->th_index]);
-	philo->num = data->th_index;
-	pthread_mutex_lock(&(data->ft_mutex));
-	data->timestamp_start_ms = get_time_ms();
-	pthread_mutex_unlock(&(base->ft_mutex));
-	wait_create_thread(base, arg, philo);
-	if (philo->num % 2 == 1)
-		usleep(200 * (arg->num_philo - philo->num + 1));
-	if ((act_except(base, arg, philo)) == IS_FINISH)
-		return ((void **)IS_FINISH);
-	while (base->is_finish != IS_FINISH)
+	philo = (t_philo *)routine_arg;
+	data = philo->data;
+	while (!(data->dead))
 	{
-		if ((philo_act(base, arg, philo)) == IS_FINISH)
+		ft_eat(philo);
+		if (data->eat_done)
 			break ;
+		
 	}
-	return ((void **)IS_FINISH);
+	// return ((void **)IS_FINISH);
 }
