@@ -6,13 +6,13 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 16:52:45 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/07 17:59:02 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/13 11:34:53 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static long long	ft_check_over(unsigned long long sum, int sign)
+long long	ft_check_over(unsigned long long sum, int sign)
 {
 	if (sum > 9223372036854775807 - 1 && sign == -1)
 		exit(0);
@@ -21,7 +21,7 @@ static long long	ft_check_over(unsigned long long sum, int sign)
 	return (sum * sign);
 }
 
-static int	ft_issapce(char c)
+int	ft_issapce(char c)
 {
 	return ((9 <= c && c <= 13) || c == ' ');
 }

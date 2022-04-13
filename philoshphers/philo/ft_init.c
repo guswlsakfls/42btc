@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/12 20:44:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/13 12:34:21 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	data->dead = 1;
 	data->forks = ft_init_fork(data);
 	pthread_mutex_init(&(data->print), NULL);
+	pthread_mutex_init(&(data->eating), NULL);
 	return (SUCCESS);
 }
 
@@ -86,6 +87,7 @@ int	ft_philo_init(t_data *data)
 		data->philo[i].num_eat = 0;
 		data->philo[i].flag_eat = 0;
 		data->philo[i].data = data;
+		data->philo[i].tid = i + 1;
 		i++;
 	}
 	return (SUCCESS);

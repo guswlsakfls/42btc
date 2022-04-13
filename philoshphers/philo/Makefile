@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/08 11:20:02 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/13 11:33:37 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,8 @@ CFLAGS = -Wall -Wextra -Werror
 AR = ar -rcs
 RM = rm -f
 
-LIB_DIR = ./libft
-
 SRCS = philo.c \
+		ft_philo_routine.c \
 		ft_utils1.c
 
 # BONUS = pipex_bonus.c ft_pipex_utils_bonus.c
@@ -28,11 +27,10 @@ OBJS = $(SRCS:.c=.o)
 
 
 %o: %c
-	$(CC) $(CFLAGS) -lpthread -c $< -o $(<:.c=.o) -I. -I$(LIB_DIR)
+	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I.
+	# -lpthread 
 
 $(NAME): $(OBJS)
-	$(MAKE) all -C $(LIB_DIR)
-	cp $(LIB_DIR)/libft.a $@
 	$(AR) $@ $^
 	$(CC) $@ -o philo
 
