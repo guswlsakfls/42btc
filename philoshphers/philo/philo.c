@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/12 20:32:07 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/14 20:26:40 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_philo_pthread(t_data *data)
 	{
 		pthread_create(&(philo[i].thread), NULL, \
 						&ft_philo_routine, &(data->philo[i]));
-		// usleep(200);
+		usleep(200);
 		i++;
 	}
 	i = 0;

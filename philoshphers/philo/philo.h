@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/13 12:44:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/14 18:56:37 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ typedef struct s_philo
 	pthread_t		thread;
 	int				r_fork; // 왜 필요한가? -> mutex_fork 에 인덱스 번호로 접근하기 위해.
 	int				l_fork;
-	int				time_eating; // 먹는 시간
-	int				time_sleeping; // 자고있는 시간
+	int				eating_ms; // 먹는 시간
+	int				sleeping_ms; // 자고있는 시간
 	int				end_ms; // 끝나는 시간
 	int				num_eat; // 먹은 횟수
 	int				flag_eat; // 먹은 횟수 종료 플래그
@@ -53,15 +53,22 @@ typedef struct s_philo
 	t_data			*data;
 }	t_philo;
 
-// ft_utils.c
-void		*ft_malloc(size_t size, size_t cnt);
-void		ft_bzero(void *s, size_t n);
-int			ft_issapce(char c);
-long long	ft_atoi(const char *str);
-int			ft_isdigit(int c);
-void		*ft_philo_routine(void *routine_arg);
+// utils
+void			*ft_malloc(size_t size, size_t cnt);
+void			ft_bzero(void *s, size_t n);
+int				ft_issapce(char c);
+long long		ft_atoi(const char *str);
+int				ft_isdigit(int c);
+void			*ft_philo_routine(void *routine_arg);
 
-// ft_init.c
-t_data		*ft_init(int argc, char **argv);
+// init
+t_data			*ft_init(int argc, char **argv);
+int				ft_check_arg(int argc, char **argv);
+pthread_mutex_t	*ft_init_fork(t_data *data);
+int				ft_data_init(int argc, char **argv, t_data *data);
+int				ft_philo_init(t_data *data);
+
+// time
+int				ft_get_time(void);
 
 #endif

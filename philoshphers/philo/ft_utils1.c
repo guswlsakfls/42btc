@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 16:52:45 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/13 11:34:53 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/14 19:01:27 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,5 +54,7 @@ long long	ft_atoi(const char *str)
 
 int	ft_isdigit(int c)
 {
-	return ('0' <= c && c <= '9');
+	if ('0' <= c && c <= '9')
+		return (SUCCESS);
+	return (ERROR);
 }

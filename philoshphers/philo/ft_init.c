@@ -6,11 +6,22 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/13 12:34:21 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/14 19:14:49 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	ft_error(int error)
+{
+	if (error == 1)
+		printf("Wrong amount of args.\n");
+	else if (error == 2)
+		printf("Error while parsing.\n");
+	else if (error == 3)
+		printf("Error while creating threads.\n");
+	return (ERROR);
+}
 
 t_data	*ft_init(int argc, char **argv)
 {
@@ -20,7 +31,7 @@ t_data	*ft_init(int argc, char **argv)
 		return (NULL);
 	data = malloc(sizeof(t_data));
 	if (data == NULL)
-		return ;
+		return (NULL);
 	if (ft_data_init(argc, argv, data) == ERROR || ft_philo_init(data) == ERROR)
 		return (0);
 	return (data);
@@ -46,7 +57,7 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 		return (ERROR);
 	}
 	data->start_ms = 0;
-	data->dead = 1;
+	data->dead = 0;
 	data->forks = ft_init_fork(data);
 	pthread_mutex_init(&(data->print), NULL);
 	pthread_mutex_init(&(data->eating), NULL);
@@ -82,7 +93,8 @@ int	ft_philo_init(t_data *data)
 			return (ERROR);
 		data->philo[i].l_fork = i;
 		data->philo[i].r_fork = (i + 1) % data->num_philo;
-		data->philo[i].num_sleeping = 0;
+		data->philo[i].eating_ms = 0;
+		data->philo[i].sleeping_ms = 0;
 		data->philo[i].end_ms = 0;
 		data->philo[i].num_eat = 0;
 		data->philo[i].flag_eat = 0;
@@ -98,16 +110,16 @@ int	ft_check_arg(int argc, char **argv)
 	int	i;
 	int	j;
 
-	if (argc != 6 || argc != 5)
-		return (ERROR);
-	i = 0;
+	if (argc != 6 && argc != 5)
+		return (ft_error(1));
+	i = 1;
 	while (argv[i])
 	{
 		j = 0;
 		while (argv[i][j])
 		{
 			if (ft_isdigit(argv[i][j]) == ERROR)
-				return (ERROR);
+				return (ft_error(1));
 			j++;
 		}
 		i++;

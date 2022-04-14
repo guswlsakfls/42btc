@@ -6,19 +6,20 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/13 11:33:37 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/14 18:53:02 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -g
 AR = ar -rcs
 RM = rm -f
 
 SRCS = philo.c \
 		ft_philo_routine.c \
-		ft_utils1.c
+		ft_utils1.c \
+		ft_init.c
 
 # BONUS = pipex_bonus.c ft_pipex_utils_bonus.c
 
@@ -38,11 +39,9 @@ all: $(NAME)
 
 clean:
 	$(RM) $(OBJS)
-	$(MAKE) -C $(LIB_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIB_DIR) fclean
 
 re: fclean all
 
