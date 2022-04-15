@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/14 19:14:49 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/15 19:20:51 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,23 @@ t_data	*ft_init(int argc, char **argv)
 	return (data);
 }
 
+int	*ft_init_table_forks(t_data *data)
+{
+	int	*table_forks;
+	int	i;
+
+	table_forks = malloc(sizeof(int) * data->num_philo);
+	if (table_forks == NULL)
+		return (NULL);
+	i = 0;
+	while (i < data->num_philo)
+	{
+		table_forks[i] = 1;
+		i++;
+	}
+	return (table_forks);
+}
+
 int	ft_data_init(int argc, char **argv, t_data *data)
 {
 	data->num_philo = ft_atoi(argv[1]);
@@ -56,15 +73,16 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 		printf("Error\nInvalid Arguments\n");
 		return (ERROR);
 	}
-	data->start_ms = 0;
-	data->dead = 0;
-	data->forks = ft_init_fork(data);
+	data->start_philo_ms = 0;
+	data->finish = 0;
+	data->mutex_forks = ft_init_mutex_forks(data);
+	data->table_forks = ft_init_table_forks(data);
 	pthread_mutex_init(&(data->print), NULL);
 	pthread_mutex_init(&(data->eating), NULL);
 	return (SUCCESS);
 }
 
-pthread_mutex_t	*ft_init_fork(t_data *data)
+pthread_mutex_t	*ft_init_mutex_forks(t_data *data)
 {
 	pthread_mutex_t	*forks;
 	int				i;
@@ -82,7 +100,7 @@ int	ft_philo_init(t_data *data)
 {
 	int	i;
 
-	data->philo = (t_philo *)malloc(sizeof(t_philo) * (data->num_philo));
+	data->philo = malloc(sizeof(t_philo) * (data->num_philo));
 	if (data->philo == NULL)
 		return (ERROR);
 	i = 0;
@@ -93,7 +111,7 @@ int	ft_philo_init(t_data *data)
 			return (ERROR);
 		data->philo[i].l_fork = i;
 		data->philo[i].r_fork = (i + 1) % data->num_philo;
-		data->philo[i].eating_ms = 0;
+		data->philo[i].start_eat_ms = 0;
 		data->philo[i].sleeping_ms = 0;
 		data->philo[i].end_ms = 0;
 		data->philo[i].num_eat = 0;

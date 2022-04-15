@@ -6,64 +6,46 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:25:42 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/14 20:27:22 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/15 19:42:23 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	ft_philo_die(t_data *data, t_philo *philo)
+{
+	philo->end_ms = ft_get_time();
+	if ((philo->end_ms - philo->start_eat_ms < data->die_ms) && \
+		data->finish != FINISH)
+		return (0);
+	if (data->table_forks[philo->l_fork] == 0)
+	{
+		data->table_forks[philo->l_fork] = 1;
+		pthread_mutex_unlock(&(data->mutex_forks[philo->l_fork]));
+	}
+	if (data->table_forks[philo->r_fork] == 0)
+	{
+		data->table_forks[philo->r_fork] = 1;
+		pthread_mutex_unlock(&(data->mutex_forks[philo->r_fork]));
+	}
+	if (data->finish == FINISH)
+		return (FINISH);
+	// 죽어야 한다.
+	ft_messaging(data, philo->tid, "died");
+	data->finish = FINISH;
+	return (FINISH);
+}
+
 void	ft_messaging(t_data *data, int tid, char *message)
 {
 	pthread_mutex_lock(&data->print);
-	if (!(data->dead))
+	if (!(data->finish))
 	{
-		printf("(%i)\t", ft_get_time() - data->start_ms);
-		printf("philo %i ", tid);
+		printf("%i ", ft_get_time() - data->start_philo_ms);
+		printf("%i ", tid);
 		printf("%s\n", message);
 	}
 	pthread_mutex_unlock(&data->print);
-}
-
-long long	ft_time_gap(long long past, long long pres)
-{
-	return (pres - past);
-}
-
-void	ft_acting(long long time, t_data *data)
-{
-	long long	t;
-
-	t = ft_get_time();
-	while (!(data->dead))
-	{
-		if (ft_time_gap(t, ft_get_time()) >= time)
-			break ;
-		usleep(50);
-	}
-}
-
-void	ft_eat(t_philo *philo)
-{
-	t_data	*data;
-
-	data = philo->data;
-	if (data->num_philo == 1)
-		return ; // when philo one, do eat
-	else
-	{
-		pthread_mutex_lock(&data->forks[philo->l_fork]);
-		ft_messaging(data, philo->tid, "has taken a fork");
-		pthread_mutex_lock(&data->forks[philo->r_fork]);
-		ft_messaging(data, philo->tid, "has taken a fork");
-		pthread_mutex_lock(&data->eating);
-		ft_messaging(data, philo->tid, "is eaing");
-		philo->eating_ms = ft_get_time();
-		(philo->num_eat)++;
-		pthread_mutex_unlock(&data->eating);
-		ft_acting(data->eat_ms, data);
-		pthread_mutex_unlock(&data->forks[philo->l_fork]);
-		pthread_mutex_unlock(&data->forks[philo->r_fork]);
-	}
 }
 
 void	*ft_philo_routine(void *routine_arg)
@@ -74,8 +56,8 @@ void	*ft_philo_routine(void *routine_arg)
 	philo = (t_philo *)routine_arg;
 	data = philo->data;
 	if (philo->tid % 2)
-		usleep(20000);
-	while (!(data->dead))
+		usleep(200);
+	while (!(data->finish))
 	{
 		ft_eat(philo);
 		if (data->eat_done)

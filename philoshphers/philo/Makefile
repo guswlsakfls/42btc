@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/14 18:53:02 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/15 19:16:35 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,8 @@ RM = rm -f
 SRCS = philo.c \
 		ft_philo_routine.c \
 		ft_utils1.c \
-		ft_init.c
+		ft_init.c \
+		ft_eat.c
 
 # BONUS = pipex_bonus.c ft_pipex_utils_bonus.c
 
