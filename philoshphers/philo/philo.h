@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/15 19:15:54 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/17 13:09:58 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_philo
 	int				l_fork;
 	int				start_eat_ms; // 먹는 시간
 	int				sleeping_ms; // 자고있는 시간
-	int				end_ms; // 끝나는 시간
+	int				end_eat_ms; // 끝나는 시간
 	int				num_eat; // 먹은 횟수
 	int				flag_eat; // 먹은 횟수 종료 플래그
 	int				tid;
@@ -76,6 +76,6 @@ int				ft_get_time(void);
 // routine
 void			ft_messaging(t_data *data, int tid, char *message);
 void			ft_eat(t_philo *philo);
-void			ft_acting(long long time, t_data *data);
+void			ft_usleep(long long time, t_data *data);
 
 #endif

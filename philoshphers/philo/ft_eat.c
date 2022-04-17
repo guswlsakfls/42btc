@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 13:25:50 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/15 19:44:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/17 10:45:31 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ long long	ft_time_gap(long long past, long long pres)
 	return (pres - past);
 }
 
-void	ft_acting(long long time, t_data *data)
+void	ft_usleep(long long time, t_data *data)
 {
 	long long	t;
 
@@ -63,12 +63,12 @@ void	ft_eat(t_philo *philo)
 		pthread_mutex_lock(&data->mutex_forks[philo->r_fork]);
 		ft_messaging(data, philo->tid, "has taken a fork");
 		data->table_forks[philo->r_fork] = 0;
-		pthread_mutex_lock(&data->eating);
+		pthread_mutex_lock(&data->eating); // eating lock is needed?
 		ft_messaging(data, philo->tid, "is eating");
 		philo->start_eat_ms = ft_get_time();
 		(philo->num_eat)++;
 		pthread_mutex_unlock(&data->eating);
-		ft_acting(data->eat_ms, data);
+		ft_usleep(data->eat_ms, data);
 		data->table_forks[philo->l_fork] = 1;
 		data->table_forks[philo->r_fork] = 1;
 		pthread_mutex_unlock(&data->mutex_forks[philo->l_fork]);
