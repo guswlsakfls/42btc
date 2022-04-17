@@ -6,11 +6,38 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:25:42 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/17 13:10:02 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/17 19:41:19 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	*ft_monitor(void *arg)
+{
+	t_data	*data;
+	int		i;
+
+	data = (t_data *)arg;
+	// waiting(2);
+	while (1)
+	{
+		i = 0;
+		while (i < data->num_philo)
+		{
+			if (!ft_philo_die(data, &data->philo[i]))
+			{
+				pthread_mutex_lock(&data->check_death);
+				// 한번만 체크하면 모두 접근할 수 있다.
+				data->death = 1;
+				pthread_mutex_unlock(&data->check_death);
+				break ;
+			}
+			i++;
+			// waiting(2);
+		}
+	}
+	return ((void **)SUCCESS);
+}
 
 int	ft_philo_die(t_data *data, t_philo *philo)
 {
@@ -18,7 +45,7 @@ int	ft_philo_die(t_data *data, t_philo *philo)
 	philo->end_eat_ms = ft_get_time();
 	// 죽지 않으면 통과.
 	if ((philo->end_eat_ms - philo->start_eat_ms < data->die_ms) && \
-		data->finish != FINISH)
+		data->death != FINISH)
 		return (0);
 	// 죽으면 포크 내려놓고 죽음
 	if (data->table_forks[philo->l_fork] == 0)
@@ -32,18 +59,18 @@ int	ft_philo_die(t_data *data, t_philo *philo)
 		pthread_mutex_unlock(&(data->mutex_forks[philo->r_fork]));
 	}
 	// data 전체 구조체에서 미리 죽은 사람이 있으면 출력하지 않고 죽음
-	if (data->finish == FINISH)
+	if (data->death == FINISH)
 		return (FINISH);
 	// 첫번째로 죽으면 위에 걸리지 않고 내려와, died 출력하고 죽고, 죽었다고 표시함.
 	ft_messaging(data, philo->tid, "died");
-	data->finish = FINISH;
+	data->death = FINISH;
 	return (FINISH);
 }
 
 void	ft_messaging(t_data *data, int tid, char *message)
 {
 	pthread_mutex_lock(&data->print);
-	if (!(data->finish))
+	if (!(data->death))
 	{
 		printf("%d ", ft_get_time() - data->start_philo_ms);
 		printf("%d ", tid);
@@ -61,13 +88,13 @@ void	*ft_philo_routine(void *routine_arg)
 	data = philo->data;
 	if (philo->tid % 2)
 		usleep(200);
-	while (!(data->finish))
+	while (!(data->death))
 	{
 		ft_eat(philo);
-		if (data->eat_done)
+		if (data->num_eat == 0)
 			break ;
 		ft_messaging(data, philo->tid, "is sleeping");
-		ft_acting(data->sleep_ms, data);
+		ft_usleep(data->sleep_ms, data);
 		ft_messaging(data, philo->tid, "is thinking");
 	}
 	return ((void **)SUCCESS);
