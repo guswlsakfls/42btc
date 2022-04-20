@@ -6,18 +6,18 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/17 19:23:22 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/20 18:40:44 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_get_time(void)
+long	ft_get_time(void)
 {
-	static struct timeval	time;
+	struct timeval	time;
 
 	gettimeofday(&time, NULL);
-	return ((time.tv_sec * (u_int64_t)(1000)) + (time.tv_usec / 1000));
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
 int	ft_philo_pthread(t_data *data)
@@ -35,9 +35,9 @@ int	ft_philo_pthread(t_data *data)
 		// usleep(200);
 		i++;
 	}
-	if (pthread_create(&(data->monitor), NULL, &ft_monitor, &data))
-		return (0);
+	pthread_create(&(data->monitor), NULL, &ft_monitor, data);
 	i = 0;
+	pthread_join(data->monitor, NULL);
 	while (i < data->num_philo)
 	{
 		pthread_join(data->philo[i].thread, NULL);
@@ -71,6 +71,6 @@ int	main(int argc, char **argv)
 	if (data == NULL)
 		return (0);
 	ft_philo_pthread(data);
-	ft_all_free(data);
+	// ft_all_free(data);
 	return (0);
 }

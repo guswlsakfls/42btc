@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 13:25:50 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/17 18:29:24 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/20 17:27:18 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	ft_eat(t_philo *philo)
 		return ; // when philo one, do eat
 	else
 	{
-		ft_philo_die(data, philo);
 		pthread_mutex_lock(&data->mutex_forks[philo->l_fork]);
 		ft_messaging(data, philo->tid, "has taken a fork");
 		data->table_forks[philo->l_fork] = 0;
@@ -70,11 +69,9 @@ void	ft_eat(t_philo *philo)
 		if (philo->num_eat > 0)
 			(philo->num_eat)--;
 		ft_usleep(data->eat_ms, data);
-		ft_philo_die(data, philo);
 		data->table_forks[philo->l_fork] = 1;
 		data->table_forks[philo->r_fork] = 1;
 		pthread_mutex_unlock(&data->mutex_forks[philo->l_fork]);
 		pthread_mutex_unlock(&data->mutex_forks[philo->r_fork]);
-		ft_philo_die(data, philo);
 	}
 }
