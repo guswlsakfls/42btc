@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/20 13:28:34 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/24 15:46:14 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,14 @@ typedef struct s_data
 	long int		die_ms;
 	long int		eat_ms;
 	long int		sleep_ms;
-	long int		num_eat;
+	long int		num_eat_done; // 먹어야 끝나는 철학자 수
+	long int		num_philo_eat_done; // 다 먹은 철학자 수
+	int				flag_eat_done; // 철학자들이 다 먹으면 종료
 	long int		start_philo_ms; // 시작 시간
-	int				death;
+	int				flag_death;
 	int				*table_forks;
 	pthread_t		monitor;
-	pthread_mutex_t	check_death;
+	pthread_mutex_t	check_finish;
 	pthread_mutex_t	lock;
 	pthread_mutex_t	print; // 프린트 할때 뮤텍스 락
 	pthread_mutex_t	*mutex_forks; // 포크 개수만큼 뮤텍스 락

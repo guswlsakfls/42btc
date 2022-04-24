@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/20 18:32:21 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/24 16:05:19 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,22 +64,23 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	data->sleep_ms = ft_atoi(argv[4]);
 	if (argc == 6)
 	{
-		data->num_eat = ft_atoi(argv[5]);
-		if (data->num_eat < 1)
+		data->num_eat_done = ft_atoi(argv[5]);
+		if (data->num_eat_done < 1)
 			return (ft_error(4));
 	}
 	else
-		data->num_eat = -1;
+		data->num_eat_done = -1;
 	if (data->num_philo < 1 || data->die_ms < 1
 		|| data->eat_ms < 1 || data->sleep_ms < 1)
 		return (ft_error(4));
+	data->num_philo_eat_done = 0;
 	data->start_philo_ms = 0;
-	data->death = 0;
+	data->flag_death = 0;
 	data->mutex_forks = ft_init_mutex_forks(data);
 	data->table_forks = ft_init_table_forks(data);
 	pthread_mutex_init(&(data->print), NULL);
 	pthread_mutex_init(&(data->lock), NULL);
-	pthread_mutex_init(&(data->check_death), NULL);
+	pthread_mutex_init(&(data->check_finish), NULL);
 	data->monitor = malloc(sizeof(pthread_t));
 	if (data->monitor == NULL)
 		return (ERROR);
@@ -119,7 +120,7 @@ int	ft_philo_init(t_data *data)
 		data->philo[i].start_eat_ms = ft_get_time();
 		data->philo[i].sleeping_ms = 0;
 		data->philo[i].end_eat_ms = 0;
-		data->philo[i].num_eat = data->num_eat;
+		data->philo[i].num_eat = 0;
 		data->philo[i].data = data;
 		data->philo[i].tid = i + 1;
 		i++;
