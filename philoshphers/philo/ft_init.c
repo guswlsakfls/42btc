@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/24 16:05:19 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/25 19:47:00 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_error(int error)
 	else if (error == 3)
 		printf("Error while creating threads.\n");
 	else if (error == 4)
-		printf("Error\nInvalid Arguments\n");
+		printf("Error\nInvalid Arguments.\n");
 	return (ERROR);
 }
 
@@ -56,7 +56,7 @@ int	*ft_init_table_forks(t_data *data)
 	return (table_forks);
 }
 
-int	ft_data_init(int argc, char **argv, t_data *data)
+int	ft_arg_init(int argc, char **argv, t_data *data)
 {
 	data->num_philo = ft_atoi(argv[1]);
 	data->die_ms = ft_atoi(argv[2]);
@@ -73,8 +73,16 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	if (data->num_philo < 1 || data->die_ms < 1
 		|| data->eat_ms < 1 || data->sleep_ms < 1)
 		return (ft_error(4));
+	return (SUCCESS);
+}
+
+int	ft_data_init(int argc, char **argv, t_data *data)
+{
+	if (ft_arg_init(argc, argv, data) == ERROR)
+		return (ERROR);
 	data->num_philo_eat_done = 0;
 	data->start_philo_ms = 0;
+	data->flag_eat_done = 0;
 	data->flag_death = 0;
 	data->mutex_forks = ft_init_mutex_forks(data);
 	data->table_forks = ft_init_table_forks(data);
@@ -114,8 +122,8 @@ int	ft_philo_init(t_data *data)
 		data->philo[i].thread = malloc(sizeof(pthread_t));
 		if (data->philo[i].thread == NULL)
 			return (ERROR);
-		data->philo[i].l_fork = i;
-		data->philo[i].r_fork = (i + 1) % data->num_philo;
+		data->philo[i].l_fork = (i + 1) % data->num_philo;;
+		data->philo[i].r_fork = i;
 		// start_eat_ms 가 계속 0이면 죽어서 현재 시간으로 초기화 시켜준다.
 		data->philo[i].start_eat_ms = ft_get_time();
 		data->philo[i].sleeping_ms = 0;

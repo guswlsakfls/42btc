@@ -6,34 +6,22 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:25:42 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/24 16:48:40 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/25 20:52:17 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	ft_philo_eat_done(t_data *data, t_philo *philo)
+int	ft_philo_eat_done(t_data *data)
 {
-	pthread_mutex_lock(&data->lock);
+	pthread_mutex_lock(&data->print);
 	// 철학자가 다 먹었는지
 	if (data->num_philo_eat_done != data->num_philo)
 	{
-		pthread_mutex_unlock(&data->lock);
+		pthread_mutex_unlock(&data->print);
 		return (0);
 	}
-	// if philo eat done all, must put fork down
-	if (data->table_forks[philo->l_fork] == 0)
-	{
-		data->table_forks[philo->l_fork] = 1;
-		pthread_mutex_unlock(&(data->mutex_forks[philo->l_fork]));
-	}
-	if (data->table_forks[philo->r_fork] == 0)
-	{
-		data->table_forks[philo->r_fork] = 1;
-		pthread_mutex_unlock(&(data->mutex_forks[philo->r_fork]));
-	}
-	data->flag_eat_done = FINISH;
-	pthread_mutex_unlock(&data->lock);
+	pthread_mutex_unlock(&data->print);
 	return (FINISH);
 }
 
@@ -50,18 +38,18 @@ void	*ft_monitor(void *arg)
 		{
 			if (ft_philo_die(data, &data->philo[i]) == FINISH)
 			{
-				pthread_mutex_lock(&data->check_finish);
+				pthread_mutex_lock(&data->print);
 				// 한번만 체크하면 모두 접근할 수 있다.
 				data->flag_death = FINISH;
-				pthread_mutex_unlock(&data->check_finish);
+				pthread_mutex_unlock(&data->print);
 				break ;
 			}
-			else if (ft_philo_eat_done(data, &data->philo[i]) == FINISH)
+			else if (ft_philo_eat_done(data) == FINISH)
 			{
-				pthread_mutex_lock(&data->check_finish);
+				pthread_mutex_lock(&data->print);
 				// 한번만 체크하면 모두 접근할 수 있다.
 				data->flag_eat_done = FINISH;
-				pthread_mutex_unlock(&data->check_finish);
+				pthread_mutex_unlock(&data->print);
 				break ;
 			}
 			i++;
@@ -82,18 +70,6 @@ int	ft_philo_die(t_data *data, t_philo *philo)
 		pthread_mutex_unlock(&data->lock);
 		return (0);
 	}
-	// 죽으면 포크 내려놓고 죽음
-	if (data->table_forks[philo->l_fork] == 0)
-	{
-		data->table_forks[philo->l_fork] = 1;
-		pthread_mutex_unlock(&(data->mutex_forks[philo->l_fork]));
-	}
-	if (data->table_forks[philo->r_fork] == 0)
-	{
-		data->table_forks[philo->r_fork] = 1;
-		pthread_mutex_unlock(&(data->mutex_forks[philo->r_fork]));
-	}
-	// data 전체 구조체에서 미리 죽은 사람이 있으면 출력하지 않고 죽음
 	if (data->flag_death == FINISH)
 	{
 		pthread_mutex_unlock(&data->lock);
@@ -109,12 +85,9 @@ int	ft_philo_die(t_data *data, t_philo *philo)
 void	ft_messaging(t_data *data, int tid, char *message)
 {
 	pthread_mutex_lock(&data->print);
-	if (!(data->flag_death))
-	{
-		printf("%ld ", ft_get_time() - data->start_philo_ms);
-		printf("%d ", tid);
-		printf("%s\n", message);
-	}
+	if (data->flag_death != FINISH && data->flag_eat_done != FINISH)
+		printf("%ld %d %s\n", ft_get_time()
+			- data->start_philo_ms, tid, message);
 	pthread_mutex_unlock(&data->print);
 }
 
@@ -123,10 +96,8 @@ void	ft_sleep(t_philo *philo)
 	t_data	*data;
 
 	data = philo->data;
-	// pthread_mutex_lock(&data->lock);
-	ft_usleep(data->sleep_ms, data);
 	ft_messaging(data, philo->tid, "is sleeping");
-	// pthread_mutex_unlock(&data->lock);
+	ft_usleep(data->sleep_ms, data);
 }
 
 void	*ft_philo_routine(void *routine_arg)
@@ -137,14 +108,13 @@ void	*ft_philo_routine(void *routine_arg)
 	philo = (t_philo *)routine_arg;
 	data = philo->data;
 	if (philo->tid % 2)
-		usleep(200); // 여기 값을 다르게 주면 안 되나?
+		usleep(200);
 	while (data->flag_death != FINISH && data->flag_eat_done != FINISH)
 	{
 		ft_eat(philo);
-		if (data->flag_eat_done != FINISH)
-			break;
 		ft_sleep(philo);
 		ft_messaging(data, philo->tid, "is thinking");
+		usleep(100);
 	}
 	return ((void **)SUCCESS);
 }
