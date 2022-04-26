@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/24 15:46:14 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/26 21:11:00 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ typedef struct s_data
 	int				flag_death;
 	int				*table_forks;
 	pthread_t		monitor;
-	pthread_mutex_t	check_finish;
 	pthread_mutex_t	lock;
 	pthread_mutex_t	print; // 프린트 할때 뮤텍스 락
 	pthread_mutex_t	*mutex_forks; // 포크 개수만큼 뮤텍스 락

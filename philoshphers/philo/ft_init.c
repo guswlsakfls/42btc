@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/25 19:47:00 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/26 21:12:59 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	data->table_forks = ft_init_table_forks(data);
 	pthread_mutex_init(&(data->print), NULL);
 	pthread_mutex_init(&(data->lock), NULL);
-	pthread_mutex_init(&(data->check_finish), NULL);
 	data->monitor = malloc(sizeof(pthread_t));
 	if (data->monitor == NULL)
 		return (ERROR);

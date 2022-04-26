@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/15 13:25:50 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/25 18:58:17 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/26 21:17:56 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,18 @@ void	ft_eat(t_philo *philo)
 		data->table_forks[philo->l_fork] = 0;
 		pthread_mutex_lock(&data->mutex_forks[philo->r_fork]);
 		ft_messaging(data, philo->tid, "has taken a fork");
-		ft_messaging(data, philo->tid, "is eating");
 		data->table_forks[philo->r_fork] = 0;
 		// pthread_mutex_lock(&data->print);
 		// check for start eat time
 		philo->start_eat_ms = ft_get_time();
 		(philo->num_eat)++; // 필로가 먹은 횟수
 		if (philo->num_eat == data->num_eat_done)
+		{
+			pthread_mutex_unlock(&data->lock);
 			(data->num_philo_eat_done)++; // 다먹으면 필로숫자 업
+			pthread_mutex_unlock(&data->lock);
+		}
+		ft_messaging(data, philo->tid, "is eating");
 		ft_usleep(data->eat_ms, data);
 		// pthread_mutex_unlock(&data->print);
 		data->table_forks[philo->l_fork] = 1;

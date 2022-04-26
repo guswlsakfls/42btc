@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/24 16:03:12 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/26 21:12:48 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	ft_all_free(t_data *data)
 	int	i;
 
 	pthread_mutex_destroy(&data->print);
-	pthread_mutex_destroy(&data->check_finish);
+	pthread_mutex_destroy(&data->lock);
 	i = 0;
 	while (i < data->num_philo)
 	{

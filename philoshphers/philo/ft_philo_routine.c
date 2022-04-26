@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/08 11:25:42 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/25 20:52:17 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/26 21:03:04 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ int	ft_philo_eat_done(t_data *data)
 		pthread_mutex_unlock(&data->print);
 		return (0);
 	}
+	data->flag_eat_done = FINISH;
 	pthread_mutex_unlock(&data->print);
 	return (FINISH);
 }
@@ -31,31 +32,19 @@ void	*ft_monitor(void *arg)
 	int		i;
 
 	data = (t_data *)arg;
-	while (data->flag_death != FINISH && data->flag_eat_done != FINISH)
+	while (1)
 	{
 		i = 0;
 		while (i < data->num_philo)
 		{
 			if (ft_philo_die(data, &data->philo[i]) == FINISH)
-			{
-				pthread_mutex_lock(&data->print);
-				// 한번만 체크하면 모두 접근할 수 있다.
-				data->flag_death = FINISH;
-				pthread_mutex_unlock(&data->print);
-				break ;
-			}
+				return ((void *)SUCCESS);
 			else if (ft_philo_eat_done(data) == FINISH)
-			{
-				pthread_mutex_lock(&data->print);
-				// 한번만 체크하면 모두 접근할 수 있다.
-				data->flag_eat_done = FINISH;
-				pthread_mutex_unlock(&data->print);
-				break ;
-			}
+				return ((void *)SUCCESS);
 			i++;
 		}
 	}
-	return ((void **)SUCCESS);
+	return ((void *)SUCCESS);
 }
 
 int	ft_philo_die(t_data *data, t_philo *philo)
@@ -67,15 +56,15 @@ int	ft_philo_die(t_data *data, t_philo *philo)
 	if ((philo->end_eat_ms - philo->start_eat_ms < data->die_ms) && \
 		data->flag_death != FINISH)
 	{
-		pthread_mutex_unlock(&data->lock);
+		// pthread_mutex_unlock(&data->print);
 		return (0);
 	}
 	if (data->flag_death == FINISH)
 	{
-		pthread_mutex_unlock(&data->lock);
+		// pthread_mutex_unlock(&data->print);
 		return (FINISH);
 	}
-	// 첫번째로 죽으면 위에 걸리지 않고 내려와, died 출력하고 죽고, 죽었다고 표시함.
+	// 여기가 무한 동력 걸린다. 슈바 그러면 하나 더 만들어ㅏ야 하나?
 	ft_messaging(data, philo->tid, "died");
 	data->flag_death = FINISH;
 	pthread_mutex_unlock(&data->lock);
@@ -116,5 +105,5 @@ void	*ft_philo_routine(void *routine_arg)
 		ft_messaging(data, philo->tid, "is thinking");
 		usleep(100);
 	}
-	return ((void **)SUCCESS);
+	return ((void *)SUCCESS);
 }
