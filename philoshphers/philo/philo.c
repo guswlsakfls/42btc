@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/02 15:58:34 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/26 21:12:48 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/27 22:28:46 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	ft_philo_pthread(t_data *data)
 	{
 		pthread_create(&(philo[i].thread), NULL, \
 						&ft_philo_routine, &(data->philo[i]));
+		usleep(1);
 		i++;
 	}
 	pthread_create(&(data->monitor), NULL, &ft_monitor, data);
@@ -45,19 +46,17 @@ int	ft_philo_pthread(t_data *data)
 	return (0);
 }
 
-void	ft_all_free(t_data *data)
+void	ft_free(t_data *data)
 {
 	int	i;
 
 	pthread_mutex_destroy(&data->print);
-	pthread_mutex_destroy(&data->lock);
 	i = 0;
 	while (i < data->num_philo)
 	{
 		pthread_mutex_destroy(&data->mutex_forks[i]);
 		i++;
 	}
-	free(data->table_forks);
 	free(data->philo);
 	free(data);
 }
@@ -70,6 +69,6 @@ int	main(int argc, char **argv)
 	if (data == NULL)
 		return (0);
 	ft_philo_pthread(data);
-	// ft_all_free(data);
+	// ft_free(data);
 	return (0);
 }

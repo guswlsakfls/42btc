@@ -6,24 +6,11 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/26 21:12:59 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/27 21:35:16 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	ft_error(int error)
-{
-	if (error == 1)
-		printf("Wrong amount of args.\n");
-	else if (error == 2)
-		printf("Error while parsing.\n");
-	else if (error == 3)
-		printf("Error while creating threads.\n");
-	else if (error == 4)
-		printf("Error\nInvalid Arguments.\n");
-	return (ERROR);
-}
 
 t_data	*ft_init(int argc, char **argv)
 {
@@ -35,25 +22,8 @@ t_data	*ft_init(int argc, char **argv)
 	if (data == NULL)
 		return (NULL);
 	if (ft_data_init(argc, argv, data) == ERROR || ft_philo_init(data) == ERROR)
-		return (0);
-	return (data);
-}
-
-int	*ft_init_table_forks(t_data *data)
-{
-	int	*table_forks;
-	int	i;
-
-	table_forks = malloc(sizeof(int) * data->num_philo);
-	if (table_forks == NULL)
 		return (NULL);
-	i = 0;
-	while (i < data->num_philo)
-	{
-		table_forks[i] = 1;
-		i++;
-	}
-	return (table_forks);
+	return (data);
 }
 
 int	ft_arg_init(int argc, char **argv, t_data *data)
@@ -85,12 +55,7 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	data->flag_eat_done = 0;
 	data->flag_death = 0;
 	data->mutex_forks = ft_init_mutex_forks(data);
-	data->table_forks = ft_init_table_forks(data);
 	pthread_mutex_init(&(data->print), NULL);
-	pthread_mutex_init(&(data->lock), NULL);
-	data->monitor = malloc(sizeof(pthread_t));
-	if (data->monitor == NULL)
-		return (ERROR);
 	return (SUCCESS);
 }
 
@@ -118,40 +83,13 @@ int	ft_philo_init(t_data *data)
 	i = 0;
 	while (i < data->num_philo)
 	{
-		data->philo[i].thread = malloc(sizeof(pthread_t));
-		if (data->philo[i].thread == NULL)
-			return (ERROR);
-		data->philo[i].l_fork = (i + 1) % data->num_philo;;
+		data->philo[i].l_fork = (i + 1) % data->num_philo;
 		data->philo[i].r_fork = i;
-		// start_eat_ms 가 계속 0이면 죽어서 현재 시간으로 초기화 시켜준다.
-		data->philo[i].start_eat_ms = ft_get_time();
-		data->philo[i].sleeping_ms = 0;
+		data->philo[i].start_eat_ms = 0;
 		data->philo[i].end_eat_ms = 0;
 		data->philo[i].num_eat = 0;
 		data->philo[i].data = data;
 		data->philo[i].tid = i + 1;
-		i++;
-	}
-	return (SUCCESS);
-}
-
-int	ft_check_arg(int argc, char **argv)
-{
-	int	i;
-	int	j;
-
-	if (argc != 6 && argc != 5)
-		return (ft_error(1));
-	i = 1;
-	while (argv[i])
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (ft_isdigit(argv[i][j]) == ERROR)
-				return (ft_error(1));
-			j++;
-		}
 		i++;
 	}
 	return (SUCCESS);
