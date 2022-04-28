@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/28 13:02:25 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/28 18:01:22 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	ft_philo_init(t_data *data)
 	{
 		data->philo[i].l_fork = (i + 1) % data->num_philo;
 		data->philo[i].r_fork = i;
-		data->philo[i].start_eat_ms = 0;
+		data->philo[i].start_eat_ms = ft_get_time();
 		data->philo[i].end_eat_ms = 0;
 		data->philo[i].num_eat = 0;
 		data->philo[i].data = data;

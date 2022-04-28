@@ -6,13 +6,13 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/27 22:23:47 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/28 18:20:50 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 AR = ar -rcs
 RM = rm -f
 
@@ -35,7 +35,7 @@ $(NAME): $(OBJS)
 all: $(NAME)
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) $(OBJS) philo
 
 fclean: clean
 	$(RM) $(NAME)
