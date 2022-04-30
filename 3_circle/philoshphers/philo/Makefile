@@ -6,12 +6,12 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/28 18:20:50 by hyujo            ###   ########.fr        #
+#    Updated: 2022/04/30 15:30:17 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo.a
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 AR = ar -rcs
 RM = rm -f

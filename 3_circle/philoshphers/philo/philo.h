@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/07 15:46:06 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/28 15:07:16 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/30 17:44:05 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int				ft_check_arg(int argc, char **argv);
 int				ft_data_init(int argc, char **argv, t_data *data);
 int				ft_philo_init(t_data *data);
 pthread_mutex_t	*ft_init_mutex_forks(t_data *data);
+int				ft_longlong_digit(char *argv);
 
 // time
 long long		ft_get_time(void);

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/11 17:31:10 by hyujo             #+#    #+#             */
-/*   Updated: 2022/04/28 18:01:22 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/04/30 17:22:10 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,10 @@ int	ft_data_init(int argc, char **argv, t_data *data)
 	data->flag_eat_done = 0;
 	data->flag_death = 0;
 	data->mutex_forks = ft_init_mutex_forks(data);
-	pthread_mutex_init(&(data->print), NULL);
+	if (data->mutex_forks == ERROR)
+		return (ft_error(3));
+	if (pthread_mutex_init(&(data->print), NULL) != 0)
+		return (ft_error(3));
 	return (SUCCESS);
 }
 
@@ -69,7 +72,10 @@ pthread_mutex_t	*ft_init_mutex_forks(t_data *data)
 	if (!forks)
 		return (NULL);
 	while (++i < data->num_philo)
-		pthread_mutex_init(&forks[i], NULL);
+	{
+		if (pthread_mutex_init(&forks[i], NULL) != 0)
+			return (ERROR);
+	}
 	return (forks);
 }
 
