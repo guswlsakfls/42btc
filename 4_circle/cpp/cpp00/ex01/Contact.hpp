@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 18:53:49 by hyujo             #+#    #+#             */
-/*   Updated: 2022/05/17 17:59:44 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/05/18 15:38:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 class Contact
 {
 private:
-	int				index;
-	std::string		firstName;
-	std::string		lastName;
-	std::string		nickName;
-	std::string		phoneNumber;
-	std::string		darkestSecret;
-	static const std::string	fieldNames[5]; // 이거 왜함?
+	int							m_index;
+	std::string					m_firstName;
+	std::string					m_lastName;
+	std::string					m_nickName;
+	std::string					m_phoneNumber;
+	std::string					m_darkestSecret;
+	static const std::string	m_fieldNames[5];
 
 public:
-	Contact(); // 생성자
-	~Contact(); // 소멸자
+	Contact();
+	~Contact();
 
 	void				setFirstName(std::string firstName);
 	std::string			getFirstName(void);

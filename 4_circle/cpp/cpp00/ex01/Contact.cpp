@@ -6,13 +6,13 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 19:11:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/05/17 18:01:15 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/05/18 17:25:02 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Contact.hpp"
 
-const std::string	Contact::fieldNames[5] =
+const std::string	Contact::m_fieldNames[5] =
 {
 	"FIRST NAME",
 	"LAST NAME",
@@ -29,46 +29,46 @@ Contact::~Contact()
 {
 }
 
-void				Contact::setFirstName(std::string firstName) {this->firstName = firstName;}
-std::string			Contact::getFirstName(void) {return (this->firstName);}
+void				Contact::setFirstName(std::string firstName) {m_firstName = firstName;}
+std::string			Contact::getFirstName(void) {return (m_firstName);}
 
-void				Contact::setLastName(std::string lastName) {this->lastName = lastName;}
-std::string			Contact::getLastName(void) {return (this->lastName);}
+void				Contact::setLastName(std::string lastName) {m_lastName = lastName;}
+std::string			Contact::getLastName(void) {return (m_lastName);}
 
-void				Contact::setNickName(std::string nickName) {this->nickName = nickName;}
-std::string			Contact::getNickName(void) {return (this->nickName);}
+void				Contact::setNickName(std::string nickName) {m_nickName = nickName;}
+std::string			Contact::getNickName(void) {return (m_nickName);}
 
-void				Contact::setPhoneNumber(std::string phoneNumber) {this->phoneNumber = phoneNumber;}
-std::string			Contact::getPhoneNumber(void) {return (this->phoneNumber);}
+void				Contact::setPhoneNumber(std::string phoneNumber) {m_phoneNumber = phoneNumber;}
+std::string			Contact::getPhoneNumber(void) {return (m_phoneNumber);}
 
-void				Contact::setDarkestSecret(std::string darkestSecret) {this->darkestSecret = darkestSecret;}
-std::string			Contact::getDarkestSecret(void) { return (this->darkestSecret);}
+void				Contact::setDarkestSecret(std::string darkestSecret) {m_darkestSecret = darkestSecret;}
+std::string			Contact::getDarkestSecret(void) { return (m_darkestSecret);}
 
-const std::string	*Contact::getFieldNames(void) {return (this->fieldNames);}
+const std::string	*Contact::getFieldNames(void) {return (m_fieldNames);}
 
 std::string			*Contact::getFieldContents(void)
 {
 	std::string		*contens = new std::string[5];
-	contens[0] = this->firstName;
-	contens[1] = this->lastName;
-	contens[2] = this->nickName;
-	contens[3] = this->phoneNumber;
-	contens[4] = this->darkestSecret;
+	contens[0] = m_firstName;
+	contens[1] = m_lastName;
+	contens[2] = m_nickName;
+	contens[3] = m_phoneNumber;
+	contens[4] = m_darkestSecret;
 	return (contens);
 }
 
 void	Contact::promptContact(int index)
 {
-	this->index = index;
-	std::cout << "# Input this fileds #" << std::endl;
-	std::cout << "FIRST NAME : ";
-	std::getline(std::cin, this->firstName);
-	std::cout << "LAST NAME : ";
-	std::getline(std::cin, this->lastName);
-	std::cout << "NICK NAME : ";
-	std::getline(std::cin, this->nickName);
-	std::cout << "PHONE NUMBER : ";
-	std::getline(std::cin, this->phoneNumber);
-	std::cout << "DARKEST SECRET : ";
-	std::getline(std::cin, this->darkestSecret);
+	m_index = index;
+	std::cout << "# INPUT THIS FIELDS #" << std::endl;
+	std::cout << '\t' << "FIRST NAME : ";
+	std::getline(std::cin, m_firstName);
+	std::cout << '\t' << "LAST NAME : ";
+	std::getline(std::cin, m_lastName);
+	std::cout << '\t' << "NICK NAME : ";
+	std::getline(std::cin, m_nickName);
+	std::cout << '\t' << "PHONE NUMBER : ";
+	std::getline(std::cin, m_phoneNumber);
+	std::cout << '\t' << "DARKEST SECRET : ";
+	std::getline(std::cin, m_darkestSecret);
 }

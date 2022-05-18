@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 18:18:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/05/16 16:22:19 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/05/18 16:39:07 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 class PhoneBook
 {
 private:
-	Contact	contacts[8];
-	int		n_contacts;
-	int		cursor;
+	Contact	m_contacts[8];
+	int		m_contactNums;
+	int		m_cursor;
 
 public:
 	PhoneBook();
