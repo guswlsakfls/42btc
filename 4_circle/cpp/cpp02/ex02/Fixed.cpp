@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/26 19:10:35 by hyujo             #+#    #+#             */
-/*   Updated: 2022/05/26 20:52:02 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/05/28 18:02:59 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,23 @@
 
 Fixed::Fixed() : value_(0) {}
 
-Fixed::Fixed(const int value) {value = value << bits_;}
+Fixed::Fixed(const int value) { value_ = value << bits_; }
 
-Fixed::Fixed(const float value) {value_ = roundf(value * (1 << bits_));}
+Fixed::Fixed(const float value) { value_ = roundf(value * (1 << bits_)); }
 
-Fixed::Fixed(const Fixed &src) {*this src;}
+Fixed::Fixed(const Fixed &src) { *this = src; }
 
 Fixed::~Fixed() {}
 
-int Fixed::getRawBits() const {return (value_);}
+int Fixed::getRawBits() const { return (value_); }
 
-void Fixed::setRawBits(int const raw) {value_ = raw;}
+void Fixed::setRawBits(int const raw) { value_ = raw; }
 
-int Fixed::toInt() const {return (value_ >> bits_);}
+int Fixed::toInt() const { return (value_ >> bits_); }
 
-float Fixed::toFloat() const {return (float(value_) / (1 << bits_));}
+float Fixed::toFloat() const { return (float(value_) / (1 << bits_)); }
 
-Fixed *Fixed::min(Fixed &f1, Fixed &f2)
+Fixed &Fixed::min(Fixed &f1, Fixed &f2)
 {
 	if (f1 < f2)
 		return (f1);
@@ -70,9 +70,9 @@ Fixed &Fixed::operator=(Fixed const &src)
 	return (*this);
 }
 
-bool Fixed::operator>(Fixed const &src) const { return (value_ < src.value_); }
+bool Fixed::operator>(Fixed const &src) const { return (value_ > src.value_); }
 
-bool Fixed::operator<(Fixed const &src) const { return (value_ > stc.value_); }
+bool Fixed::operator<(Fixed const &src) const { return (value_ < src.value_); }
 
 bool Fixed::operator>=(Fixed const &src) const { return (value_ >= src.value_); }
 
@@ -90,7 +90,7 @@ Fixed Fixed::operator*(Fixed const &src) const { return (Fixed(toFloat() * src.t
 
 Fixed Fixed::operator/(Fixed const &src) const { return (Fixed(toFloat() / src.toFloat())); }
 
-Fixed Fixed::operator++()
+Fixed &Fixed::operator++()
 {
 	value_++;
 	return (*this);

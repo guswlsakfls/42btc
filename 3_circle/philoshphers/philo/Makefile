@@ -6,13 +6,14 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/04/30 15:30:17 by hyujo            ###   ########.fr        #
+#    Updated: 2022/05/01 16:31:48 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo.a
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CPPFLAGS = -Wall -Wextra -Werror
+# CFLAGS = -Wall -Wextra -Werror
 AR = ar -rcs
 RM = rm -f
 
@@ -25,12 +26,12 @@ SRCS = philo.c \
 
 OBJS = $(SRCS:.c=.o)
 
-%o: %c
-	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -I.
+# %o: %c
+# 	$(CC) -c $< -o $(<:.c=.o) -I.
 
 $(NAME): $(OBJS)
 	$(AR) $@ $^
-	$(CC) -lpthread $@ -o philo
+	$(CC) $@ -o philo
 
 all: $(NAME)
 
