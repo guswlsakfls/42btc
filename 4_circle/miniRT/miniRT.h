@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/03 15:01:33 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/04 17:29:11 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 
 // 식별자 매크로
 # define FALSE 0
-# define TURE 1
+# define TRUE 1
 
 typedef struct s_vec3
 {
@@ -97,13 +97,6 @@ typedef struct s_ray
 	t_vec3	dir;
 }	t_ray;
 
-typedef struct s_light
-{
-	t_vec3	orig;
-	t_vec3	lightColor;
-	double	brightRatio;
-}	t_light;
-
 typedef struct s_hitRecord
 {
 	t_vec3	p;
@@ -111,9 +104,7 @@ typedef struct s_hitRecord
 	double	tmin;
 	double	tmax;
 	double	t;
-	int		frontFace;
-	t_vec3	ambient; // 반사광 계수를 벡터화 시킨것.
-	t_vec3	albedo;
+	int		front;
 }	t_hitRecord;
 
 // ft_init.c
@@ -146,7 +137,7 @@ t_ray	initRay(t_vec3 orig, t_vec3 dir);
 t_vec3	rayAt(t_ray *ray, double t);
 t_ray	rayPrimary(t_camera *cam, double u, double v);
 t_vec3	rayColor(t_ray *r, t_sphere *sphere);
-t_vec3	phongLighting(t_light light, t_hitRecord hitR);
+void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_sphere sp, double root);
 
 
 // utils_1.c
@@ -155,6 +146,6 @@ int		createTrgb(int t, int r, int g, int b);
 
 // figure
 t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo);
-double		hitSphere(t_sphere *sp, t_ray *ray);
+int			hitSphere(t_sphere sp, t_ray *ray, t_hitRecord *hitRecord);
 
 #endif
