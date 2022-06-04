@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 17:29:11 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/04 19:09:17 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,8 @@
 # define KEY_S 1
 # define KEY_D 2
 
-# define END 1
-
-# define TOP 0
-# define MID 1
-# define BOT 2
+# define SP 0
+# define LIGHT_POINT 1
 
 // 식별자 매크로
 # define FALSE 0
@@ -62,6 +59,13 @@ typedef struct s_sphere
 	double	radius2;
 	t_vec3	albedo;
 }	t_sphere;
+
+typedef struct s_light
+{
+	t_vec3	orig;
+	t_vec3	light_color;
+	double	bright_ratio;
+}	t_light;
 
 typedef struct s_data
 {
@@ -147,5 +151,6 @@ int		createTrgb(int t, int r, int g, int b);
 // figure
 t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo);
 int			hitSphere(t_sphere sp, t_ray *ray, t_hitRecord *hitRecord);
+t_light		makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio);
 
 #endif

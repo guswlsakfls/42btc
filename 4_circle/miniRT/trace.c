@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 18:16:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/04 18:29:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_vec3	rayColor(t_ray *r, t_sphere *sphere)
 	hit_record.tmax = INFINITY;
 	if (hit(sphere, r, &hit_record) == TRUE)
 	{
-		rgb = vecMult(vec3(hit_record.normal.x + 1, hit_record.normal.y + 1, hit_record.normal.z + 1), 0.5);
+		rgb = vecMult(vecPlusVec(vec3(hit_record.normal.x, hit_record.normal.y, hit_record.normal.z), color3(1, 1, 1)), 0.5);
 		return (rgb);
 	}
 	else

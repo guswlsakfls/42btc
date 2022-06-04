@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:23:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/03 15:07:01 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/04 19:08:58 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,4 +50,17 @@ t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo)
 	sp.radius2 = radius * radius;
 	sp.albedo = albedo;
 	return (sp);
+}
+
+t_light	makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio)
+{
+	t_light	*light;
+
+	light = (t_light *)malloc(sizeof(t_light)
+	if (!light)
+		return (NULL;)
+	light->orig = light_orig;
+	light->light_color = light_color;
+	light->bright_ratio = bright_ratio;
+	return (light);
 }
