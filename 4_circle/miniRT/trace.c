@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 17:28:12 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/04 18:16:51 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,18 +73,13 @@ int	hit(t_sphere *sp, t_ray *ray, t_hitRecord *hit_record)
 t_vec3	rayColor(t_ray *r, t_sphere *sphere)
 {
 	t_vec3		rgb;
-	t_vec3		tmp;
-	t_vec3		n;
 	t_hitRecord	hit_record;
 
 	hit_record.tmin = 0;
 	hit_record.tmax = INFINITY;
 	if (hit(sphere, r, &hit_record) == TRUE)
 	{
-		// 구  그라데이션
-		tmp = rayAt(r, hit_record.t);
-		n = vecUnit(vec3(tmp.x - 0, tmp.y - 0, tmp.z - (-1)));
-		rgb = vecMult(vec3(n.x + 1, n.y + 1, n.z + 1), 0.5);
+		rgb = vecMult(vec3(hit_record.normal.x + 1, hit_record.normal.y + 1, hit_record.normal.z + 1), 0.5);
 		return (rgb);
 	}
 	else
