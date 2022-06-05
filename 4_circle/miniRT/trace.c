@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/05 17:14:35 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/05 20:47:37 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,10 +158,50 @@ t_vec3	pointLightGet(t_rt *rt, t_light *light)
 {
 	t_vec3	diffuse;
 	t_vec3	light_dir;
+	t_vec3	specular;
+	t_vec3	view_dir;
+	t_vec3	reflect_dir;
+	t_ray	light_ray;
+	double	light_len;
 	double	kd;
+	double	spec;
+	double	ksn;
+	double	ks;
+	double	brightness;
 
-	light_dir = vecUnit(light->orig, rt->hit_record.p); // 교점에서 출발하여 광원을 향하는 벡터 (정규화)
+	light_dir = vecMinusVec(light->orig, rt->hit_record.p);
+	light_len = vecLength(light_dir);
+	light_ray = initRay(vecPlus(re->hit_record.p, vecMult(re->hit_record.normal, EPSILON)), light_dir);
+	if (inShadow(rt, light_ray, light_len))
+		return (vec3(0, 0, 0));
+	light_dir = vecUnit(light_dir);
 	// cos 은 0값이 90도 일 때 0이고, 각이 둔각이면 음수가 되므로 0.0보다 작은 경우 0.0으로 대체한다.
 	kd = vecMax(vecDotvec(rt->hit_record.normal, light_dir, 0.0));
 	diffuse = vecMult(light->light_color, kd);
+	// specular
+	view_dir = vecUnit(vecMult(rt->ray.dir, -1));
+	reflect_dir = reflect(vecMult(light_dir, -1), re->hit_record.normal);
+	ksn = 64; // shininess value
+	ks = 0.5; // specular strength
+	spec = pow(vecMax(vecDot(view_dir, reflect_dir), 0.0), ksn);
+	specular = vecMult(vecMult(light->light_color, ks), spec);
+	brightness = light->bright_ratio * LUMEN; // 기준 광속/광량을 정의한 매크로
+	return (vecMult(vecPlus(vecPlus(ambient, diffuse), specular), brightness));
+}
+
+t_vec3	reflect(t_vec3 v, t_vec3 n)
+{
+	// v - 2 * dot(v, n) * n;
+	return (vecMinus(v, vecMult(n, vecDotVec(v, n) * 2)));
+}
+
+int	inShadow(t_object *objs, t_ray light_ray, double light_len)
+{
+	t_hitRecord	hitRecord;
+
+	hitRecord.tmin = 0;
+	hitRecord.tmax = light_len;
+	if (hit(objs, &light_ray, &hitRecord))
+		return (TRUE);
+	return (FALSE);
 }
