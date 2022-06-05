@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 18:29:35 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/05 17:14:35 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_vec3	rayColor(t_ray *r, t_sphere *sphere)
 	t_vec3		rgb;
 	t_hitRecord	hit_record;
 
-	hit_record.tmin = 0;
+	hit_record.tmin = EPSILON;
 	hit_record.tmax = INFINITY;
 	if (hit(sphere, r, &hit_record) == TRUE)
 	{
@@ -125,6 +125,7 @@ void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_sphere sp, double root
 	hit_record->t = root;
 	hit_record->p = rayAt(ray, root);
 	hit_record->normal = vecDivide(vecMinusVec(hit_record->p, sp.center), sp.radius); // 이거 뭐 나타내는거?
+	hit_record->sp.albedo;
 	if (vecDotVec(ray->dir, hit_record->normal) > 0.0) // ray is inside
 	{
 		hit_record->normal = vec3(-hit_record->normal.x,
@@ -133,4 +134,34 @@ void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_sphere sp, double root
 	}
 	else // ray is outside
 		hit_record->front = TRUE;
+}
+
+t_vec3	phongLightning(t_rt *rt)
+{
+	t_vec3	light_color;
+	t_light	*lights;
+
+	light_color = vec3(0, 0, 0);
+	lights = rt->light;
+	while (lights)
+	{
+		if (lights->type == LIGHT_POINT)
+			light_color = vecPlusVec(light_color, pointLightGet(rt, lights->element));
+		lights = lights->next;
+	}
+	light_color = vecPlusVec(light_color, rt->abient);
+	return (vecMin(vecMultvec(light_color, hit_record->albedo), vec3(1, 1, 1)));
+	// 모든 광원에 의한 빛의 양을 구한 후, 오브젝트의 반사율과 곱해준다. 그 값이 (1, 1, 1)을 넘으면 (1, 1, 1)을 반환한다.
+}
+
+t_vec3	pointLightGet(t_rt *rt, t_light *light)
+{
+	t_vec3	diffuse;
+	t_vec3	light_dir;
+	double	kd;
+
+	light_dir = vecUnit(light->orig, rt->hit_record.p); // 교점에서 출발하여 광원을 향하는 벡터 (정규화)
+	// cos 은 0값이 90도 일 때 0이고, 각이 둔각이면 음수가 되므로 0.0보다 작은 경우 0.0으로 대체한다.
+	kd = vecMax(vecDotvec(rt->hit_record.normal, light_dir, 0.0));
+	diffuse = vecMult(light->light_color, kd);
 }

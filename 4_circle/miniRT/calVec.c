@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 08:40:02 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/03 12:29:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/05 17:09:06 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,3 +172,13 @@ t_vec3	vecMin(t_vec3 vec, t_vec3 vec2)
 		vec.z = vec2.z;
 	return (vec);
 }
+
+t_vec3	vecMax(t_vec3 vec, t_vec3 vec2)
+{
+	if (vec.x < vec2.x)
+		vec.x = vec2.x;
+	if (vec.y < vec2.y)
+		vec.y = vec2.y;
+	if (vec.z < vec2.z)
+		vec.z = vec2.z;
+	return (vec);

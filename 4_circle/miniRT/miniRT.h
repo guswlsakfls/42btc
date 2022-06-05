@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 19:09:17 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/05 17:14:41 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 
 # define SP 0
 # define LIGHT_POINT 1
+# define EPSILON 1e-6 // 0.000001 // double 데이터 타입이 근사값이기 때문에 t의 값이 0에 가까운 값이 나올 때, tmin이 0이면 비교 시 hit 상황이 아닐 때도 hit로 판단하는 오차를 만들어 낼 수 있다.
 
 // 식별자 매크로
 # define FALSE 0
@@ -109,7 +110,26 @@ typedef struct s_hitRecord
 	double	tmax;
 	double	t;
 	int		front;
+	t_vec3	albedo;
 }	t_hitRecord;
+
+typedef struct s_rt
+{
+	t_sphere		*sp;
+	t_light			*light;
+	t_vec3			ambient;
+}	t_rt;
+
+// typedef struct s_info
+// {
+// 	t_canvas		canvas;
+// 	t_camera		camera;
+// 	t_sphere		*sp;
+// 	t_light			*light;
+// 	t_vec3			ambient;
+// 	t_ray			ray;
+// 	t_hit_record	rec;
+// }	t_scene;
 
 // ft_init.c
 t_canvas	initCanvas(int width, int height);
@@ -134,6 +154,7 @@ double	vecDotVec(t_vec3 vec, t_vec3 vec2);
 t_vec3	vecCrossVec(t_vec3 vec, t_vec3 vec2);
 t_vec3	vecUnit(t_vec3 vec);
 t_vec3	vecMin(t_vec3 vec1, t_vec3 vec2);
+t_vec3	vecMax(t_vec3 vec, t_vec3 vec2);
 
 
 // trace.c
@@ -152,5 +173,7 @@ int		createTrgb(int t, int r, int g, int b);
 t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo);
 int			hitSphere(t_sphere sp, t_ray *ray, t_hitRecord *hitRecord);
 t_light		makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio);
+t_vec3		phongLightning(t_rt *rt)
+t_vec3		pointLightGet(t_rt *rt, t_light *light)
 
 #endif

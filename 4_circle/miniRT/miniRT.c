@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/04 17:32:10 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/05 16:21:55 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,12 @@ int	main()
 	t_canvas	canv;
 	t_camera	cam;
 	t_ray		ray;
-	int			t;
+	// t_scene		scene;
+	t_sphere	*sp;
+	t_light		*light;
+	double		ka = 0.1;
 
-	t = 1;
+	// scene = initScene();
 	//Scene setting;
 	canv = initCanvas(1600, 900);
 	cam = initCamera(&canv, point3(0, 0, 0));
@@ -60,14 +63,19 @@ int	main()
 	vars.win = mlx_new_window(vars.mlx, canv.width, canv.height, "Hellow World!");
 	image.img = mlx_new_image(vars.mlx, canv.width, canv.height);
 	image.addr = mlx_get_data_addr(image.img, &image.bits_per_pixel, &image.line_length, &image.endian);
-	image.sp = malloc(sizeof(t_sphere) * 4);
+	
+	// 3개의 구 예시로 만듬
+	image.sp = malloc(sizeof(t_sphere) * 3);
 	if (image.sp == NULL)
 		exit (0);
 	image.sp[0] = makeSphere(point3(-1, 0, -5), 2, point3(0.5, 0, 0));
 	image.sp[1] = makeSphere(point3(1, 0, -4), 2, point3(0, 0.5, 0));
 	image.sp[2] = makeSphere(point3(0, 1000, -100), 999, point3(1, 1, 1));
+	
+	// 밝기 만들기
+
+
 	// 랜더링
-	// P3 는 색상값이 아스키코드라는 뜻, 그리고 다음 줄은 캔버스의 가로, 세로 픽셀 수, 마지막은 사용할 색상값
 	j = canv.height - 1;
 	while (j >= 0)
 	{
