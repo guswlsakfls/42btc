@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/07 18:10:02 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/07 21:31:51 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_vars
 typedef struct		s_amb
 {
 	double			ratio;
-	int				color;
+	t_vec3			color;
 }					t_amb;
 
 // scha
@@ -87,7 +87,7 @@ typedef struct		s_elem
 {
 	t_vec3			pos;
 	t_vec3			normal;
-	int				color;
+	t_vec3			color;
 	double			ratio;
 	double			diam;
 	double			height;
@@ -137,6 +137,9 @@ typedef struct	s_rt
 	t_ray		ray;
 	t_info		info;
 	t_vec3		pixel_color;
+	t_vec3		ambient;
+	t_vec3		color;
+	t_vec3		albedo;
 }				t_rt;
 
 // scha
@@ -164,7 +167,7 @@ typedef struct s_hitRecord
 	double	tmax;
 	double	t;
 	int		front;
-	t_vec3	albedo;
+	t_vec3	color;
 }	t_hitRecord;
 
 
@@ -199,7 +202,7 @@ t_vec3	vecMax(t_vec3 vec, t_vec3 vec2);
 t_ray	initRay(t_vec3 orig, t_vec3 dir);
 t_vec3	rayAt(t_ray *ray, double t);
 t_ray	rayPrimary(t_camera cam, double u, double v);
-t_vec3	rayColor(t_ray *r, t_info info);
+t_vec3	rayColor(t_ray *r, t_info info, t_rt *rt);
 void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_elem sp, double root);
 
 
@@ -227,7 +230,7 @@ double	get_ratio(char *str);
 int		check_split(char **s);
 t_vec3	get_vector(char *str);
 t_vec3	get_normal(char *str);
-int		get_color(char *str);
+t_vec3	get_color(char *str);
 int		get_posint(char *str);
 int		get_int(char *str);
 void	get_light(t_elem *new, t_info *info);

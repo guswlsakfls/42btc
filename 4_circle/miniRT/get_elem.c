@@ -44,7 +44,7 @@ void	get_sphere(t_elem *new, t_info *info)
 {
 	info_line_split(info, 3);
 	new->pos = get_vector(info->split[1]);
-	new->ratio = get_double(info->split[2]);
+	new->diam = get_double(info->split[2]);
 	new->color = get_color(info->split[3]);
 	list_add_back_elem(new, &info->sp);
 	free(info->split);

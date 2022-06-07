@@ -21,6 +21,15 @@ bool	ft_isnormal(t_vec3 normal)
 	return (false);
 }
 
+bool	ft_iscolor(t_vec3 color)
+{
+	if (color.x >= 0 && color.x <= 255.0 &&
+			color.y >= 0 && color.y <= 255.0 &&
+			color.z >= 0.0 && color.z <= 255.0)
+		return (true);
+	return (false);
+}
+
 t_vec3	get_vector(char *str)
 {
 	t_vec3	vec;
@@ -46,6 +55,16 @@ t_vec3	get_normal(char *str)
 
 	vec = get_vector(str);
 	if (ft_isnormal(vec) == false)
+		exit(1);
+	return (vec);
+}
+
+t_vec3	get_color(char *str)
+{
+	t_vec3	vec;
+
+	vec = get_vector(str);
+	if (ft_iscolor(vec) == false)
 		exit(1);
 	return (vec);
 }

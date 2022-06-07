@@ -19,7 +19,7 @@ bool	ft_isrgb(int n)
 	return (false);
 }
 
-int		get_color(char *str)
+int		get_colori(char *str)
 {
 	int		color;
 	int		temp;

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/07 17:59:34 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/07 21:23:37 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	main(int argc, char **argv)
 			u = (double)i / (rt.canvas.width - 1);
 			v = (double)j / (rt.canvas.height - 1);
 			rt.ray = rayPrimary(*rt.info.camera, u, v);
-			rt.pixel_color = rayColor(&rt.ray, rt.info);
+			rt.pixel_color = rayColor(&rt.ray, rt.info, &rt);
 			myMlxPixelPut(&rt.image, i, j, writeColor(&rt.pixel_color));
 			++i;
 		}
