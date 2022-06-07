@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/05 20:48:16 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/07 18:10:02 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,9 @@
 # include <stdio.h>
 # include <math.h>
 
-# define BUFFER_SIZE 1
-
-# define IMGSIZE 64
+# define BUFFER_SIZE 100
 
 # define KEY_ESC 53
-
-# define KEY_W 13
-# define KEY_A 0
-# define KEY_S 1
-# define KEY_D 2
 
 # define SP 0
 # define LIGHT_POINT 1
@@ -54,13 +47,107 @@ typedef struct s_vars
 	void	*win;
 }	t_vars;
 
-typedef struct s_sphere
+// typedef struct s_camera
+// {
+// 	t_vec3	origPoint; // 카메라 원점(위치) // cooordi_view
+// 	double	viewportH; // 뷰포트 세로길이 
+// 	double	viewportW; // 뷰포트 가로길이
+// 	t_vec3	horizontal; // 수평길이 벡터	
+// 	t_vec3	vertical; // 수직길이 벡터
+// 	double	focalLen; // focal length
+// 	t_vec3	leftBottom; // 왼쪽 아래 코너점
+// }	t_camera;
+
+typedef struct		s_amb
 {
-	t_vec3	center;
-	double	radius;
-	double	radius2;
-	t_vec3	albedo;
-}	t_sphere;
+	double			ratio;
+	int				color;
+}					t_amb;
+
+// scha
+#include <stdbool.h>
+
+typedef struct s_camera
+{
+	t_vec3	coordi_view;
+	t_vec3	normalize;
+	double		fov;
+	t_vec3	origPoint; // 카메라 원점(위치) // cooordi_view
+	double	viewportH; // 뷰포트 세로길이 
+	double	viewportW; // 뷰포트 가로길이
+	t_vec3	horizontal; // 수평길이 벡터	
+	t_vec3	vertical; // 수직길이 벡터
+	double	focalLen; // focal length
+	t_vec3	leftBottom; // 왼쪽 아래 코너점
+	struct s_camera	*next;
+	struct s_camera	*prev;
+}				t_camera;
+
+typedef struct		s_elem
+{
+	t_vec3			pos;
+	t_vec3			normal;
+	int				color;
+	double			ratio;
+	double			diam;
+	double			height;
+	struct s_elem	*next;
+}					t_elem;
+
+typedef	struct s_canvas
+{
+	int		width;
+	int		height;
+	double	aspectRatio;
+}	t_canvas;
+
+typedef struct		s_info
+{
+	char			*line;
+	char			**split;
+	t_amb			*amb;
+	t_camera		*camera;
+	t_elem			*light;
+	t_elem			*sp;
+	t_elem			*pl;
+	t_elem			*cy;
+	short int		qtys[6];
+}					t_info;
+
+typedef struct s_image
+{
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+}	t_image;
+
+typedef struct s_ray
+{
+	t_vec3	orig;
+	t_vec3	dir;
+}	t_ray;
+
+typedef struct	s_rt
+{
+	t_vars		vars;
+	t_canvas	canvas;
+	t_image		image;
+	t_ray		ray;
+	t_info		info;
+	t_vec3		pixel_color;
+}				t_rt;
+
+// scha
+
+// typedef struct s_sphere
+// {
+// 	t_vec3	center;
+// 	double	radius;
+// 	double	radius2;
+// 	t_vec3	albedo;
+// }	t_sphere;
 
 typedef struct s_light
 {
@@ -68,40 +155,6 @@ typedef struct s_light
 	t_vec3	light_color;
 	double	bright_ratio;
 }	t_light;
-
-typedef struct s_data
-{
-	void		*img;
-	char		*addr;
-	int			bits_per_pixel;
-	int			line_length;
-	int			endian;
-	t_sphere	*sp;
-}	t_data;
-
-typedef struct s_camera
-{
-	t_vec3	origPoint; // 카메라 원점(위치)
-	double	viewportH; // 뷰포트 세로길이
-	double	viewportW; // 뷰포트 가로길이
-	t_vec3	horizontal; // 수평길이 벡터	
-	t_vec3	vertical; // 수직길이 벡터
-	double	focalLen; // focal length
-	t_vec3	leftBottom; // 왼쪽 아래 코너점
-}	t_camera;
-
-typedef	struct s_canvas
-{
-	int		width;
-	int		height;
-	double	aspectRatio; // 종횡비
-}	t_canvas;
-
-typedef struct s_ray
-{
-	t_vec3	orig;
-	t_vec3	dir;
-}	t_ray;
 
 typedef struct s_hitRecord
 {
@@ -114,27 +167,11 @@ typedef struct s_hitRecord
 	t_vec3	albedo;
 }	t_hitRecord;
 
-typedef struct s_rt
-{
-	t_sphere		*sp;
-	t_light			*light;
-	t_vec3			ambient;
-}	t_rt;
 
-// typedef struct s_info
-// {
-// 	t_canvas		canvas;
-// 	t_camera		camera;
-// 	t_sphere		*sp;
-// 	t_light			*light;
-// 	t_vec3			ambient;
-// 	t_ray			ray;
-// 	t_hit_record	rec;
-// }	t_scene;
 
 // ft_init.c
-t_canvas	initCanvas(int width, int height);
-t_camera	initCamera(t_canvas *canvas, t_vec3 orig);
+void	init_canvas(t_canvas *canvas);
+void	init_camera(t_camera *cam, t_canvas canvas, t_vec3 orig);
 
 
 // calVec.c
@@ -161,21 +198,68 @@ t_vec3	vecMax(t_vec3 vec, t_vec3 vec2);
 // trace.c
 t_ray	initRay(t_vec3 orig, t_vec3 dir);
 t_vec3	rayAt(t_ray *ray, double t);
-t_ray	rayPrimary(t_camera *cam, double u, double v);
-t_vec3	rayColor(t_ray *r, t_sphere *sphere);
-void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_sphere sp, double root);
+t_ray	rayPrimary(t_camera cam, double u, double v);
+t_vec3	rayColor(t_ray *r, t_info info);
+void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_elem sp, double root);
 
 
 // utils_1.c
-int		writeColor(int t, t_vec3 *pixelColor);
+int		writeColor(t_vec3 *pixelColor);
 int		createTrgb(int t, int r, int g, int b);
 
 // figure
-t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo);
-int			hitSphere(t_sphere sp, t_ray *ray, t_hitRecord *hitRecord);
+int			hitSphere(t_elem sp, t_ray *ray, t_hitRecord *hitRecord);
 t_light		makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio);
 t_vec3		phongLightning(t_rt *rt);
 t_vec3		pointLightGet(t_rt *rt, t_light *light);
-int			inShadow(t_object *objs, t_ray light_ray, double light_len);
+// int			inShadow(t_object *objs, t_ray light_ray, double light_len);
+
+// scha
+
+/*init*/
+void	check_line(char* line, t_info *info);
+void	init_info(char* file, t_info *info);
+void	init_info2(t_rt *rt);
+
+/*get*/
+double	get_double(char *str);
+double	get_ratio(char *str);
+int		check_split(char **s);
+t_vec3	get_vector(char *str);
+t_vec3	get_normal(char *str);
+int		get_color(char *str);
+int		get_posint(char *str);
+int		get_int(char *str);
+void	get_light(t_elem *new, t_info *info);
+void	get_sphere(t_elem *new, t_info *info);
+void	get_plane(t_elem *new, t_info *info);
+void	get_cylinder(t_elem *new, t_info *info);
+void	get_amb(t_info *info);
+void	get_camera(t_info *info);
+
+void	info_line_split(t_info *info, int id);
+
+/*utils*/
+int		ft_atoi(const char *str);
+double	ft_atof(const char *str);
+void	free_split(char **str, size_t index);
+void	ft_bzero(void *s, size_t n);
+void	*ft_memset(void *b, int c, size_t len);
+int		ft_strncmp(const char *s1, const char *s2, size_t n);
+int		ft_strlen(const char *s);
+char	**ft_split(const char *s, char c);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s1);
+char	*ft_strnldup(const char *s1);
+char	*ft_strjoin(char const *s1, char const *s2);
+int		get_next_line(int fd, char **line);
+int		ft_isdigit(int c);
+int		check_split(char **s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+
+int		ft_str_isdouble(char *str);
+bool	ft_str_isint(char *str);
+// scha
+
 
 #endif

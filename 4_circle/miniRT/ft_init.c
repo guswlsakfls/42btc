@@ -6,63 +6,108 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:23:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/05 16:22:01 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/07 17:19:00 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./mlx/mlx.h"
 #include "miniRT.h"
 
-t_canvas	initCanvas(int width, int height)
+void	init_canvas(t_canvas *canvas)
 {
-	t_canvas	canvas;
-
-	canvas.width = width;
-	canvas.height = height;
-	canvas.aspectRatio = (double)width / (double)height;
-	return (canvas);
+	canvas->width = 1600;
+	canvas->height = 900;
+	canvas->aspectRatio = (double)canvas->width
+		/ (double)canvas->height;
 }
 
-t_camera	initCamera(t_canvas *canvas, t_vec3 orig)
+void	init_camera(t_camera *cam, t_canvas canvas, t_vec3 orig)
 {
-	t_camera	cam;
 	double		focalLen;
 	double		viewportHeight;
 
 	viewportHeight = 2.0;
 	focalLen = 1.0;
-	cam.origPoint = orig;
-	cam.viewportH = viewportHeight;
-	cam.viewportW = viewportHeight * canvas->aspectRatio; // 화면 비율을 곱해서 구함.
-	cam.focalLen = focalLen; // 보통 1로 고정해서 보여준다.
-	cam.horizontal = vec3(cam.viewportW, 0, 0);
-	cam.vertical = vec3(0, cam.viewportH, 0);
-	cam.leftBottom = vecMinusVec(vecMinusVec(vecMinusVec(cam.origPoint, vecDivide(cam.horizontal, 2)), vecDivide(cam.vertical, 2)), vec3(0, 0, focalLen));
-	return (cam);
+	cam->origPoint = orig;
+	cam->viewportH = viewportHeight;
+	cam->viewportW = viewportHeight * canvas.aspectRatio; // 화면 비율을 곱해서 구함.
+	cam->focalLen = focalLen; // 보통 1로 고정해서 보여준다.
+	cam->horizontal = vec3(cam->viewportW, 0, 0);
+	cam->vertical = vec3(0, cam->viewportH, 0);
+	cam->leftBottom = vecMinusVec(vecMinusVec(vecMinusVec(cam->origPoint, vecDivide(cam->horizontal, 2)), vecDivide(cam->vertical, 2)), vec3(0, 0, focalLen));
 }
 
-t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo)
-{
-	t_sphere	sp;
+// t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo)
+// {
+// 	t_sphere	sp;
 
-	sp.center = center;
-	sp.radius = radius;
-	sp.radius2 = radius * radius;
-	sp.albedo = albedo;
-	return (sp);
+// 	sp.center = center;
+// 	sp.radius = radius;
+// 	sp.radius2 = radius * radius;
+// 	sp.albedo = albedo;
+// 	return (sp);
+// }
+
+// t_light	makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio)
+// {
+// 	t_light	*light;
+
+// 	light = (t_light *)malloc(sizeof(t_light)
+// 	if (!light)
+// 		return (NULL;)
+// 	light->orig = light_orig;
+// 	light->light_color = light_color;
+// 	light->bright_ratio = bright_ratio;
+// 	return (light);
+// }
+
+void	check_line(char* line, t_info *info)
+{
+	t_elem *new;
+
+	if (ft_strncmp(line, "A ", 2) == 0)
+		get_amb(info);
+	else if (ft_strncmp(line, "C ", 2) == 0)
+			get_camera(info);
+	else
+	{
+		new = malloc(sizeof(t_elem));
+		if (!new)
+			exit(1);
+		ft_bzero(new, 0);
+		new->next = NULL;
+		if (ft_strncmp(line, "L ", 2) == 0)
+			get_light(new,info);
+		else if (ft_strncmp(line, "sp", 2) == 0)
+			get_sphere(new,info);
+		else if (ft_strncmp(line, "pl", 2) == 0)
+			get_plane(new,info);
+		else if (ft_strncmp(line, "cy", 2) == 0)
+			get_cylinder(new,info);
+	}
 }
 
-t_light	makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio)
+void	init_info(char* file, t_info *info)
 {
-	t_light	*light;
+	int	fd;
+	int	re;
 
-	light = (t_light *)malloc(sizeof(t_light)
-	if (!light)
-		return (NULL;)
-	light->orig = light_orig;
-	light->light_color = light_color;
-	light->bright_ratio = bright_ratio;
-	return (light);
+	*info = (t_info) {0};
+	if (ft_strncmp(file + ft_strlen(file) - 3, ".rt", 3) != 0)
+		exit(1);
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		exit(1);
+	while ((re = get_next_line(fd, &(info->line)) > 0))
+	{
+		check_line(info->line, info);
+		free(info->line);
+		if (re == 0)
+			break;
+	}
+	close(fd);
+	if(info->qtys[0] == 0 || info->qtys[1] == 0 || info->qtys[2] == 0)
+		exit(1);
 }
 
 // t_scene	*initScene(void)

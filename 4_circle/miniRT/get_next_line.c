@@ -5,130 +5,81 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/17 12:53:55 by hyujo             #+#    #+#             */
-/*   Updated: 2022/02/26 18:21:08 by hyujo            ###   ########.fr       */
+/*   Created: 2022/06/07 15:37:32 by hyujo             #+#    #+#             */
+/*   Updated: 2022/06/07 15:37:32 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "./miniRT.h"
 
-t_list	*ft_find_next(t_list **head, t_list **list)
+static void	sfree(char *s)
 {
-	t_list	*tmp;
-
-	tmp = *head;
-	if ((*head) == (*list))
-	{
-		*head = (*head)->next;
-		free((*list)->backup);
-		free(*list);
-	}
-	else
-	{
-		while (tmp->next != (*list))
-			tmp = tmp->next;
-		tmp->next = (*list)->next;
-		free(*list);
-		*list = NULL;
-	}
-	return (*head);
-}
-
-t_list	*ft_get_backup(t_list **list, t_list **head)
-{
-	char	buf[BUFFER_SIZE + 1];
-	int		read_size;
-
-	read_size = 1;
-	while (!ft_strchr((*list)->backup, '\n') && read_size != 0)
-	{
-		read_size = read((*list)->fd, buf, BUFFER_SIZE);
-		if (read_size < 0)
-		{
-			*head = ft_find_next(head, list);
-			return (NULL);
-		}
-		else if (read_size == 0 && (*list)->backup && !((*list)->backup[0]))
-		{
-			*head = ft_find_next(head, list);
-			return (NULL);
-		}
-		buf[read_size] = '\0';
-		(*list)->backup = ft_strjoin((*list)->backup, buf);
-	}
-	return (*list);
-}
-
-char	*ft_get_line(t_list *list)
-{
-	int		i;
-	char	*line;
-
-	i = 0;
-	if (!((list->backup)[0]))
-		return (NULL);
-	while (list->backup[i] != '\n' && list->backup[i] != '\0')
-		i++;
-	line = malloc(sizeof(char) * (i + 2));
-	if (!line)
-		return (NULL);
-	i = 0;
-	while (list->backup[i] != '\n' && list->backup[i] != '\0')
-	{
-		line[i] = list->backup[i];
-		i++;
-	}
-	line[i] = '\0';
-	return (line);
-}
-
-void	ft_left_backup(t_list *list)
-{
-	int		i;
-	int		j;
-	char	*tmp;
-
-	i = 0;
-	while (list->backup[i] != '\n' && (list->backup)[i] != '\0')
-		i++;
-	if (!((list->backup)[i]))
-	{
-		free(list->backup);
-		list->backup = NULL;
+	if (!s)
 		return ;
-	}
-	tmp = malloc(sizeof(char) * (ft_strlen(list->backup) - i + 1));
-	if (!tmp)
-		return ;
-	i++;
-	j = -1;
-	while (list->backup[i] != '\0')
-	{
-		tmp[++j] = list->backup[i++];
-	}
-	tmp[++j] = '\0';
-	free(list->backup);
-	list->backup = tmp;
+	if (s)
+		free(s);
 }
 
-char	*get_next_line(int fd)
+static char	*snull(char *s, char **line)
 {
-	static t_list	*head;
-	t_list			*list;
-	char			*line;
+	if (!s)
+		*line = ft_strdup("\0");
+	return (s);
+}
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	list = ft_lstfd(&head, fd);
-	list = ft_get_backup(&list, &head);
-	if (!list || !list->backup)
+static char	*rline(char **line, char *s)
+{
+	size_t	i;
+	char	*temp;
+
+	if (!s)
 	{
-		list = NULL;
-		return (NULL);
+		s = snull(s, line);
+		return (s);
 	}
-	line = ft_get_line(list);
-	ft_left_backup(list);
-	if (!(list->backup))
-		head = ft_find_next(&head, &list);
-	return (line);
+	i = 0;
+	while (s[i] != '\n' && s[i] != '\0')
+		i++;
+	if (s[i] == '\0')
+	{
+		*line = ft_strdup(s);
+		sfree(s);
+		s = NULL;
+	}
+	else if (s[i] == '\n')
+	{
+		*line = ft_strnldup(s);
+		temp = ft_strdup(&s[++i]);
+		sfree(s);
+		s = temp;
+	}
+	return (s);
+}
+
+int			get_next_line(int fd, char **line)
+{
+	int				rev;
+	char			*buff;
+	char			*temp;
+	static char		*s;
+
+	if (fd < 0 || line == NULL || BUFFER_SIZE <= 0)
+		return (-1);
+	buff = (char *)malloc(BUFFER_SIZE + 1);
+	while (0 < (rev = read(fd, buff, BUFFER_SIZE)))
+	{
+		buff[rev] = '\0';
+		if (s == NULL)
+			s = ft_strdup("\0");
+		temp = ft_strjoin(s, buff);
+		sfree(s);
+		s = temp;
+		if (ft_strchr(buff, '\n'))
+			break ;
+	}
+	sfree(buff);
+	s = rline(line, s);
+	if (rev == 0 && s == NULL)
+		return (0);
+	return (rev < 0 ? -1 : 1);
 }

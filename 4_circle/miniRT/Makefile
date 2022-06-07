@@ -6,22 +6,33 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/05/31 18:58:43 by hyujo            ###   ########.fr        #
+#    Updated: 2022/06/07 19:07:10 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = miniRT.a
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror
 CLIB = -Lmlx -lmlx -framework OpenGL -framework Appkit -Imlx
 AR = ar -rcs
 RM = rm -f
 
 SRCS = miniRT.c \
-		utils_1.c \
-		trace.c \
+		ft_gnl_utils.c \
+		ft_split.c \
+		ft_utils2.c \
+		get_ambcam.c \
+		get_color.c \
+		get_coord.c \
+		get_double.c \
+		get_elem.c \
+		get_int.c \
+		get_next_line.c \
+		ft_init.c \
 		calVec.c \
-		ft_init.c
+		utils_1.c \
+		trace.c
+
 
 OBJS = $(SRCS:.c=.o)
 
@@ -30,7 +41,7 @@ OBJS = $(SRCS:.c=.o)
 
 $(NAME): $(OBJS)
 	$(AR) $@ $^
-	$(CC) $(CLIB) $(SRCS) $@ -o miniRT
+	$(CC) $(CLIB) $(SRCS) $@ -o miniRT -g
 
 all: $(NAME)
 
@@ -41,6 +52,7 @@ fclean: clean
 	$(RM) $(NAME)
 	$(RM) miniRT
 
-re: fclean all
-
+re:
+	$(make) fclean
+	$(make) all
 .PHONY: all clean fclean re
