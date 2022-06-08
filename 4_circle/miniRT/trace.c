@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/08 18:02:39 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/08 19:44:42 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,8 +165,8 @@ t_vec3	pointLightGet(t_rt *rt, t_elem *light, t_hitRecord *hit_record)
 	t_vec3	specular;
 	t_vec3	view_dir;
 	t_vec3	reflect_dir;
-	// t_ray	light_ray;
-	// double	light_len;
+	t_ray	light_ray;
+	double	light_len;
 	double	kd; // diffuse 의 강도
 	double	spec;
 	double	ksn;
@@ -177,10 +177,10 @@ t_vec3	pointLightGet(t_rt *rt, t_elem *light, t_hitRecord *hit_record)
 	if (!rt)
 		exit(1);
 	light_dir = vecMinusVec(light->pos, hit_record->p);
-	// light_len = vecLength(light_dir);
-	// light_ray = initRay(vecPlusVec(hit_record->p, vecMult(hit_record->normal, EPSILON)), light_dir);
-	// if (inShadow(rt->info, light_ray, light_len))
-	// 	return (vec3(0, 0, 0));
+	light_len = vecLength(light_dir);
+	light_ray = initRay(vecPlusVec(hit_record->p, vecMult(hit_record->normal, EPSILON)), light_dir);
+	if (inShadow(rt->info, light_ray, light_len))
+		return (vec3(0, 0, 0));
 	light_dir = vecUnit(light_dir);
 	// cos 은 0값이 90도 일 때 0이고, 각이 둔각이면 음수가 되므로 0.0보다 작은 경우 0.0으로 대체한다.
 	kd = fmax(vecDotVec(hit_record->normal, light_dir), 0.0);
