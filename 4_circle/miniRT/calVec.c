@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 08:40:02 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/07 15:52:25 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/08 17:38:10 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,9 @@ t_vec3	vecMultVec(t_vec3 vec, t_vec3 vec2)
 // 벡터 스칼라 나누기
 t_vec3	vecDivide(t_vec3 vec, double t)
 {
-	vec.x *= 1 / t;
-	vec.y *= 1 / t;
-	vec.z *= 1 / t;
+	vec.x *= (double)(1 / t);
+	vec.y *=  (double)(1 / t);
+	vec.z *= (double)(1 / t);
 	return (vec);
 }
 

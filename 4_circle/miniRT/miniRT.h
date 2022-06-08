@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/07 21:31:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/08 17:06:10 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,20 +137,11 @@ typedef struct	s_rt
 	t_ray		ray;
 	t_info		info;
 	t_vec3		pixel_color;
-	t_vec3		ambient;
-	t_vec3		color;
 	t_vec3		albedo;
+	t_vec3		ambient;
 }				t_rt;
 
 // scha
-
-// typedef struct s_sphere
-// {
-// 	t_vec3	center;
-// 	double	radius;
-// 	double	radius2;
-// 	t_vec3	albedo;
-// }	t_sphere;
 
 typedef struct s_light
 {
@@ -213,9 +204,10 @@ int		createTrgb(int t, int r, int g, int b);
 // figure
 int			hitSphere(t_elem sp, t_ray *ray, t_hitRecord *hitRecord);
 t_light		makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio);
-t_vec3		phongLightning(t_rt *rt);
-t_vec3		pointLightGet(t_rt *rt, t_light *light);
-// int			inShadow(t_object *objs, t_ray light_ray, double light_len);
+t_vec3		phongLightning(t_rt *rt, t_hitRecord *hit_record);
+t_vec3		pointLightGet(t_rt *rt, t_elem *light, t_hitRecord *hit_record);
+int			inShadow(t_info info, t_ray light_ray, double light_len);
+t_vec3		reflect(t_vec3 v, t_vec3 n);
 
 // scha
 
