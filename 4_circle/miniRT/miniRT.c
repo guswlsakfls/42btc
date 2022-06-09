@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/08 19:41:51 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/09 19:33:37 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_mlx(t_vars *vars, t_image *image, t_canvas canvas)
 void	init_info2(t_rt *rt)
 {
 	init_canvas(&rt->canvas);
-	init_camera(rt->info.camera, rt->canvas, point3(0, 0, 15));
+	init_camera(rt->info.camera, rt->canvas, point3(0, 0, 400));
 	init_mlx(&rt->vars, &rt->image, rt->canvas);
 }
 

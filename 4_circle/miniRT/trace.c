@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/08 19:44:42 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/09 18:50:45 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_ray	rayPrimary(t_camera cam, double u, double v)
 	return (ray);
 }
 
-int	hitObj(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
+int	hit_obj_sp(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
 {
 	int	hit_result;
 
@@ -48,7 +48,14 @@ int	hitObj(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
 	return (hit_result);
 }
 
+int	hit_obj_cy(t_elem cy, t_ray *ray, t_hitRecord *hit_record)
+{
+	int	hit_result;
 
+	hit_result = FALSE;
+	hit_result = hit_cylinder(&cy, ray, hit_record);
+	return (hit_result);
+}
 
 int	hit(t_info info, t_ray *ray, t_hitRecord *hit_record)
 {
@@ -59,12 +66,19 @@ int	hit(t_info info, t_ray *ray, t_hitRecord *hit_record)
 	hit_anything = FALSE;
 	while (info.sp)
 	{
-		if (hitObj(*info.sp, ray, &temp_record) == TRUE)
+		if (hit_obj_sp(*info.sp, ray, &temp_record) == TRUE)
 		{
 			hit_anything = TRUE;
 			temp_record.tmax = temp_record.t;
 			*hit_record = temp_record;
 			hit_record->color = info.sp->color;
+		}
+		if (hit_obj_cy(*info.cy, ray, &temp_record) == TRUE)
+		{
+			hit_anything = TRUE;
+			temp_record.tmax = temp_record.t;
+			*hit_record = temp_record;
+			hit_record->color = info.cy->color;
 		}
 		info.sp = info.sp->next;
 	}
@@ -119,15 +133,15 @@ int	hitSphere(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
 		if (root < hit_record->tmin || hit_record->tmax < root)
 			return (-1);
 	}
-	setFaceNormal(ray, hit_record, sp, root);
-	return (TRUE);
-}
-
-void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_elem sp, double root)
-{
 	hit_record->t = root;
 	hit_record->p = rayAt(ray, root);
 	hit_record->normal = vecDivide(vecMinusVec(hit_record->p, sp.pos), (double)sp.diam / 2); // 이거 뭐 나타내는거?
+	setFaceNormal(ray, hit_record);
+	return (TRUE);
+}
+
+void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record)
+{
 	if (vecDotVec(ray->dir, hit_record->normal) > 0.0) // ray is inside
 	{
 		hit_record->normal = vecMult(hit_record->normal, -1);

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/12/11 16:58:25 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/08 19:43:08 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/09 18:47:08 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,13 +188,22 @@ t_vec3	vecUnit(t_vec3 vec);
 t_vec3	vecMin(t_vec3 vec1, t_vec3 vec2);
 t_vec3	vecMax(t_vec3 vec, t_vec3 vec2);
 
+// cylinder.c
+double	cy_boundary(t_elem *cy, t_vec3 at_point);
+t_vec3	get_cylinder_normal(t_elem *cy, t_vec3 at_point, double hit_height);
+int	hit_cylinder(t_elem *cy, t_ray *ray, t_hitRecord *hit_record);
+int	hit_cylinder_cap(t_elem *cy, t_ray *ray, t_hitRecord *hit_record, double height);
+int	hit_cylinder_side(t_elem *cy, t_ray *ray, t_hitRecord *hit_record);
 
 // trace.c
 t_ray	initRay(t_vec3 orig, t_vec3 dir);
 t_vec3	rayAt(t_ray *ray, double t);
 t_ray	rayPrimary(t_camera cam, double u, double v);
 t_vec3	rayColor(t_ray *r, t_info info, t_rt *rt);
-void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record, t_elem sp, double root);
+void	setFaceNormal(t_ray *ray, t_hitRecord *hit_record);
+
+int	hit_obj_cy(t_elem cy, t_ray *ray, t_hitRecord *hit_record);
+int	hit_obj_sp(t_elem sp, t_ray *ray, t_hitRecord *hit_record);
 
 
 // utils_1.c

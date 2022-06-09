@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/06/07 19:07:10 by hyujo            ###   ########.fr        #
+#    Updated: 2022/06/09 17:57:38 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,8 @@ SRCS = miniRT.c \
 		ft_init.c \
 		calVec.c \
 		utils_1.c \
-		trace.c
+		trace.c \
+		cylinder.c
 
 
 OBJS = $(SRCS:.c=.o)
