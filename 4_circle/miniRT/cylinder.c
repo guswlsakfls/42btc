@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/09 15:57:02 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/09 19:47:02 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/10 18:12:13 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,14 +40,14 @@ int	hit_cylinder_side(t_elem *cy, t_ray *ray, t_hitRecord *hit_record)
 		return (FALSE);
 	sqrtd = sqrt(discri);
 	root = (-half_b - sqrtd) / a;
-	if (root < hit_record->tmin || hit_record->tmax < root)
+	if (root < hit_record->tmin || hit_record->tmax < root) // 여기 무조건 걸린다고?
 	{
 		root = (-half_b + sqrtd) / a;
-		if (root < hit_record->tmin || hit_record->tmax < root)
-			return (-1);
+		if (root < hit_record->tmin || hit_record->tmax < root) // 절반은 여기로 빠지...
+			return (FALSE);
 	}
 	hit_height = cy_boundary(cy, rayAt(ray, root));
-	if (!hit_height)
+	if (hit_height == FALSE)
 		return (FALSE);
 	hit_record->t = root;
 	hit_record->p = rayAt(ray, root); // 교점의 좌표
@@ -65,10 +65,12 @@ int	hit_cylinder_cap(t_elem *cy, t_ray *ray, t_hitRecord *hit_record, double hei
 
 	r = cy->diam / 2;
 	circle_center = vecPlusVec(cy->pos, vecMult(cy->normal, height));
-	root = vecDotVec(vecMinusVec(circle_center, ray->orig), cy->normal);
+	root = vecDotVec(vecMinusVec(circle_center, ray->orig), cy->normal) / vecDotVec(ray->dir, cy->normal);
 	diam = vecLength(vecMinusVec(circle_center, rayAt(ray, root)));
 	if (fabs(r) < fabs(diam))
+	{
 		return (FALSE);
+	}
 	if (root < hit_record->tmin || hit_record->tmax < root)
 		return (FALSE);
 	hit_record->t = root;
@@ -89,7 +91,7 @@ int	hit_cylinder(t_elem *cy, t_ray *ray, t_hitRecord *hit_record)
 	res = 0;
 	res += hit_cylinder_cap(cy, ray, hit_record, cy->height / 2);
 	res += hit_cylinder_cap(cy, ray, hit_record, -(cy->height / 2));
-	// res += hit_cylinder_side(cy, ray, hit_record);
+	res += hit_cylinder_side(cy, ray, hit_record);
 	return (res);
 }
 

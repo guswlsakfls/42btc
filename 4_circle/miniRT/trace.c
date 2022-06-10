@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/09 18:50:45 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/10 17:10:29 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,18 @@ int	hit(t_info info, t_ray *ray, t_hitRecord *hit_record)
 			*hit_record = temp_record;
 			hit_record->color = info.sp->color;
 		}
-		if (hit_obj_cy(*info.cy, ray, &temp_record) == TRUE)
+		info.sp = info.sp->next;
+	}
+	while (info.cy)
+	{
+		if (hit_obj_cy(*info.cy, ray, &temp_record) != FALSE) // 3개 로 나눠 그려짐
 		{
 			hit_anything = TRUE;
 			temp_record.tmax = temp_record.t;
 			*hit_record = temp_record;
 			hit_record->color = info.cy->color;
 		}
-		info.sp = info.sp->next;
+		info.cy = info.cy->next;
 	}
 	return (hit_anything);
 }
@@ -93,7 +97,7 @@ t_vec3	rayColor(t_ray *r, t_info info, t_rt *rt)
 
 	hit_record.tmin = EPSILON;
 	hit_record.tmax = INFINITY;
-	if (hit(info, r, &hit_record) == TRUE)
+	if (hit(info, r, &hit_record) == TRUE) // 그림자는 생기는데 들어가지 않는다?
 	{
 		rt->albedo = vecDivide(hit_record.color, 255);
 		rgb = phongLightning(rt, &hit_record);
@@ -156,12 +160,10 @@ t_vec3	phongLightning(t_rt *rt, t_hitRecord *hit_record)
 	t_vec3	light_color;
 	t_elem	*lights;
 
-	if (!hit_record)
-		exit(10);
 	light_color = vec3(0, 0, 0);
 	lights = rt->info.light;
-	// rt->ambient = vecMult(rt->info.amb->color, rt->info.amb->ratio); // 이게 진짜
-	rt->ambient = vecMult(vec3(1, 1, 1), 0.1);
+	// rt->ambient = vecMult(rt->info.amb->color, rt->info.amb->ratio); // 이게 진짜로 할꺼
+	rt->ambient = vecMult(vec3(1, 1, 1), 0.1); // 이거는 한번만 하면 되서 init 함수에 넣어주면 될 듯
 	while (lights)
 	{
 		light_color = vecPlusVec(light_color, pointLightGet(rt, lights, hit_record));
@@ -187,20 +189,17 @@ t_vec3	pointLightGet(t_rt *rt, t_elem *light, t_hitRecord *hit_record)
 	double	ks;
 	double	brightness;
 
-	// 지우기
-	if (!rt)
-		exit(1);
 	light_dir = vecMinusVec(light->pos, hit_record->p);
 	light_len = vecLength(light_dir);
 	light_ray = initRay(vecPlusVec(hit_record->p, vecMult(hit_record->normal, EPSILON)), light_dir);
-	if (inShadow(rt->info, light_ray, light_len))
+	if (inShadow(rt->info, light_ray, light_len) == TRUE)
 		return (vec3(0, 0, 0));
 	light_dir = vecUnit(light_dir);
 	// cos 은 0값이 90도 일 때 0이고, 각이 둔각이면 음수가 되므로 0.0보다 작은 경우 0.0으로 대체한다.
 	kd = fmax(vecDotVec(hit_record->normal, light_dir), 0.0);
 	diffuse = vecMult(light->color, kd);
 	diffuse = vecDivide(diffuse, 255);
-	// // specular
+	// specular
 	view_dir = vecUnit(vecMult(rt->ray.dir, -1));
 	reflect_dir = reflect(vecMult(light_dir, -1), hit_record->normal);
 	ksn = 64; // shininess value
@@ -222,7 +221,7 @@ int	inShadow(t_info info, t_ray light_ray, double light_len)
 {
 	t_hitRecord	hit_record;
 
-	hit_record.tmin = 0;
+	hit_record.tmin = EPSILON;
 	hit_record.tmax = light_len;
 	if (hit(info, &light_ray, &hit_record))
 		return (TRUE);

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:23:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/09 18:25:06 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/10 18:14:20 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ void	init_info(char* file, t_info *info)
 			break;
 	}
 	close(fd);
-	if(info->qtys[0] == 0 || info->qtys[1] == 0 || info->qtys[2] == 0)
+	if(info->qtys[0] == 0 || info->qtys[1] == 0)
 		exit(1);
 }
 
