@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/10 17:19:34 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/13 14:36:50 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,38 +56,12 @@ int	main(int argc, char **argv)
 	int			j;
 	double		u;
 	double		v;
-	// t_light		*light;
-	// double		ka = 0.1;
-	// 찐 변수들
-	t_rt	rt;
+	t_rt		rt;
 
 	if (argc != 2)
 		exit(1);
 	init_info(argv[1], &rt.info);
 	init_info2(&rt);
-
-	//Scene setting;
-	// canvas = initCanvas(1600, 900);
-	// cam = initCamera(&canvas, point3(0, 0, 0));
-
-	// // mlx 초기화
-	// vars.mlx = mlx_init();
-	// vars.win = mlx_new_window(vars.mlx, canvas.width, canvas.height, "Hellow World!");
-	// image.img = mlx_new_image(vars.mlx, canvas.width, canvas.height);
-	// image.addr = mlx_get_data_addr(image.img, &image.bits_per_pixel, &image.line_length, &image.endian);
-	
-	// // 3개의 구 예시로 만듬
-	// image.sp = malloc(sizeof(t_sphere) * 3);
-	// if (image.sp == NULL)
-	// 	exit (0);
-	// image.sp[0] = makeSphere(point3(-1, 0, -5), 2, point3(0.5, 0, 0));
-	// image.sp[1] = makeSphere(point3(1, 0, -4), 2, point3(0, 0.5, 0));
-	// image.sp[2] = makeSphere(point3(0, 1000, -100), 999, point3(1, 1, 1));
-	
-	// // 밝기 만들기
-
-
-	// // 랜더링
 	j = rt.canvas.height - 1;
 	while (j >= 0)
 	{

@@ -6,7 +6,7 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/31 12:08:51 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/10 17:10:29 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/13 21:09:56 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ t_vec3	rayColor(t_ray *r, t_info info, t_rt *rt)
 	t_vec3		rgb;
 	t_hitRecord	hit_record;
 
-	hit_record.tmin = EPSILON;
+	hit_record.tmin = EPSILON;;
 	hit_record.tmax = INFINITY;
 	if (hit(info, r, &hit_record) == TRUE) // 그림자는 생기는데 들어가지 않는다?
 	{
@@ -124,7 +124,7 @@ int	hitSphere(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
 	double	root;
 
 	oc = vecMinusVec(ray->orig, sp.pos); // A-C (광선원점 - 구의 원점)
-	a = vecDotVec(ray->dir, ray->dir); //(b * b)t^2
+	a = vecDotVec(ray->dir, ray->dir); //(b * b)t^2ddd
 	b = 2.0 * vecDotVec(oc, ray->dir); // 2*b*(A-C)*t
 	c = vecDotVec(oc, oc) - pow((double)(sp.diam / 2), 2); // (A-C) * (A-C) -r^2
 	discri = b * b - 4 * a * c;
@@ -135,7 +135,7 @@ int	hitSphere(t_elem sp, t_ray *ray, t_hitRecord *hit_record)
 	{
 		root = (-b + sqrt(discri)) / (2.0 * a);
 		if (root < hit_record->tmin || hit_record->tmax < root)
-			return (-1);
+			return (FALSE);
 	}
 	hit_record->t = root;
 	hit_record->p = rayAt(ray, root);
