@@ -14,18 +14,18 @@
 
 bool	ft_isnormal(t_vec3 normal)
 {
-	if (normal.x >= -1.0 && normal.x <= 1.0 &&
-			normal.y >= -1.0 && normal.y <= 1.0 &&
-			normal.z >= -1.0 && normal.z <= 1.0)
+	if (normal.x >= -1.0 && normal.x <= 1.0
+		&&normal.y >= -1.0 && normal.y <= 1.0
+		&&normal.z >= -1.0 && normal.z <= 1.0)
 		return (true);
 	return (false);
 }
 
 bool	ft_iscolor(t_vec3 color)
 {
-	if (color.x >= 0 && color.x <= 255.0 &&
-			color.y >= 0 && color.y <= 255.0 &&
-			color.z >= 0.0 && color.z <= 255.0)
+	if (color.x >= 0 && color.x <= 255.0
+		&& color.y >= 0 && color.y <= 255.0
+		&& color.z >= 0.0 && color.z <= 255.0)
 		return (true);
 	return (false);
 }
@@ -36,11 +36,12 @@ t_vec3	get_vector(char *str)
 	char	**split;
 
 	split = ft_split(str, ',');
-	if (check_split(split) != 3 || !(ft_str_isdouble(split[0]) == 1 &&
-			ft_str_isdouble(split[1]) == 1 && ft_str_isdouble(split[2]) == 1))
+	if (check_split(split) != 3 || !(ft_str_isdouble(split[0]) == 1
+			&& ft_str_isdouble(split[1]) == 1
+			&& ft_str_isdouble(split[2]) == 1))
 	{
 		free_split(split, check_split(split));
-		exit(1);
+		msg_exit("elem input ");
 	}
 	vec.x = ft_atof(split[0]);
 	vec.y = ft_atof(split[1]);
@@ -55,7 +56,7 @@ t_vec3	get_normal(char *str)
 
 	vec = get_vector(str);
 	if (ft_isnormal(vec) == false)
-		exit(1);
+		msg_exit("nomarize ");
 	return (vec);
 }
 
@@ -65,6 +66,6 @@ t_vec3	get_color(char *str)
 
 	vec = get_vector(str);
 	if (ft_iscolor(vec) == false)
-		exit(1);
+		msg_exit("rgb range ");
 	return (vec);
 }

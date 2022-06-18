@@ -12,7 +12,7 @@
 
 #include "./miniRT.h"
 
-bool			ft_str_isint(char *str)
+bool	ft_str_isint(char *str)
 {
 	int		i;
 
@@ -28,19 +28,9 @@ bool			ft_str_isint(char *str)
 	return (true);
 }
 
-int				get_int(char *str)
+int	get_int(char *str)
 {
 	if (ft_str_isint(str) == false)
-		exit(1);
+		msg_exit("int ");
 	return (ft_atoi(str));
-}
-
-int				get_posint(char *str)
-{
-	int		posint;
-
-	posint = get_int(str);
-	if (!(posint > 0))
-		exit(1);
-	return (posint);
 }

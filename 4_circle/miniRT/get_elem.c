@@ -12,7 +12,7 @@
 
 #include "./miniRT.h"
 
-void		list_add_back_elem(t_elem *new, t_elem **lst)
+void	list_add_back_elem(t_elem *new, t_elem **lst)
 {
 	t_elem	*temp;
 
@@ -36,7 +36,7 @@ void	get_light(t_elem *new, t_info *info)
 	new->ratio = get_ratio(info->split[2]);
 	new->color = get_color(info->split[3]);
 	list_add_back_elem(new, &info->light);
-	free(info->split);
+	free_split(info->split, 4);
 	info->qtys[2] += 1;
 }
 
@@ -47,7 +47,7 @@ void	get_sphere(t_elem *new, t_info *info)
 	new->diam = get_double(info->split[2]);
 	new->color = get_color(info->split[3]);
 	list_add_back_elem(new, &info->sp);
-	free(info->split);
+	free_split(info->split, 4);
 	info->qtys[3] += 1;
 }
 
@@ -55,10 +55,12 @@ void	get_plane(t_elem *new, t_info *info)
 {
 	info_line_split(info, 4);
 	new->pos = get_vector(info->split[1]);
-	new->normal = get_vector(info->split[2]);
+	check_normal(get_vector(info->split[2]));
+	new->normal = vec_unit(get_vector(info->split[2]));
 	new->color = get_color(info->split[3]);
+	new->diam = -1;
 	list_add_back_elem(new, &info->pl);
-	free(info->split);
+	free_split(info->split, 4);
 	info->qtys[4] += 1;
 }
 
@@ -66,11 +68,13 @@ void	get_cylinder(t_elem *new, t_info *info)
 {
 	info_line_split(info, 5);
 	new->pos = get_vector(info->split[1]);
-	new->normal = get_vector(info->split[2]);
+	check_normal(get_vector(info->split[2]));
+	new->normal = vec_unit(get_vector(info->split[2]));
 	new->diam = get_double(info->split[3]);
 	new->height = get_double(info->split[4]);
 	new->color = get_color(info->split[5]);
 	list_add_back_elem(new, &info->cy);
-	free(info->split);
+	free_split(info->split, 6);
 	info->qtys[4] += 1;
+	cap_in_cylinder(new, info);
 }

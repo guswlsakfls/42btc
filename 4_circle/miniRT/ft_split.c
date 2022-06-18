@@ -44,14 +44,14 @@ static	size_t	hms(const char *s, char c)
 	return (result);
 }
 
-size_t			endcount(const char *s, char c, size_t end)
+size_t	endcount(const char *s, char c, size_t end)
 {
 	while (s[end] != c && s[end])
 		end++;
 	return (end);
 }
 
-static char		**splitcpy(char **str, const char *s, char c, size_t hmsplit)
+static char	**splitcpy(char **str, const char *s, char c, size_t hmsplit)
 {
 	size_t	index;
 	size_t	start;
@@ -80,7 +80,7 @@ static char		**splitcpy(char **str, const char *s, char c, size_t hmsplit)
 	return (str);
 }
 
-char			**ft_split(const char *s, char c)
+char	**ft_split(const char *s, char c)
 {
 	char	**str;
 	size_t	hmsplit;

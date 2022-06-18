@@ -19,7 +19,7 @@ bool	ft_isrgb(int n)
 	return (false);
 }
 
-int		get_colori(char *str)
+int	get_colori(char *str)
 {
 	int		color;
 	int		temp;
@@ -28,16 +28,16 @@ int		get_colori(char *str)
 
 	split = ft_split(str, ',');
 	if (check_split(split) != 3)
-		exit(1);
+		msg_exit("");
 	color = 0;
 	i = 0;
 	while (i < 3)
 	{
 		if (ft_str_isint(split[i]) == false)
-			exit(1);
+			msg_exit("");
 		temp = ft_atoi(split[i]);
 		if (ft_isrgb(temp) == false)
-			exit(1);
+			msg_exit("");
 		color = (color << 8) | temp;
 		i++;
 	}

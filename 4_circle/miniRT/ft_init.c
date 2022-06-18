@@ -6,132 +6,111 @@
 /*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/01 14:23:21 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/10 18:14:20 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/17 16:28:43 by hyujo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./mlx/mlx.h"
 #include "miniRT.h"
 
 void	init_canvas(t_canvas *canvas)
 {
 	canvas->width = 1600;
 	canvas->height = 900;
-	canvas->aspectRatio = (double)canvas->width
+	canvas->aspect_ratio = (double)canvas->width
 		/ (double)canvas->height;
 }
 
-void	init_camera(t_camera *cam, t_canvas canvas, t_vec3 orig)
+void	init_camera(t_camera *cam, t_canvas canvas, t_info info)
 {
-	double		focalLen;
-	double		viewportHeight;
+	double		viewport_height;
+	t_vec3		w;
+	t_vec3		u;
+	t_vec3		v;
 
-	viewportHeight = 2.0;
-	focalLen = 1.0;
-	cam->origPoint = orig;
-	cam->viewportH = viewportHeight;
-	cam->viewportW = viewportHeight * canvas.aspectRatio; // 화면 비율을 곱해서 구함.
-	cam->focalLen = focalLen; // 보통 1로 고정해서 보여준다.
-	cam->horizontal = vec3(cam->viewportW, 0, 0);
-	cam->vertical = vec3(0, cam->viewportH, 0);
-	cam->leftBottom = vecMinusVec(vecMinusVec(vecMinusVec(cam->origPoint, vecDivide(cam->horizontal, 2)), vecDivide(cam->vertical, 2)), vec3(0, 0, focalLen));
+	while (info.qtys[1] != 0)
+	{
+		check_cam_normalize(cam);
+		w = vec_unit(vec_mult_vec(cam->normalize, vec3(-1, -1, -1)));
+		u = vec_unit(vec_cross_vec(vec3(0, 1, 0), w));
+		v = vec_cross_vec(u, w);
+		viewport_height = 2 * cam->fov;
+		cam->orig_point = cam->coordi_view;
+		cam->viewport_h = viewport_height;
+		cam->viewport_w = viewport_height * canvas.aspect_ratio;
+		cam->focal_len = 2.0;
+		cam->horizontal = vec_mult(u, cam->viewport_w);
+		cam->vertical = vec_mult(v, cam->viewport_h);
+		cam->left_bottom = vec_minus_vec(vec_minus_vec(vec_minus_vec(
+						cam->orig_point, vec_divide(cam->horizontal, 2)),
+					vec_divide(cam->vertical, 2)), w);
+		cam = cam->next;
+		info.qtys[1] -= 1;
+	}
 }
 
-// t_sphere	makeSphere(t_vec3 center, double radius, t_vec3 albedo)
-// {
-// 	t_sphere	sp;
-
-// 	sp.center = center;
-// 	sp.radius = radius;
-// 	sp.radius2 = radius * radius;
-// 	sp.albedo = albedo;
-// 	return (sp);
-// }
-
-// t_light	makeLightPoint(t_vec3 light_orig, t_vec3 light_color, double bright_ratio)
-// {
-// 	t_light	*light;
-
-// 	light = (t_light *)malloc(sizeof(t_light)
-// 	if (!light)
-// 		return (NULL;)
-// 	light->orig = light_orig;
-// 	light->light_color = light_color;
-// 	light->bright_ratio = bright_ratio;
-// 	return (light);
-// }
-
-void	check_line(char* line, t_info *info)
+void	check_line(char *line, t_info *info)
 {
-	t_elem *new;
+	t_elem	*new;
 
 	if (ft_strncmp(line, "A ", 2) == 0)
 		get_amb(info);
 	else if (ft_strncmp(line, "C ", 2) == 0)
-			get_camera(info);
+		get_camera(info);
 	else
 	{
 		new = malloc(sizeof(t_elem));
 		if (!new)
-			exit(1);
+			msg_exit("malloc ");
 		ft_bzero(new, 0);
 		new->next = NULL;
 		if (ft_strncmp(line, "L ", 2) == 0)
-			get_light(new,info);
-		else if (ft_strncmp(line, "sp", 2) == 0)
-			get_sphere(new,info);
-		else if (ft_strncmp(line, "pl", 2) == 0)
-			get_plane(new,info);
-		else if (ft_strncmp(line, "cy", 2) == 0)
-			get_cylinder(new,info);
+			get_light(new, info);
+		else if (ft_strncmp(line, "sp ", 3) == 0)
+			get_sphere(new, info);
+		else if (ft_strncmp(line, "pl ", 3) == 0)
+			get_plane(new, info);
+		else if (ft_strncmp(line, "cy ", 3) == 0)
+			get_cylinder(new, info);
+		else
+			free(new);
 	}
 }
 
-void	init_info(char* file, t_info *info)
+static void	line_replace(char *line)
+{
+	if (!(line) || *line == '\0')
+		return ;
+	while (*line != '\0')
+	{
+		if (*line == '\t')
+			*line = ' ';
+		line++;
+	}
+}
+
+void	init_info(char *file, t_info *info)
 {
 	int	fd;
-	int	re;
 
-	*info = (t_info) {0};
+	*info = (t_info){0};
 	if (ft_strncmp(file + ft_strlen(file) - 3, ".rt", 3) != 0)
-		exit(1);
+		msg_exit("file name ");
 	fd = open(file, O_RDONLY);
 	if (fd < 0)
-		exit(1);
-	while ((re = get_next_line(fd, &(info->line)) > 0))
+		msg_exit("fd ");
+	while (1)
 	{
-		check_line(info->line, info);
-		free(info->line);
-		if (re == 0)
-			break;
+		info->line = get_next_line(fd);
+		if (info->line)
+		{
+			line_replace(info->line);
+			check_line(info->line, info);
+			free(info->line);
+		}
+		if (!(info->line))
+			break ;
 	}
 	close(fd);
-	if(info->qtys[0] == 0 || info->qtys[1] == 0)
-		exit(1);
+	if (info->qtys[0] == 0 || info->qtys[1] == 0 || info->qtys[2] == 0)
+		msg_exit("input ");
 }
-
-// t_scene	*initScene(void)
-// {
-// 	t_scene		*scene;
-// 	light		*lights;
-// 	t_sphere	*sp;
-// 	double		ka; // 8.4 에서 설명
-
-// 	// malloc 할당 실패 시, 실습에서는 return NULL로 해두었지만, 적절한 에러 처리가 필요하다.
-// 	if(!(scene = (t_scene *)malloc(sizeof(t_scene))))
-// 		return (NULL);
-// 	scene->canvas = canvas(400, 300);
-// 	scene->camera = camera(&scene->canvas, point3(0, 0, 0));
-// 	// 구 오브젝트 추가
-// 	image.sp = malloc(sizeof(t_sphere) * 3);
-// 	if (image.sp == NULL)
-// 		exit (0);
-// 	image.sp[0] = makeSphere(point3(-1, 0, -5), 2, point3(0.5, 0, 0));
-// 	image.sp[1] = makeSphere(point3(1, 0, -4), 2, point3(0, 0.5, 0));
-// 	image.sp[2] = makeSphere(point3(0, 1000, -100), 999, point3(1, 1, 1));
-// 	lights = object(LIGHT_POINT, light_point(point3(0, 5, 0), color3(1, 1, 1), 0.5), color3(0, 0, 0)); // 더미 albedo
-// 	scene->light = lights;
-// 	ka = 0.1; // 8.4 에서 설명
-// 	scene->ambient = vmult(color(1,1,1), ka); // 8.4 에서 설명
-// 	return (scene);
-// }

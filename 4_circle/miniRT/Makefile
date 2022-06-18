@@ -3,24 +3,26 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
+#    By: scha <scha@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/09 17:56:16 by hyujo             #+#    #+#              #
-#    Updated: 2022/06/09 17:57:38 by hyujo            ###   ########.fr        #
+#    Updated: 2022/06/16 20:25:56 by scha             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = miniRT.a
-CC = gcc
+CC = cc -g
 CFLAGS = -Wall -Wextra -Werror
 CLIB = -Lmlx -lmlx -framework OpenGL -framework Appkit -Imlx
 AR = ar -rcs
 RM = rm -f
 
 SRCS = miniRT.c \
-		ft_gnl_utils.c \
+		get_next_line_utils.c \
 		ft_split.c \
+		ft_utils.c \
 		ft_utils2.c \
+		ft_utils3.c \
 		get_ambcam.c \
 		get_color.c \
 		get_coord.c \
@@ -30,9 +32,15 @@ SRCS = miniRT.c \
 		get_next_line.c \
 		ft_init.c \
 		calVec.c \
+		calVec2.c \
+		calVec3.c \
+		calVec4.c \
 		utils_1.c \
 		trace.c \
-		cylinder.c
+		trace2.c \
+		ray_init.c \
+		cylinder.c \
+		phong_light.c
 
 
 OBJS = $(SRCS:.c=.o)
@@ -42,7 +50,7 @@ OBJS = $(SRCS:.c=.o)
 
 $(NAME): $(OBJS)
 	$(AR) $@ $^
-	$(CC) $(CLIB) $(SRCS) $@ -o miniRT -g
+	$(CC) $(CLIB) $(SRCS) $@ -o miniRT
 
 all: $(NAME)
 
@@ -54,6 +62,6 @@ fclean: clean
 	$(RM) miniRT
 
 re:
-	$(make) fclean
-	$(make) all
+	make fclean
+	make all
 .PHONY: all clean fclean re

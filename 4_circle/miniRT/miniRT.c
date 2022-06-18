@@ -3,83 +3,109 @@
 /*                                                        :::      ::::::::   */
 /*   miniRT.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: scha <scha@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/22 17:59:17 by hyujo             #+#    #+#             */
-/*   Updated: 2022/06/13 14:36:50 by hyujo            ###   ########.fr       */
+/*   Updated: 2022/06/16 20:16:15 by scha             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./mlx/mlx.h"
 #include "miniRT.h"
 
-int	ft_key_hook(int keycode, t_vars *vars)
+int	ft_key_hook(int keycode, t_rt *rt)
 {
-	if (keycode == 53)
+	t_camera	*temp;
+	static int	qtys;
+	int			i;
+
+	i = 0;
+	temp = rt->info.camera;
+	if (keycode == 124 || keycode == 123)
 	{
-		mlx_destroy_window(vars->mlx, vars->win);
-		exit(0);
+		if (keycode == 124)
+			qtys += 1;
+		else
+			qtys -= 1;
+		if (qtys == rt->info.qtys[1])
+			qtys -= rt->info.qtys[1];
+		else if (qtys < 0)
+			qtys += rt->info.qtys[1];
+		while (i++ != qtys)
+			temp = temp->next;
+		mlx_put_image_to_window(rt->vars.mlx,
+			rt->vars.win, temp->image.img, 0, 0);
 	}
+	if (keycode == 53)
+		exit(0);
 	return (0);
 }
 
-void	myMlxPixelPut(t_image *image, int x, int y, int color)
+void	init_image(t_rt *rt)
 {
-	char	*dst;
+	t_camera	*temp;
 
-	dst = image->addr + (y * image->line_length + x * (image->bits_per_pixel / 8));
-	*(unsigned int*)dst = color;
+	temp = rt->info.camera;
+	while (temp)
+	{
+		temp->image.img = mlx_new_image(rt->vars.mlx,
+				rt->canvas.width, rt->canvas.height);
+		temp->image.addr = mlx_get_data_addr(temp->image.img,
+				&temp->image.bpp, &temp->image.line_length,
+				&temp->image.endian);
+		temp = temp->next;
+	}
 }
 
-int	ft_exit_hook(void)
-{
-	exit(0);
-}
-
-void	init_mlx(t_vars *vars, t_image *image, t_canvas canvas)
-{
-	vars->mlx = mlx_init();
-	vars->win = mlx_new_window(vars->mlx, canvas.width, canvas.height, "miniRT");
-	image->img = mlx_new_image(vars->mlx, canvas.width, canvas.height);
-	image->addr = mlx_get_data_addr(image->img, &image->bits_per_pixel, &image->line_length, &image->endian);
-}
 void	init_info2(t_rt *rt)
 {
 	init_canvas(&rt->canvas);
-	init_camera(rt->info.camera, rt->canvas, point3(0, 0, 300));
+	init_camera(rt->info.camera, rt->canvas, rt->info);
 	init_mlx(&rt->vars, &rt->image, rt->canvas);
+	init_image(rt);
+}
+
+void	start_ray(t_rt *rt, t_camera *temp, int qtys)
+{
+	int		i;
+	int		j;
+	double	u;
+	double	v;
+
+	while (qtys--)
+	{
+		j = rt->canvas.height - 1;
+		while (j >= 0)
+		{
+			i = 0;
+			while (i < rt->canvas.width)
+			{
+				u = (double)i / (rt->canvas.width - 1);
+				v = (double)j / (rt->canvas.height - 1);
+				rt->ray = ray_primary(*temp, u, v);
+				rt->pixel_color = ray_color(&rt->ray, rt->info, rt);
+				my_mlx_pixel_put(&temp->image, i, j,
+					write_color(&rt->pixel_color));
+				i++;
+			}
+			--j;
+		}
+		temp = temp->next;
+	}
 }
 
 int	main(int argc, char **argv)
 {
-	int			i;
-	int			j;
-	double		u;
-	double		v;
 	t_rt		rt;
 
 	if (argc != 2)
-		exit(1);
+		msg_exit("argument ");
 	init_info(argv[1], &rt.info);
 	init_info2(&rt);
-	j = rt.canvas.height - 1;
-	while (j >= 0)
-	{
-		i = 0;
-		while (i < rt.canvas.width)
-		{
-			u = (double)i / (rt.canvas.width - 1);
-			v = (double)j / (rt.canvas.height - 1);
-			rt.ray = rayPrimary(*rt.info.camera, u, v);
-			rt.pixel_color = rayColor(&rt.ray, rt.info, &rt);
-			myMlxPixelPut(&rt.image, i, j, writeColor(&rt.pixel_color));
-			++i;
-		}
-		--j;
-	}
-	mlx_put_image_to_window(rt.vars.mlx, rt.vars.win, rt.image.img, 0, 0);
-	// mlx_key_hook(vars.win, &ft_key_hook, &vars);
-	// mlx_hook(win_ptr, 17, 0, ft_exit_hook, &);
+	start_ray(&rt, rt.info.camera, rt.info.qtys[1]);
+	mlx_put_image_to_window(rt.vars.mlx, rt.vars.win,
+		rt.info.camera->image.img, 0, 0);
+	mlx_key_hook(rt.vars.win, ft_key_hook, &rt);
+	mlx_hook(rt.vars.win, 17, 0, ft_exit_hook, 0);
 	mlx_loop(rt.vars.mlx);
 	return (0);
 }
