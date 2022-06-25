@@ -6,7 +6,7 @@
 #    By: hyujo <hyujo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/01 13:14:06 by hyujo             #+#    #+#              #
-#    Updated: 2022/05/28 18:03:15 by hyujo            ###   ########.fr        #
+#    Updated: 2022/06/18 22:14:50 by hyujo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,5 +32,7 @@ fclean : clean
 	rm -rf $(NAME)
 
 re:	clean all
+	$(MAKE) fclean
+	$(MAKE) all
 
 .PHONY: all clean fclean re
